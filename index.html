@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>激闘！加藤先生の授業</title>
     <meta name="description" content="先生にバレずに寝ろ！スリル満点の授業中サバイバルゲーム。">
-    
     <link rel="icon" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-
     <meta property="og:title" content="激闘！加藤先生の授業">
     <meta property="og:type" content="website">
     <meta property="og:description" content="先生の目を盗んで居眠りしろ！スマホで遊べるブラウザゲーム。">
     <meta property="og:url" content="https://kato-game-1.onrender.com">
     <meta property="og:image" content="https://kato-game-1.onrender.com/icon.png">
     <meta name="twitter:card" content="summary_large_image">
-
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
     <style>
@@ -25,23 +21,32 @@
         body::after { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.2) 50%); background-size: 100% 4px; pointer-events: none; z-index: 999; }
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-color); transition: opacity 0.3s; }
         .hidden { display: none !important; }
-        
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; width: 80%; }
         .btn:active { transform: translateY(4px); } 
-        /* クリア済みのボタンは金色にする */
         .btn.cleared { border-color: var(--accent-color); color: var(--accent-color); background: #333; } 
         .btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #555; }
-        
+        .btn-endless { border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); } }
         .btn-x { background: #000; border-color: #fff; }
         .btn-line { background: #06c755; border-color: #fff; }
         .btn-share { background: #555; border-color: #ccc; }
         .share-container { display: flex; gap: 5px; width: 85%; justify-content: center; margin-top: 10px; }
         .share-container .btn { width: 100%; font-size: 10px; padding: 10px 5px; }
 
-        #game-screen { justify-content: flex-start; }
-        #teacher-area { height: 45vh; width: 100%; border-bottom: 6px solid #8B4513; background: #333; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
-        #blackboard-text { position: absolute; top: 20px; width: 100%; text-align: center; font-size: 10px; color: rgba(255,255,255,0.3); }
-        #player-area { height: 55vh; width: 100%; background-color: #222; position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+        /* ▼▼▼ 教室の背景設定 ▼▼▼ */
+        #game-screen {
+            justify-content: flex-start;
+            /* SVGで描いたレトロな教室の背景 */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23333'/%3E%3Crect y='160' width='320' height='80' fill='%235a3a22'/%3E%3Crect x='20' y='40' width='60' height='80' fill='%2387ceeb' stroke='%23555' stroke-width='4'/%3E%3Cline x1='50' y1='40' x2='50' y2='120' stroke='%23555' stroke-width='2'/%3E%3Cline x1='20' y1='80' x2='80' y2='80' stroke='%23555' stroke-width='2'/%3E%3Crect x='240' y='50' width='60' height='40' fill='%23eee' stroke='%23ccc' stroke-width='2'/%3E%3Crect x='100' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='110' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3Crect x='200' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='210' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+        }
+        /* 背景が見えるように透明にする */
+        #teacher-area { height: 45vh; width: 100%; background: rgba(0,0,0,0.2); position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
+        #player-area { height: 55vh; width: 100%; background: rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-top: 4px solid #5a3a22; }
+        /* ▲▲▲ 設定ここまで ▲▲▲ */
+
+        #blackboard-text { position: absolute; top: 20px; width: 100%; text-align: center; font-size: 10px; color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.5); padding: 5px; }
         #hud { width: 90%; display: flex; justify-content: space-between; margin-bottom: 10px; }
         #hearts { color: var(--danger-color); font-size: 20px; text-shadow: 2px 2px 0 #000; }
         #progress-bar { width: 100%; height: 10px; background: #555; margin-top: 10px; border: 2px solid #fff; }
@@ -79,6 +84,7 @@
         <button id="btn-st2" class="btn" onclick="startStage(2)" disabled>英語：松田先生</button>
         <button id="btn-st3" class="btn" onclick="startStage(3)" disabled>音楽：菅原先生</button>
         <button id="btn-st4" class="btn" onclick="startStage(4)" disabled>担任：福盛田先生</button>
+        <button id="btn-st5" class="btn btn-endless" onclick="startStage(5)" style="display:none; margin-top:30px;">💀 ENDLESS MODE</button>
     </div>
 
     <div id="game-screen" class="screen hidden">
@@ -105,13 +111,11 @@
             <p style="text-align:right; margin-top:20px;">2025年 睡眠委員会</p>
             <div style="font-size:40px; margin-top:10px;">💮</div>
         </div>
-        
         <div class="share-container">
             <button class="btn btn-x" onclick="shareX()">Xで自慢</button>
             <button class="btn btn-line" onclick="shareLine()">LINE</button>
             <button class="btn btn-share" onclick="shareNative()">共有/コピー</button>
         </div>
-        
         <button class="btn" onclick="location.reload()" style="margin-top:20px;">最初から眠る</button>
     </div>
 
@@ -121,64 +125,38 @@
             1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ..." },
             2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook..." },
             3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪" },
-            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH..." }
+            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH..." },
+            5: { name: "endless", label: "Endless", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE" }
         };
-        let currentStage = 1, unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1, hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false, gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0;
+        const teacherNames = ["kato", "matsuda", "sugawara", "fukumorita"];
+        let currentStage = 1, unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1, hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false, gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
         
-        function initMenu() { 
-            for(let i=1; i<=4; i++) { 
-                const btn = document.getElementById(`btn-st${i}`); 
-                if(i <= unlockedStage) { 
-                    btn.disabled = false; 
-                    if(i < unlockedStage) btn.classList.add("cleared"); // クリア済み(金色)
-                } 
-            } 
+        // 音声システム（ミュートボタン削除に伴い簡略化）
+        const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
+        function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
+        function playSound(type) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); const now = audioCtx.currentTime;
+            if (type === 'dead') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+            else if (type === 'clear') { osc.type = 'square'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now+0.1); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
         }
+
+        function initMenu() { for(let i=1; i<=4; i++) { const btn = document.getElementById(`btn-st${i}`); if(i <= unlockedStage) { btn.disabled = false; if(i < unlockedStage || unlockedStage >=5) btn.classList.add("cleared"); } } if (unlockedStage >= 5) { document.getElementById("btn-st5").style.display = "block"; } }
         initMenu();
-        
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
-        
-        function startStage(st) { currentStage = st; hp = 3; sleepTime = 0; isTeacherLooking = false; document.getElementById("select-screen").classList.add("hidden"); document.getElementById("game-screen").classList.remove("hidden"); const t = teachers[currentStage]; document.getElementById("blackboard-text").textContent = t.blackboard; document.getElementById("target-score").textContent = t.target; updateHearts(); updateProgress(); updateTeacherBehavior(); gameLoopId = setInterval(gameLoop, 100); }
-        function updateTeacherBehavior() { const t = teachers[currentStage]; const sprite = document.getElementById("teacher-sprite"); sprite.className = `sprite ${t.name}-back`; isTeacherLooking = false; let waitBase = (t.name === 'sugawara') ? 3000 : 2000; if(t.name === 'fukumorita') waitBase = 1000; let randomTime = Math.random() * waitBase + 1000; teacherTimerId = setTimeout(() => { sprite.className = `sprite ${t.name}-face`; isTeacherLooking = true; setTimeout(() => { updateTeacherBehavior(); }, 1000); }, randomTime / t.speed); }
+        function startStage(st) { initAudio(); currentStage = st; hp = 3; sleepTime = 0; isTeacherLooking = false; endlessSpeed = 1.0; document.getElementById("select-screen").classList.add("hidden"); document.getElementById("game-screen").classList.remove("hidden"); const t = teachers[currentStage]; document.getElementById("blackboard-text").textContent = t.blackboard; document.getElementById("target-score").textContent = (st===5) ? "∞" : t.target; updateHearts(); updateProgress(); updateTeacherBehavior(); gameLoopId = setInterval(gameLoop, 100); }
+        function updateTeacherBehavior() { let tName = teachers[currentStage].name; if (currentStage === 5) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; } const sprite = document.getElementById("teacher-sprite"); sprite.className = `sprite ${tName}-back`; isTeacherLooking = false; let waitBase = 2000; if (tName === 'sugawara') waitBase = 3000; if (tName === 'fukumorita') waitBase = 1000; let speed = (currentStage === 5) ? endlessSpeed : teachers[currentStage].speed; let randomTime = (Math.random() * waitBase + 1000) / speed; teacherTimerId = setTimeout(() => { sprite.className = `sprite ${tName}-face`; isTeacherLooking = true; let lookTime = (currentStage === 5) ? Math.max(400, 1000 - endlessSpeed*100) : 1000; setTimeout(() => { updateTeacherBehavior(); }, lookTime); }, randomTime); }
         function gameLoop() { if (isSleeping) { sleepTime += isGodMode ? 0.5 : 0.1; updateProgress(); if (isTeacherLooking && !isInvincible) takeDamage(); } }
-        function updateProgress() { const t = teachers[currentStage]; const pct = Math.min(100, (sleepTime / t.target) * 100); document.getElementById("progress-fill").style.width = pct + "%"; if (sleepTime >= t.target) stageClear(); }
-        function takeDamage() { if(isGodMode) return; hp--; updateHearts(); isInvincible = true; document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate(200); setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500); if (hp <= 0) gameOver(); }
+        function updateProgress() { if(currentStage === 5) { document.getElementById("progress-bar").style.display = "none"; document.getElementById("target-score").textContent = sleepTime.toFixed(1); } else { const t = teachers[currentStage]; const pct = Math.min(100, (sleepTime / t.target) * 100); document.getElementById("progress-fill").style.width = pct + "%"; if (sleepTime >= t.target) stageClear(); } }
+        function takeDamage() { if(isGodMode) return; hp--; updateHearts(); playSound('dead'); isInvincible = true; document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate(200); setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500); if (hp <= 0) gameOver(); }
         function updateHearts() { let h = ""; for(let i=0; i<hp; i++) h += "❤"; const heartEl = document.getElementById("hearts"); heartEl.textContent = h; if(isGodMode) heartEl.classList.add("god-mode"); }
-        
-        function stageClear() { 
-            clearInterval(gameLoopId); 
-            clearTimeout(teacherTimerId); 
-            
-            // ★ここが修正点！ステージ4もクリア扱いに記録する★
-            if (currentStage === 4) { 
-                if (unlockedStage < 5) {
-                    unlockedStage = 5;
-                    localStorage.setItem("soichiGameStage", unlockedStage);
-                }
-                showEnding(); 
-                return; 
-            } 
-            
-            if(currentStage >= unlockedStage) { 
-                unlockedStage++; 
-                localStorage.setItem("soichiGameStage", unlockedStage); 
-            } 
-            document.getElementById("game-screen").classList.add("hidden"); 
-            document.getElementById("result-screen").classList.remove("hidden"); 
-            document.getElementById("result-screen").style.background = "#2b4528"; 
-            document.getElementById("result-title").textContent = "STAGE CLEAR!"; 
-            document.getElementById("result-title").style.color = "gold"; 
-            document.getElementById("result-msg").textContent = "次の授業へ進みます"; 
-        }
-        
-        function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; document.getElementById("result-msg").textContent = "補習決定..."; }
+        function stageClear() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear'); if (currentStage === 4) { if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); } showEnding(); return; } if(currentStage >= unlockedStage) { unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage); } document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#2b4528"; document.getElementById("result-title").textContent = "STAGE CLEAR!"; document.getElementById("result-title").style.color = "gold"; document.getElementById("result-msg").textContent = "次の授業へ進みます"; }
+        function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (currentStage === 5) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
         function showEnding() { document.getElementById("game-screen").classList.add("hidden"); document.getElementById("ending-screen").classList.remove("hidden"); for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } }
-        
         const shareText = "【証明書】私は加藤・松田・菅原・福盛田先生の授業を全て寝て過ごしたことを証明します。 #加藤先生ゲーム";
         function shareX() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(GAME_URL)}`, '_blank'); }
         function shareLine() { const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(GAME_URL)}`; window.open(lineUrl, '_blank'); }
         async function shareNative() { if (navigator.share) { try { await navigator.share({ title: '激闘！加藤先生の授業', text: shareText, url: GAME_URL, }); } catch (err) { console.log('Share canceled'); } } else { navigator.clipboard.writeText(`${shareText} ${GAME_URL}`); alert("URLをコピーしました！"); } }
-
         const startSleep = () => { isSleeping = true; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); };
         const stopSleep = () => { isSleeping = false; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } };
         function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = "50%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 1500); }
