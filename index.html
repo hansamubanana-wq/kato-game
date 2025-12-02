@@ -2,99 +2,270 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>加藤先生の授業で寝ろ！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Survival in Math Class</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; }
-        #game-area { margin-top: 50px; font-size: 24px; font-weight: bold; }
-        #status { font-size: 100px; margin: 20px; }
-        #score { font-size: 20px; color: #333; }
-        .sleeping { color: blue; }
-        .awake { color: green; }
-        .danger { color: red; }
+        body {
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            background-color: #2b4528; /* 黒板色 */
+            color: white;
+            margin: 0;
+            overflow: hidden; /* スクロール禁止 */
+            touch-action: manipulation; /* スマホでの遅延対策 */
+            user-select: none; /* テキスト選択禁止 */
+            -webkit-user-select: none;
+        }
+
+        /* 黒板エリア */
+        #blackboard {
+            border: 10px solid #8b5a2b;
+            margin: 10px;
+            height: 40vh;
+            position: relative;
+            background-image: linear-gradient(#2b4528, #1a2e18);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* 先生の見た目 */
+        #teacher {
+            font-size: 80px;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .writing { transform: scaleX(-1); } /* 背中 */
+        .looking { transform: scaleX(1); } /* こっち見てる */
+        
+        /* 吹き出し */
+        #speech-bubble {
+            background: white;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 10px;
+            position: absolute;
+            top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* プレイヤーエリア */
+        #player-area {
+            height: 50vh;
+            background-color: #f0f0f0;
+            color: #333;
+            padding-top: 20px;
+            position: relative;
+        }
+
+        #status { font-size: 60px; margin-bottom: 10px; }
+        #score-display { font-size: 24px; font-weight: bold; }
+        #level-display { font-size: 14px; color: #666; }
+
+        /* スマホ用ボタン（画面全体をボタン化する透明レイヤー） */
+        #touch-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+        }
+
+        /* 緊急回避ボタン */
+        #boss-key {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            border-radius: 5px;
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        /* 偽装画面（最初は隠れている） */
+        #fake-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            color: black;
+            z-index: 100;
+            text-align: left;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: serif;
+        }
     </style>
 </head>
 <body>
-    <h1>加藤先生に見つからずに寝ろ！</h1>
-    <p>スペースキーを押している間だけ寝られます。<br>先生がこっちを見たらキーを離して起きろ！</p>
-    
-    <div id="game-area">
-        <div id="teacher-status">加藤先生：黒板を書いている...</div>
-        <div id="status">😐 起きている</div>
-        <div id="score">睡眠時間: 0秒</div>
+
+    <div id="blackboard">
+        <div id="speech-bubble">...</div>
+        <div id="teacher">👨‍🏫</div>
+        <div style="margin-top:10px; color:#ddd; font-size:12px;">加藤先生 (数学)</div>
+    </div>
+
+    <div id="player-area">
+        <div id="status">😐</div>
+        <div id="score-display">睡眠時間: 0.0秒</div>
+        <div id="level-display">Level 1</div>
+        <p style="font-size:12px; margin-top:20px;">PC:スペースキー / スマホ:画面長押し<br>で寝る！</p>
+        
+        <div id="touch-layer"></div>
+    </div>
+
+    <button id="boss-key">緊急回避！</button>
+
+    <div id="fake-screen">
+        <h3>2次関数の最大・最小</h3>
+        <p>関数 y = ax^2 + bx + c のグラフにおいて...</p>
+        <p>頂点の座標は (-b/2a, -(b^2-4ac)/4a) であり...</p>
+        <hr>
+        <p style="color:gray; font-size:10px;">(画面をダブルタップして復帰)</p>
     </div>
 
     <script>
+        const teacherEl = document.getElementById("teacher");
+        const bubbleEl = document.getElementById("speech-bubble");
         const statusEl = document.getElementById("status");
-        const teacherEl = document.getElementById("teacher-status");
-        const scoreEl = document.getElementById("score");
+        const scoreEl = document.getElementById("score-display");
+        const levelEl = document.getElementById("level-display");
+        const fakeScreen = document.getElementById("fake-screen");
         
         let isSleeping = false;
         let isTeacherLooking = false;
         let score = 0;
+        let level = 1;
         let gameOver = false;
-
-        // スペースキーを押すと寝る
-        document.addEventListener("keydown", (e) => {
-            if (e.code === "Space" && !gameOver) {
-                isSleeping = true;
-                statusEl.textContent = "😴 睡眠中...";
-                statusEl.className = "sleeping";
-            }
-        });
-
-        // スペースキーを離すと起きる
-        document.addEventListener("keyup", (e) => {
-            if (e.code === "Space") {
-                isSleeping = false;
-                statusEl.textContent = "😐 起きている";
-                statusEl.className = "awake";
-            }
-        });
-
-        // ゲームループ（睡眠時間を計測）
-        setInterval(() => {
+        let teacherTimer;
+        
+        // 先生の状態管理
+        function updateTeacher() {
             if (gameOver) return;
 
-            if (isSleeping) {
-                score += 1;
-                scoreEl.textContent = "睡眠時間: " + (score / 10).toFixed(1) + "秒";
-            }
-            
-            // 先生が見ているのに寝ていたらゲームオーバー
-            if (isTeacherLooking && isSleeping) {
-                gameOver = true;
-                statusEl.textContent = "😱 バレた！！";
-                teacherEl.textContent = "加藤先生：「コラ！寝るな！」";
-                teacherEl.className = "danger";
-                alert("加藤先生に見つかりました... 記録: " + (score / 10).toFixed(1) + "秒");
-                location.reload(); // リロードして再開
-            }
-        }, 100);
+            // レベルに応じて待ち時間を短縮
+            let difficulty = Math.max(500, 3000 - (level * 200)); 
+            let waitTime = Math.random() * difficulty + 1000;
 
-        // 加藤先生の動き（ランダム）
-        function teacherLoop() {
-            if (gameOver) return;
-            
-            // ランダムな時間で振り返る
-            const waitTime = Math.random() * 3000 + 2000; // 2〜5秒
+            teacherTimer = setTimeout(() => {
+                // 20%の確率でフェイント（すぐ戻る）
+                const isFeint = Math.random() < 0.2;
+                
+                // 予兆
+                bubbleEl.style.display = "block";
+                bubbleEl.textContent = "ん？";
 
-            setTimeout(() => {
-                isTeacherLooking = true;
-                teacherEl.textContent = "⚠️ 加藤先生が見ている！";
-                teacherEl.className = "danger";
-
-                // 1〜2秒見つめる
                 setTimeout(() => {
-                    isTeacherLooking = false;
-                    teacherEl.textContent = "加藤先生：黒板を書いている...";
-                    teacherEl.className = "";
-                    teacherLoop(); // 次のループへ
-                }, Math.random() * 1000 + 1000);
+                    // 振り返る
+                    teacherEl.classList.remove("writing");
+                    teacherEl.classList.add("looking");
+                    teacherEl.textContent = "😠"; // 怒り顔
+                    isTeacherLooking = true;
+                    bubbleEl.style.display = "none";
+
+                    // 判定時間（フェイントなら短く、通常なら1〜2秒）
+                    const lookTime = isFeint ? 300 : (Math.random() * 1000 + 800);
+
+                    setTimeout(() => {
+                        // 黒板に戻る
+                        isTeacherLooking = false;
+                        teacherEl.classList.remove("looking");
+                        teacherEl.classList.add("writing");
+                        teacherEl.textContent = "👨‍🏫";
+                        
+                        // レベルアップ判定
+                        if(score > level * 50) {
+                            level++;
+                            levelEl.textContent = "Level " + level + " (先生の反応速度UP)";
+                        }
+
+                        updateTeacher(); // ループ
+                    }, lookTime);
+
+                }, 500); // 予兆から振り返るまでの時間
 
             }, waitTime);
         }
 
-        teacherLoop(); // 開始
+        // 初期化
+        teacherEl.classList.add("writing");
+        updateTeacher();
+
+        // 睡眠ループ
+        setInterval(() => {
+            if (gameOver) return;
+
+            if (isSleeping) {
+                // 寝ている間スコア加算
+                score += 1;
+                scoreEl.textContent = "睡眠時間: " + (score / 10).toFixed(1) + "秒";
+                
+                // 先生が見ているのに寝ていたらアウト
+                if (isTeacherLooking) {
+                    endGame();
+                }
+            }
+        }, 100);
+
+        function endGame() {
+            gameOver = true;
+            statusEl.textContent = "😱";
+            teacherEl.textContent = "👹"; // 鬼の形相
+            bubbleEl.style.display = "block";
+            bubbleEl.textContent = "廊下に立ってろ！";
+            document.body.style.backgroundColor = "#500000"; // 背景赤く
+            alert("バレた！ 記録: " + (score / 10).toFixed(1) + "秒");
+            location.reload();
+        }
+
+        // 入力操作（PCとスマホ共通）
+        const startSleep = () => {
+            if (!gameOver) {
+                isSleeping = true;
+                statusEl.textContent = "😴"; // 寝顔
+                document.body.style.opacity = "0.8"; // 視界が暗くなる演出
+            }
+        };
+
+        const stopSleep = () => {
+            isSleeping = false;
+            statusEl.textContent = "😐"; // 真顔
+            document.body.style.opacity = "1";
+        };
+
+        // イベントリスナー
+        const touchLayer = document.getElementById("touch-layer");
+        
+        // スマホ用
+        touchLayer.addEventListener("touchstart", (e) => { e.preventDefault(); startSleep(); });
+        touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); });
+
+        // PC用
+        document.addEventListener("keydown", (e) => { if (e.code === "Space") startSleep(); });
+        document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
+
+        // 緊急回避機能
+        document.getElementById("boss-key").addEventListener("click", () => {
+            fakeScreen.style.display = "block";
+            gameOver = true; // ゲームは一時停止（というか終了扱いで安全確保）
+            clearTimeout(teacherTimer);
+        });
+
+        // 偽装解除（ダブルタップ）
+        let lastTap = 0;
+        fakeScreen.addEventListener("click", (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 500 && tapLength > 0) {
+                location.reload(); // リロードしてゲーム再開
+            }
+            lastTap = currentTime;
+        });
+
     </script>
 </body>
 </html>
