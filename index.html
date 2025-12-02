@@ -30,18 +30,13 @@
         .btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #555; }
         .btn-endless { border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); } }
-
-        /* ショップボタン */
         .btn-shop { background: #ff9800; border-color: #fff; margin-bottom: 20px; }
-        
-        /* SNSボタン */
         .btn-x { background: #000; border-color: #fff; }
         .btn-line { background: #06c755; border-color: #fff; }
         .btn-share { background: #555; border-color: #ccc; }
         .share-container { display: flex; gap: 5px; width: 85%; justify-content: center; margin-top: 10px; }
         .share-container .btn { width: 100%; font-size: 10px; padding: 10px 5px; }
 
-        /* ゲーム画面（教室背景） */
         #game-screen {
             justify-content: flex-start;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23333'/%3E%3Crect y='160' width='320' height='80' fill='%235a3a22'/%3E%3Crect x='20' y='40' width='60' height='80' fill='%2387ceeb' stroke='%23555' stroke-width='4'/%3E%3Cline x1='50' y1='40' x2='50' y2='120' stroke='%23555' stroke-width='2'/%3E%3Cline x1='20' y1='80' x2='80' y2='80' stroke='%23555' stroke-width='2'/%3E%3Crect x='240' y='50' width='60' height='40' fill='%23eee' stroke='%23ccc' stroke-width='2'/%3E%3Crect x='100' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='110' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3Crect x='200' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='210' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3C/svg%3E");
@@ -64,7 +59,6 @@
         }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
 
-        /* キャラクターSVG */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
         .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23ffcccc'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23a00'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='1' width='6' height='4' fill='%23f0c0a0'/%3E%3Crect x='2' y='1' width='6' height='2' fill='%23622'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
@@ -87,7 +81,6 @@
         .confetti { position: absolute; width: 10px; height: 10px; background: #f00; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
-        /* ショップ画面 */
         #shop-screen { background: #111; z-index: 1500; }
         .shop-item { border: 2px solid #555; padding: 10px; margin: 10px; width: 80%; display: flex; align-items: center; justify-content: space-between; font-size: 10px; }
         .shop-item.unlocked { border-color: var(--accent-color); }
@@ -164,10 +157,11 @@
         const teacherNames = ["kato", "matsuda", "sugawara", "fukumorita"];
         let currentStage = 1, unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1;
         
-        // ZP（通貨）とスキル管理
         let zp = parseFloat(localStorage.getItem("soichiZP")) || 0;
-        let unlockedSkills = JSON.parse(localStorage.getItem("soichiSkills")) || []; // ["speed", "shield"] like strings
-        let equippedSkill = localStorage.getItem("soichiEquipped") || null;
+        let unlockedSkills = JSON.parse(localStorage.getItem("soichiSkills")) || []; 
+        let equippedSkill = localStorage.getItem("soichiEquipped");
+        // ★修正点：nullという文字列が保存されていたらリセット
+        if (equippedSkill === "null") equippedSkill = null;
 
         const skills = {
             "speed": { name: "速記ペン", price: 50, icon: "🖊️", desc: "睡眠速度 1.5倍" },
@@ -191,7 +185,6 @@
         }
         initMenu();
 
-        // ショップ機能
         function openShop() {
             document.getElementById("select-screen").classList.add("hidden");
             document.getElementById("shop-screen").classList.remove("hidden");
@@ -218,6 +211,7 @@
                 if (isEquipped) {
                     btnHtml = `<button disabled>装着中</button>`;
                 } else if (isUnlocked) {
+                    // ★安全対策：文字列で渡す
                     btnHtml = `<button onclick="equipSkill('${key}')">装備</button>`;
                 } else {
                     if (zp >= s.price) {
@@ -239,8 +233,8 @@
                 `;
                 list.appendChild(div);
             });
-            // 装備解除ボタン
             if(equippedSkill) {
+                // ★安全対策：nullを渡す
                 const removeDiv = document.createElement("div");
                 removeDiv.innerHTML = `<button class="btn" style="width:100%; font-size:10px;" onclick="equipSkill(null)">装備を外す</button>`;
                 list.appendChild(removeDiv);
@@ -262,18 +256,18 @@
             renderShopList();
         }
 
-        // ゲーム開始処理
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
         
         function startStage(st) { 
             currentStage = st; 
-            
-            // スキル効果適用
             hp = (equippedSkill === 'shield') ? 4 : 3;
-            if(equippedSkill) {
-                document.getElementById("equipped-skill-display").textContent = skills[equippedSkill].icon;
+            
+            // ★安全対策：スキルが存在するか確認してからアイコンを表示
+            const skillDisplay = document.getElementById("equipped-skill-display");
+            if(equippedSkill && skills[equippedSkill]) {
+                skillDisplay.textContent = skills[equippedSkill].icon;
             } else {
-                document.getElementById("equipped-skill-display").textContent = "";
+                skillDisplay.textContent = "";
             }
 
             sleepTime = 0; isTeacherLooking = false; endlessSpeed = 1.0; 
@@ -286,13 +280,9 @@
             let tName = teachers[currentStage].name; if (currentStage === 5) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; } 
             const sprite = document.getElementById("teacher-sprite"); sprite.className = `sprite ${tName}-back`; isTeacherLooking = false; 
             let waitBase = 2000; if (tName === 'sugawara') waitBase = 3000; if (tName === 'fukumorita') waitBase = 1000; 
-            
-            // スキル：隠密（待ち時間増加）
             if (equippedSkill === 'stealth') waitBase += 1000;
-
             let speed = (currentStage === 5) ? endlessSpeed : teachers[currentStage].speed; 
             let randomTime = (Math.random() * waitBase + 1000) / speed; 
-            
             teacherTimerId = setTimeout(() => { 
                 sprite.className = `sprite ${tName}-face`; isTeacherLooking = true; 
                 let lookTime = (currentStage === 5) ? Math.max(400, 1000 - endlessSpeed*100) : 1000; 
@@ -302,16 +292,11 @@
 
         function gameLoop() { 
             if (isSleeping) { 
-                // スキル：速記（スピードアップ）
                 let speedMultiplier = (equippedSkill === 'speed') ? 1.5 : 1.0;
-                let cheatMultiplier = isGodMode ? 5.0 : 1.0; // チートはさらに別枠
-
+                let cheatMultiplier = isGodMode ? 5.0 : 1.0;
                 let gain = 0.1 * speedMultiplier * cheatMultiplier;
                 sleepTime += gain; 
-                
-                // ZP獲得
                 zp += gain;
-                
                 updateProgress(); 
                 if (isTeacherLooking && !isInvincible) takeDamage(); 
             } 
@@ -321,9 +306,18 @@
             if(currentStage === 5) { document.getElementById("progress-bar").style.display = "none"; document.getElementById("target-score").textContent = sleepTime.toFixed(1); } else { const t = teachers[currentStage]; const pct = Math.min(100, (sleepTime / t.target) * 100); document.getElementById("progress-fill").style.width = pct + "%"; if (sleepTime >= t.target) stageClear(); } 
         }
         
+        const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
+        function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
+        function playSound(type) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); const now = audioCtx.currentTime;
+            if (type === 'dead') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+            else if (type === 'clear') { osc.type = 'square'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now+0.1); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+        }
+
         function takeDamage() { 
             if(isGodMode) return; 
-            hp--; updateHearts(); isInvincible = true; 
+            hp--; updateHearts(); playSound('dead'); isInvincible = true; 
             const chalk = document.createElement("div"); chalk.className = "chalk-missile";
             document.getElementById("game-screen").appendChild(chalk);
             setTimeout(() => chalk.remove(), 300);
@@ -335,7 +329,7 @@
         }
         
         function updateHearts() { let h = ""; for(let i=0; i<hp; i++) h += "❤"; const heartEl = document.getElementById("hearts"); heartEl.textContent = h; if(isGodMode) heartEl.classList.add("god-mode"); }
-        function stageClear() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); saveGameData(); if (currentStage === 4) { if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); } showEnding(); return; } if(currentStage >= unlockedStage) { unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage); } document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#2b4528"; document.getElementById("result-title").textContent = "STAGE CLEAR!"; document.getElementById("result-title").style.color = "gold"; document.getElementById("result-msg").textContent = "次の授業へ進みます"; }
+        function stageClear() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear'); saveGameData(); if (currentStage === 4) { if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); } showEnding(); return; } if(currentStage >= unlockedStage) { unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage); } document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#2b4528"; document.getElementById("result-title").textContent = "STAGE CLEAR!"; document.getElementById("result-title").style.color = "gold"; document.getElementById("result-msg").textContent = "次の授業へ進みます"; }
         function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); saveGameData(); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (currentStage === 5) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
         function showEnding() { document.getElementById("game-screen").classList.add("hidden"); document.getElementById("ending-screen").classList.remove("hidden"); for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } }
         const shareText = "【証明書】私は加藤・松田・菅原・福盛田先生の授業を全て寝て過ごしたことを証明します。 #加藤先生ゲーム";
@@ -345,7 +339,7 @@
         const startSleep = () => { isSleeping = true; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); };
         const stopSleep = () => { isSleeping = false; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } };
         function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = "50%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 1500); }
-        const touchLayer = document.getElementById("player-area"); touchLayer.addEventListener("touchstart", (e) => { e.preventDefault(); startSleep(); }); touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); }); document.addEventListener("keydown", (e) => { if (e.code === "Space") startSleep(); }); document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
+        const touchLayer = document.getElementById("player-area"); touchLayer.addEventListener("touchstart", (e) => { initAudio(); e.preventDefault(); startSleep(); }); touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); }); document.addEventListener("keydown", (e) => { if (e.code === "Space") { initAudio(); startSleep(); } }); document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
     </script>
 </body>
 </html>
