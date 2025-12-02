@@ -24,23 +24,20 @@
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
-        /* メニュー画面 */
+        /* メニュー画面（高解像度廊下） */
         #menu-screen {
-            background: linear-gradient(#444 50%, #8b4513 50%);
-            perspective: 600px; overflow: hidden;
-        }
-        #menu-screen::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, transparent 0, transparent 40px, rgba(0,0,0,0.2) 40px, rgba(0,0,0,0.2) 42px);
-            opacity: 0.5; pointer-events: none;
+            justify-content: flex-start;
+            /* SVG 320x480 High-Res Corridor */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='480' viewBox='0 0 320 480'%3E%3Cdefs%3E%3ClinearGradient id='floor' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23654321'/%3E%3Cstop offset='100%25' stop-color='%238b5a2b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='480' fill='%23222'/%3E%3C!-- 天井 --%3E%3Crect width='320' height='160' fill='%23444'/%3E%3C!-- 床 --%3E%3Cpath d='M0,480 L320,480 L220,320 L100,320 Z' fill='url(%23floor)'/%3E%3C!-- 奥の壁 --%3E%3Crect x='100' y='160' width='120' height='160' fill='%23666'/%3E%3C!-- 扉 --%3E%3Crect x='130' y='180' width='60' height='140' fill='%23333' border='2' stroke='%23555'/%3E%3C!-- 側面の壁 --%3E%3Cpath d='M0,0 L100,160 L100,320 L0,480 Z' fill='%23888'/%3E%3Cpath d='M320,0 L220,160 L220,320 L320,480 Z' fill='%23777'/%3E%3C!-- 窓枠の線 --%3E%3Cline x1='0' y1='100' x2='100' y2='190' stroke='%23555' stroke-width='3'/%3E%3Cline x1='320' y1='100' x2='220' y2='190' stroke='%23555' stroke-width='3'/%3E%3C/svg%3E");
+            background-size: cover; background-position: center;
         }
 
         #face-off-area {
             display: flex; justify-content: space-between; align-items: flex-end;
-            width: 80%; height: 200px; margin-bottom: 20px; position: relative;
+            width: 80%; height: 200px; margin-bottom: 20px; position: relative; margin-top: 60px;
         }
         .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; }
-        .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; }
+        .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; color: white; }
         
         .walk-right { animation: walkOff 1.5s forwards linear; }
         .fade-in-right { animation: slideIn 1s forwards ease-out; }
@@ -50,7 +47,7 @@
         /* 装備メニュー */
         #equip-menu {
             width: 90%; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; border: 2px solid #fff;
-            display: flex; flex-direction: column; align-items: center; margin-top: 10px;
+            display: flex; flex-direction: column; align-items: center;
         }
         #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 5px; }
         #equip-desc { color: #fff; font-size: 8px; margin-top: 5px; height: 20px; }
@@ -63,23 +60,25 @@
         .equip-item.unlocked { border-color: #fff; }
         .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; background: #444; }
 
-        /* ゲーム画面 */
+        /* ゲーム画面（高解像度教室） */
         #game-screen {
             justify-content: flex-start;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23333'/%3E%3Crect y='160' width='320' height='80' fill='%235a3a22'/%3E%3Crect x='20' y='40' width='60' height='80' fill='%2387ceeb' stroke='%23555' stroke-width='4'/%3E%3Cline x1='50' y1='40' x2='50' y2='120' stroke='%23555' stroke-width='2'/%3E%3Cline x1='20' y1='80' x2='80' y2='80' stroke='%23555' stroke-width='2'/%3E%3Crect x='240' y='50' width='60' height='40' fill='%23eee' stroke='%23ccc' stroke-width='2'/%3E%3Crect x='100' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='110' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3Crect x='200' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='210' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3C/svg%3E");
+            /* SVG 320x240 High-Res Classroom */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3C!-- 黒板エリア --%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3C!-- 壁 --%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3C!-- 窓 --%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3C!-- 後ろのロッカー --%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3Cline x1='250' y1='190' x2='310' y2='190' stroke='%23aaa'/%3E%3C!-- 床 --%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E");
             background-size: cover; background-position: center;
         }
-        #teacher-area { height: 45vh; width: 100%; background: rgba(0,0,0,0.2); position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
-        #player-area { height: 55vh; width: 100%; background: rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-top: 4px solid #5a3a22; }
+        #teacher-area { height: 45vh; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; z-index: 5; }
+        #player-area { height: 55vh; width: 100%; background: rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-top: 4px solid #5a3a22; z-index: 10; }
 
-        #blackboard-text { position: absolute; top: 20px; width: 100%; text-align: center; font-size: 10px; color: rgba(255,255,255,0.5); background: rgba(0,0,0,0.5); padding: 5px; }
+        #blackboard-text { position: absolute; top: 30px; width: 80%; left:10%; text-align: center; font-family:serif; font-size: 12px; color: rgba(255,255,255,0.9); padding: 5px; }
         #hud { width: 90%; display: flex; justify-content: space-between; margin-bottom: 10px; }
         #hearts { color: var(--danger-color); font-size: 20px; text-shadow: 2px 2px 0 #000; }
         #progress-bar { width: 100%; height: 10px; background: #555; margin-top: 10px; border: 2px solid #fff; }
         #progress-fill { width: 0%; height: 100%; background: var(--accent-color); transition: width 0.2s; }
-        .sprite { width: 140px; height: 140px; background-repeat: no-repeat; background-position: center; background-size: contain; }
         
-        /* スキルボタン（修正：z-indexを高くし、クリックイベントを優先） */
+        /* スプライトサイズ調整 */
+        .sprite { width: 160px; height: 160px; background-repeat: no-repeat; background-position: center; background-size: contain; }
+        
         #active-skill-btn {
             position: absolute; bottom: 80px; right: 20px;
             width: 70px; height: 70px; border-radius: 50%;
@@ -87,29 +86,23 @@
             border: 4px solid #fff; box-shadow: 0 0 15px #ffd700;
             display: none; align-items: center; justify-content: center;
             font-size: 30px; cursor: pointer; z-index: 1000; animation: glow 2s infinite;
-            /* タッチのハイライトを無効化 */
             -webkit-tap-highlight-color: transparent;
         }
         #active-skill-btn:active { transform: scale(0.9); }
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
         @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
 
-        /* コマンドボタン類 */
         #config-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
-        #help-btn { position: absolute; top: 10px; left: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
-        
         #exit-btn { position: absolute; top: 10px; left: 10px; font-size: 12px; cursor: pointer; background: #444; color: #fff; border: 2px solid #fff; padding: 5px; z-index: 20; }
         
-        /* 設定モーダル */
         #config-modal, #tutorial-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 3000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
         .config-box { background: #333; padding: 20px; border: 2px solid #fff; text-align: center; width: 80%; }
-        .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 10px; line-height: 1.6; }
+        .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 10px; line-height: 1.6; color: #fff; }
 
-        /* クリア後ボタン類 */
         .btn-endless { 
             display: none; width: 200px;
             border-color: #ff00ff; color: #ff00ff; 
@@ -129,18 +122,35 @@
         }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
 
-        /* SVG */
-        .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
-        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23ffcccc'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23a00'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
-        .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='1' width='6' height='4' fill='%23f0c0a0'/%3E%3Crect x='2' y='1' width='6' height='2' fill='%23622'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
-        .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='1' width='6' height='4' fill='%23f0c0a0'/%3E%3Crect x='2' y='1' width='6' height='1' fill='%23622'/%3E%3Crect x='8' y='2' width='1' height='4' fill='%23622'/%3E%3Crect x='1' y='2' width='1' height='4' fill='%23622'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23f0a'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23f0a'/%3E%3Crect x='4' y='4' width='2' height='1' fill='%23f00'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
-        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='0' width='6' height='3' fill='%23321'/%3E%3Crect x='2' y='2' width='6' height='3' fill='%23e0b090'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23456'/%3E%3C/svg%3E"); }
-        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='0' width='6' height='3' fill='%23321'/%3E%3Crect x='2' y='2' width='6' height='3' fill='%23e0b090'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='3' width='2' height='1' fill='%23000' opacity='0.5'/%3E%3Crect x='6' y='3' width='2' height='1' fill='%23000' opacity='0.5'/%3E%3Crect x='4' y='4' width='2' height='1' fill='%23000'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23456'/%3E%3C/svg%3E"); }
-        .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23111'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23111'/%3E%3C/svg%3E"); }
-        .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23111'/%3E%3Crect x='3' y='3' width='4' height='1' fill='%23000'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23fff'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23111'/%3E%3Crect x='4' y='5' width='2' height='2' fill='%23fff'/%3E%3Crect x='4' y='6' width='2' height='1' fill='%23a00'/%3E%3Crect x='6' y='5' width='1' height='1' fill='%23fff'/%3E%3Crect x='7' y='6' width='1' height='1' fill='%23fff'/%3E%3C/svg%3E"); }
-        .student-awake { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='2' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='2' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='6' width='6' height='4' fill='%234488ff'/%3E%3C/svg%3E"); }
-        .student-sleep { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='3' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='3' width='4' height='1' fill='%23222'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%23000'/%3E%3Crect x='7' y='4' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='7' width='6' height='3' fill='%234488ff'/%3E%3C/svg%3E"); }
-        .student-hurt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='2' width='4' height='4' fill='%23fff'/%3E%3Crect x='3' y='2' width='4' height='1' fill='%23222'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='5' width='3' height='1' fill='%23000'/%3E%3Crect x='2' y='6' width='6' height='4' fill='%234488ff'/%3E%3C/svg%3E"); animation: shake 0.2s infinite; }
+        /* ▼▼▼ High-Res SVG Sprites (32x32 Grid) ▼▼▼ */
+        
+        /* 加藤先生：普通 */
+        .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+        /* 加藤先生：怒り（メガネ強調） */
+        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y1='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+
+        /* 松田先生：普通（ピンクの服） */
+        .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
+        /* 松田先生：怒り（濃いメイク） */
+        .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M8,4 L24,4 L24,10 L8,10 Z' fill='%23622'/%3E%3Cpath d='M6,6 L8,6 L8,16 L6,16 Z' fill='%23622'/%3E%3Cpath d='M24,6 L26,6 L26,16 L24,16 Z' fill='%23622'/%3E%3Crect x='11' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='19' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='9' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23d00'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
+
+        /* 菅原先生：普通（もじゃもじゃ） */
+        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        /* 菅原先生：怒り（丸メガネ） */
+        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+
+        /* 福盛田先生：普通（スーツ） */
+        .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3C/svg%3E"); }
+        /* 福盛田先生：怒り（ナイキ風マーク） */
+        .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3C!-- ナイキ風マーク --%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+
+        /* 生徒：起き */
+        .student-awake { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='8' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%234488ff'/%3E%3C/svg%3E"); }
+        /* 生徒：寝る（目が閉じ、少し下がる） */
+        .student-sleep { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='12' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='12' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='16' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='16' width='2' height='1' fill='%23000'/%3E%3Crect x='8' y='24' width='16' height='8' fill='%234488ff'/%3E%3C/svg%3E"); }
+        /* 生徒：バレた（青ざめ） */
+        .student-hurt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23ccf'/%3E%3Crect x='10' y='8' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='2' fill='%23000'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%234488ff'/%3E%3C/svg%3E"); animation: shake 0.2s infinite; }
+
         @keyframes shake { 0% { transform: translate(0, 0); } 25% { transform: translate(-5px, 0); } 75% { transform: translate(5px, 0); } 100% { transform: translate(0, 0); } }
         .zzz { position: absolute; color: cyan; font-size: 20px; animation: floatUp 1.5s steps(4) forwards; }
         @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
@@ -161,7 +171,6 @@
     <div id="menu-screen" class="screen">
         <h1 id="game-title" style="color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer;">BATTLE SELECT</h1>
         <button id="config-btn" onclick="openConfig()">⚙️</button>
-        <button id="help-btn" onclick="openTutorial()">❓</button>
         <p id="cheat-msg" style="color:gold; font-size:10px; display:none; z-index:10;">GOD MODE!</p>
 
         <div id="face-off-area">
@@ -203,7 +212,9 @@
     <div id="config-modal">
         <div class="config-box">
             <h2 style="color:var(--accent-color);">SETTINGS</h2>
-            <p style="font-size:10px; color:#aaa;">データ操作</p>
+            <p style="font-size:10px; color:#aaa;">メニュー</p>
+            <button class="btn" style="border-color:#aaa; color:#fff;" onclick="openTutorial()">❓ 遊び方を見る</button>
+            <br><br>
             <button class="btn" style="border-color:red; color:red;" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
             <button class="btn" style="margin-top:20px;" onclick="closeConfig()">CLOSE</button>
         </div>
@@ -283,7 +294,6 @@
         }
 
         function initMenu() {
-            // チュートリアルチェック
             if (!localStorage.getItem("soichiTutorialSeen")) {
                 openTutorial();
                 localStorage.setItem("soichiTutorialSeen", "true");
@@ -345,7 +355,6 @@
             renderEquipMenu();
         }
 
-        /* --- モーダル制御 --- */
         function openConfig() { document.getElementById("config-modal").style.display = "flex"; }
         function closeConfig() { document.getElementById("config-modal").style.display = "none"; }
         function openTutorial() { document.getElementById("tutorial-modal").style.display = "flex"; }
@@ -398,10 +407,8 @@
             initMenu();
         }
 
-        /* ★スマホ対応修正：イベントを受け取り伝播を止める */
         window.activateKatoSkill = function(event) {
-            if(event) event.stopPropagation(); // ここで寝る判定（親要素）への通知を止める！
-
+            if(event) event.stopPropagation(); 
             const btn = document.getElementById("active-skill-btn");
             if (btn.classList.contains("cooldown")) return;
             playSound('skill'); isTimeStopped = true; btn.classList.add("cooldown");
@@ -465,13 +472,11 @@
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { unlockedPowers.push("fukumorita"); gotPower = true; alert("福盛田先生のちから「スニーカー」を奪った！"); }
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
-            let nextStage = currentStage;
             if (currentStage === 4) {
                 if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); }
                 showEnding(); return;
             } else if(currentStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
-                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
@@ -515,20 +520,7 @@
         const startSleep = () => { isSleeping = true; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); };
         const stopSleep = () => { isSleeping = false; sleepContinuous = 0; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } };
         function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = "50%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 1500); }
-        
-        // ★重要：スマホ対応（タッチ開始時にイベントを止めるのではなく、ボタンのタッチを優先させる）
-        const touchLayer = document.getElementById("player-area"); 
-        touchLayer.addEventListener("touchstart", (e) => { 
-            // もしタップしたのがスキルボタンなら、寝る処理をしない
-            if(e.target.id === "active-skill-btn") return;
-            initAudio(); e.preventDefault(); startSleep(); 
-        }); 
-        touchLayer.addEventListener("touchend", (e) => { 
-            if(e.target.id === "active-skill-btn") return;
-            e.preventDefault(); stopSleep(); 
-        }); 
-        
-        document.addEventListener("keydown", (e) => { if (e.code === "Space") { initAudio(); startSleep(); } }); document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
+        const touchLayer = document.getElementById("player-area"); touchLayer.addEventListener("touchstart", (e) => { initAudio(); e.preventDefault(); startSleep(); }); touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); }); document.addEventListener("keydown", (e) => { if (e.code === "Space") { initAudio(); startSleep(); } }); document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
 
         initMenu();
     </script>
