@@ -24,41 +24,42 @@
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
+        /* ▼▼▼ メニュー画面（リアルな廊下） ▼▼▼ */
         #menu-screen {
-            background: linear-gradient(#444 50%, #8b4513 50%);
-            perspective: 600px; overflow: hidden;
-        }
-        #menu-screen::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, transparent 0, transparent 40px, rgba(0,0,0,0.2) 40px, rgba(0,0,0,0.2) 42px);
-            opacity: 0.5; pointer-events: none;
+            justify-content: flex-start;
+            /* SVGで描いた奥行きのある廊下 */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='480' viewBox='0 0 320 480'%3E%3Crect width='320' height='480' fill='%23222'/%3E%3C!-- 天井 --%3E%3Crect width='320' height='150' fill='%23444'/%3E%3C!-- 床 --%3E%3Crect y='330' width='320' height='150' fill='%238b4513'/%3E%3C!-- 奥の壁 --%3E%3Crect x='110' y='150' width='100' height='180' fill='%23666'/%3E%3Crect x='120' y='180' width='80' height='150' fill='%23222'/%3E%3C!-- 側面の壁 --%3E%3Cpath d='M0,0 L110,150 L110,330 L0,480 Z' fill='%23999'/%3E%3Cpath d='M320,0 L210,150 L210,330 L320,480 Z' fill='%23888'/%3E%3C!-- 窓やドアの線 --%3E%3Cline x1='0' y1='100' x2='110' y2='190' stroke='%23555' stroke-width='2'/%3E%3Cline x1='320' y1='100' x2='210' y2='190' stroke='%23555' stroke-width='2'/%3E%3C!-- 床のパース線 --%3E%3Cline x1='0' y1='480' x2='160' y2='330' stroke='%236b3e1e' stroke-width='2'/%3E%3Cline x1='320' y1='480' x2='160' y2='330' stroke='%236b3e1e' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
         }
 
         #face-off-area {
             display: flex; justify-content: space-between; align-items: flex-end;
-            width: 80%; height: 200px; margin-bottom: 20px; position: relative;
+            width: 80%; height: 250px; margin-top: 50px; position: relative; z-index: 5;
         }
         .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; }
-        .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; }
+        .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; color: #fff; }
         
         .walk-right { animation: walkOff 1.5s forwards linear; }
         .fade-in-right { animation: slideIn 1s forwards ease-out; }
         @keyframes walkOff { 0% { transform: translateX(0); } 20% { transform: translateX(0) translateY(-10px); } 40% { transform: translateX(50px) translateY(0); } 60% { transform: translateX(100px) translateY(-10px); } 100% { transform: translateX(400px) translateY(0); } }
         @keyframes slideIn { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
 
+        /* 装備メニュー */
         #equip-menu {
-            width: 90%; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 2px solid #fff;
-            display: flex; flex-direction: column; align-items: center;
+            width: 90%; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; border: 2px solid #fff;
+            display: flex; flex-direction: column; align-items: center; margin-top: auto; margin-bottom: 20px; z-index: 10;
         }
-        #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 10px; }
-        .equip-list { display: flex; gap: 15px; justify-content: center; }
+        #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 5px; }
+        .equip-list { display: flex; gap: 10px; justify-content: center; min-height: 40px; }
         .equip-item { 
-            width: 50px; height: 50px; border: 2px solid #555; background: #333; 
-            display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer;
+            width: 40px; height: 40px; border: 2px solid #555; background: #333; 
+            display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer;
         }
         .equip-item.unlocked { border-color: #fff; }
         .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; background: #444; }
 
+        /* ゲーム画面 */
         #game-screen {
             justify-content: flex-start;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23333'/%3E%3Crect y='160' width='320' height='80' fill='%235a3a22'/%3E%3Crect x='20' y='40' width='60' height='80' fill='%2387ceeb' stroke='%23555' stroke-width='4'/%3E%3Cline x1='50' y1='40' x2='50' y2='120' stroke='%23555' stroke-width='2'/%3E%3Cline x1='20' y1='80' x2='80' y2='80' stroke='%23555' stroke-width='2'/%3E%3Crect x='240' y='50' width='60' height='40' fill='%23eee' stroke='%23ccc' stroke-width='2'/%3E%3Crect x='100' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='110' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3Crect x='200' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='210' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3C/svg%3E");
@@ -145,7 +146,7 @@
 
         <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:var(--danger-color);" onclick="startBattle()">BATTLE START</button>
 
-        <div id="equip-menu" style="margin-top:20px;">
+        <div id="equip-menu">
             <div id="current-equip">装備なし</div>
             <div class="equip-list">
                 <div id="skill-kato" class="equip-item" onclick="equipSkill('kato')">⏱️</div>
@@ -153,7 +154,7 @@
                 <div id="skill-sugawara" class="equip-item" onclick="equipSkill('sugawara')">🎵</div>
                 <div id="skill-fukumorita" class="equip-item" onclick="equipSkill('fukumorita')">👟</div>
             </div>
-            <div style="font-size:8px; margin-top:5px; color:#aaa;">SELECT SKILL</div>
+            <div style="font-size:8px; margin-top:5px; color:#aaa;">TAP ICON TO EQUIP</div>
         </div>
     </div>
 
@@ -161,7 +162,7 @@
         <div class="config-box">
             <h2 style="color:var(--accent-color);">SETTINGS</h2>
             <p style="font-size:10px; color:#aaa;">クリア情報を操作します</p>
-            <button class="btn" onclick="newGamePlus()">💪 強くてニューゲーム<br><span style="font-size:8px">(能力維持・ステージ1へ)</span></button>
+            <button id="ng-plus-btn" class="btn" style="display:none;" onclick="newGamePlus()">💪 強くてニューゲーム<br><span style="font-size:8px">(能力維持・ステージ1へ)</span></button>
             <button class="btn" style="border-color:red; color:red;" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
             <button class="btn" style="margin-top:20px;" onclick="closeConfig()">CLOSE</button>
         </div>
@@ -255,10 +256,19 @@
         function renderEquipMenu() {
             const skillNames = { "kato": "加藤の時計", "matsuda": "松田のランチ", "sugawara": "菅原のタクト", "fukumorita": "福盛田のスニーカー" };
             document.getElementById("current-equip").textContent = equippedPower ? `装備中: ${skillNames[equippedPower]}` : "装備なし";
+            
+            // アイコン表示の制御（持っていないものは非表示）
             ["kato", "matsuda", "sugawara", "fukumorita"].forEach(p => {
                 const el = document.getElementById(`skill-${p}`);
-                if (unlockedPowers.includes(p)) { el.classList.add("unlocked"); el.style.opacity = "1"; el.style.pointerEvents = "auto"; } else { el.classList.remove("unlocked"); el.style.opacity = "0.3"; el.style.pointerEvents = "none"; }
-                if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
+                if (unlockedPowers.includes(p)) { 
+                    el.style.display = "flex"; // 持っていれば表示
+                    el.classList.add("unlocked"); 
+                } else { 
+                    el.style.display = "none"; // なければ非表示
+                }
+                
+                if (equippedPower === p) el.classList.add("selected"); 
+                else el.classList.remove("selected");
             });
         }
 
@@ -268,7 +278,18 @@
             renderEquipMenu();
         }
 
-        function openConfig() { document.getElementById("config-modal").style.display = "flex"; }
+        /* --- 設定・リセット機能 --- */
+        function openConfig() { 
+            // 強くてニューゲームボタンの制御
+            const ngBtn = document.getElementById("ng-plus-btn");
+            // ステージ5（エンドレス）が解放されている＝全クリ済み
+            if (unlockedStage >= 5) {
+                ngBtn.style.display = "block";
+            } else {
+                ngBtn.style.display = "none";
+            }
+            document.getElementById("config-modal").style.display = "flex"; 
+        }
         function closeConfig() { document.getElementById("config-modal").style.display = "none"; }
         
         function newGamePlus() {
@@ -377,11 +398,13 @@
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { unlockedPowers.push("fukumorita"); gotPower = true; alert("福盛田先生のちから「スニーカー」を奪った！"); }
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
+            let nextStage = currentStage;
             if (currentStage === 4) {
                 if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); }
                 showEnding(); return;
             } else if(currentStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
+                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
@@ -395,7 +418,6 @@
         function returnToMenu() {
             document.getElementById("result-screen").classList.add("hidden");
             document.getElementById("menu-screen").classList.remove("hidden");
-            // ★装備メニュー更新
             renderEquipMenu();
             if (justCleared && currentStage < 5) { 
                 justCleared = false; 
@@ -406,19 +428,11 @@
         }
 
         function playWalkAnimation() {
-            updateMenuVisuals(currentStage); // 旧ステージ表示
-            const player = document.getElementById("menu-player");
-            const rival = document.getElementById("menu-rival");
-            rival.style.opacity = "0"; 
-            player.classList.add("walk-right");
-            
+            updateMenuVisuals(currentStage); const player = document.getElementById("menu-player"); const rival = document.getElementById("menu-rival");
+            rival.style.opacity = "0"; player.classList.add("walk-right");
             setTimeout(() => {
-                // ★修正点：アニメーション完了時にcurrentStageを最新にする
-                currentStage = unlockedStage;
-                updateMenuVisuals(currentStage); 
-                rival.style.opacity = "1";
-                rival.classList.add("fade-in-right");
-                player.classList.remove("walk-right");
+                currentStage = unlockedStage; updateMenuVisuals(currentStage); 
+                rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right");
                 setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000);
             }, 1500); 
         }
