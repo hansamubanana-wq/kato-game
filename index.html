@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MATH CLASS: PIXEL PERFECT</title>
+    <title>MATH CLASS: PIXEL PERFECT FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #111;
-            --accent-color: #80ff80; /* 発光するような緑 */
+            --accent-color: #80ff80;
             --danger-color: #ff4040;
             --text-color: #eee;
-            --crt-line-color: rgba(0, 0, 0, 0.3);
         }
 
         body {
@@ -23,22 +22,21 @@
             overflow: hidden;
             touch-action: manipulation;
             user-select: none;
-            image-rendering: pixelated; /* ドットをくっきり表示 */
+            /* SVGをドット絵っぽくクッキリ表示 */
+            image-rendering: pixelated; 
         }
 
-        /* ブラウン管風エフェクト */
+        /* ブラウン管風ライン */
         body::after {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(var(--crt-line-color) 50%, transparent 50%);
-            background-size: 100% 4px; /* 走査線の幅 */
-            pointer-events: none; /* 操作を邪魔しない */
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
             z-index: 999;
-            opacity: 0.5;
         }
 
-        /* 共通スクリーン */
         .screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -53,7 +51,6 @@
         /* ゲーム画面 */
         #game-screen { justify-content: flex-start; }
 
-        /* 教壇エリア */
         #teacher-area {
             height: 45vh;
             width: 100%;
@@ -62,28 +59,8 @@
             position: relative;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* 下揃え */
+            align-items: flex-end;
             padding-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        /* ドット絵を表示するボックス（先生） */
-        #teacher-sprite {
-            width: 128px;  /* ドット絵のサイズ */
-            height: 128px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center bottom;
-            /* デフォルト：書いている姿 */
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAP1BMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE38ECFAAAAFXRSTlMABwwjND1DXGuFiZ6vtcrP3e7x+f47t5eJAAAC4klEQVR4nO3ba3LbMBCFYV9iCW4SJAEQvP9ta9UpV8aO0Ugy05F6/5VMnM86sgA87/b7Uf+xT+n5Hj679XzX7vXn6Q0/jN/e7s6X748/jF+c79o9f3d6w4/i+6e78uVvpx961v3v+eWz8z199tX96R3v4vsvd/zPz19/OP2w9XwP+c3d39+Vv3x6t9+P+o/9wPkePj+9Y/f69/QDP47fX9/x9fP7d3f84HzX7vXj6Y0+iO//3rX76XzX7vWn0xt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EP8FwB8/e6xT5bAAAAAASUVORK5CYII=');
-        }
-        /* チラ見 */
-        #teacher-sprite.peeking {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC6klEQVR4nO3c0W7bQAxE0aQkU26cBEgA//9rSyK1XUqU7XnLzDmH6t4g18w0tq0BPN/d7Vd9zDml53t4f3R91+79/eGGV+P31z8/7958vL3w8fmu3duPhze8in++3pV3P5z+0LPuX8+vH5/v6f3Hhxt+Ht/f/Pxr9/H7wx9a1v0Z3v77+W9Pz3f3/Pr283d48Xy726/6mHPA+R7ef33A7v3n4S89i/d/b11/d75r9/7u8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8Ibn9w/+B4QW8G77pAAAAABJRU5ErkJggg==');
-        }
-        /* 怒り */
-        #teacher-sprite.looking {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC7ElEQVR4nO3bW3LbMAyF4V5iCW5yJAEQ3P9ua9WpnJ44RiPJTEfq/VcycT7ryALwvLvtj3pMe0rP9/Bxd9vH9vHj5Q3PjV8/3pWvP17e8Nx8l7efT3e8Ot9/uSufP13+0KPuX89P75/vyf33lzd8Hn+/8/PXto+flz/0rPtbeP/721/s7/f0fHfPz+fL1/Dibruv6jHtAed7eP/4gO3j1+UvPeP7v7uunzvfpe3n0xueG7/+e3ft6/Nd2n4+veG58eu/d9e+Pt+l7efTG54bv/57d+3r813afj694bnx6793174+36Xt59Mbnht/fX3X3r//aP/69Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz+Af7nELhB9s6yAAAAAElFTkSuQmCC');
         }
 
         /* プレイヤーエリア */
@@ -97,29 +74,50 @@
             align-items: center;
             justify-content: flex-start;
             padding-top: 30px;
-            border-top: 4px solid var(--crt-line-color);
+            border-top: 4px solid #000;
         }
 
-        /* ドット絵を表示するボックス（生徒） */
-        #student-sprite {
-            width: 128px;
-            height: 128px;
-            background-size: contain;
+        /* キャラクター表示用（共通設定） */
+        .sprite {
+            width: 120px;
+            height: 120px;
             background-repeat: no-repeat;
             background-position: center;
-            margin-bottom: 20px;
-            /* デフォルト：起きている */
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAP1BMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE38ECFAAAAFXRSTlMABwwjND1DXGuFiZ6vtcrP3e7x+f47t5eJAAAC4klEQVR4nO3ba3LbMBCFYV9iCW4SJAEQvP9ta9UpV8aO0Ugy05F6/5VMnM86sgA87/b7Uf+xT+n5Hj679XzX7vXn6Q0/jN/e7s6X748/jF+c79o9f3d6w4/i+6e78uVvpx961v3v+eWz8z199tX96R3v4vsvd/zPz19/OP2w9XwP+c3d39+Vv3x6t9+P+o/9wPkePj+9Y/f69/QDP47fX9/x9fP7d3f84HzX7vXj6Y0+iO//3rX76XzX7vWn0xt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EP8FwB8/e6xT5bAAAAAASUVORK5CYII=');
+            background-size: contain;
         }
-        /* 寝ている */
-        #student-sprite.sleeping {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC6klEQVR4nO3c0W7bQAxE0aQkU26cBEgA//9rSyK1XUqU7XnLzDmH6t4g18w0tq0BPN/d7Vd9zDml53t4f3R91+79/eGGV+P31z8/7958vL3w8fmu3duPhze8in++3pV3P5z+0LPuX8+vH5/v6f3Hhxt+Ht/f/Pxr9/H7wx9a1v0Z3v77+W9Pz3f3/Pr283d48Xy726/6mHPA+R7ef33A7v3n4S89i/d/b11/d75r9/7u8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8Ibn9w/+B4QW8G77pAAAAABJRU5ErkJggg==');
+
+        /* ▼▼▼ ここが魔法のSVG画像データ ▼▼▼ */
+        
+        /* 先生：書いている（背中） */
+        .teacher-writing {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23444'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3Crect x='8' y='5' width='2' height='1' fill='%23fff'/%3E%3C/svg%3E");
         }
-        /* バレた */
-        #student-sprite.busted {
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC7ElEQVR4nO3bW3LbMAyF4V5iCW5yJAEQ3P9ua9WpnJ44RiPJTEfq/VcycT7ryALwvLvtj3pMe0rP9/Bxd9vH9vHj5Q3PjV8/3pWvP17e8Nx8l7efT3e8Ot9/uSufP13+0KPuX89P75/vyf33lzd8Hn+/8/PXto+flz/0rPtbeP/721/s7/f0fHfPz+fL1/Dibruv6jHtAed7eP/4gO3j1+UvPeP7v7uunzvfpe3n0xueG7/+e3ft6/Nd2n4+veG58eu/d9e+Pt+l7efTG54bv/57d+3r813afj694bnx6793174+36Xt59Mbnht/fX3X3r//aP/69Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz+Af7nELhB9s6yAAAAAElFTkSuQmCC');
-            animation: shake 0.5s infinite; /* バレた時に震える */
+        /* 先生：チラ見 */
+        .teacher-peeking {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23444'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E");
         }
+        /* 先生：怒る（こっち見てる） */
+        .teacher-angry {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23ffcccc'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23444'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23a00'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E");
+        }
+
+        /* 生徒：起きている */
+        .student-awake {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='2' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='2' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='6' width='6' height='4' fill='%234488ff'/%3E%3C/svg%3E");
+        }
+        /* 生徒：寝ている */
+        .student-sleeping {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='3' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='3' width='4' height='1' fill='%23222'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%23000'/%3E%3Crect x='7' y='4' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='7' width='6' height='3' fill='%234488ff'/%3E%3C/svg%3E");
+            transform: translateY(10px); /* 少し下に沈む */
+        }
+        /* 生徒：バレた（青ざめる） */
+        .student-busted {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='2' width='4' height='4' fill='%23aaccff'/%3E%3Crect x='3' y='2' width='4' height='1' fill='%23222'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='5' width='3' height='1' fill='%23000'/%3E%3Crect x='2' y='6' width='6' height='4' fill='%234488ff'/%3E%3C/svg%3E");
+            animation: shake 0.2s infinite;
+        }
+
+        /* ▲▲▲ 魔法終わり ▲▲▲ */
+
         @keyframes shake {
             0% { transform: translate(0, 0); }
             25% { transform: translate(-5px, 0); }
@@ -127,16 +125,16 @@
             100% { transform: translate(0, 0); }
         }
 
-        /* Zzz アニメーション（ドット文字） */
+        /* Zzz アニメーション */
         .zzz {
             position: absolute;
             color: var(--accent-color);
             font-size: 20px;
-            animation: floatUpRetro 1.5s steps(6) forwards;
+            animation: floatUp 1.5s steps(4) forwards;
         }
-        @keyframes floatUpRetro {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(2); opacity: 0; }
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-60px); opacity: 0; }
         }
 
         #score-board { font-size: 20px; margin: 10px; color: var(--accent-color); }
@@ -147,20 +145,17 @@
             font-family: 'Press Start 2P', cursive;
             background: var(--accent-color);
             border: 4px solid #000;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
             padding: 15px 20px;
             font-size: 16px;
             color: #000;
             cursor: pointer;
             margin-top: 30px;
         }
-        .btn:active { transform: translate(4px, 4px); box-shadow: none; }
+        .btn:active { transform: translate(4px, 4px); }
 
-        /* タイトル・リザルト */
         h1 { font-size: 24px; line-height: 1.5; color: var(--accent-color); margin-bottom: 20px; }
         .blink { animation: blinker 0.5s step-end infinite alternate; color: var(--danger-color); }
         @keyframes blinker { to { opacity: 0; } }
-
         #result-screen { background: #300; color: var(--danger-color); }
     </style>
 </head>
@@ -169,22 +164,22 @@
     <div id="title-screen" class="screen">
         <h1>MATH CLASS<br>PIXEL PANIC</h1>
         <div style="display: flex; gap: 20px; margin: 30px;">
-             <div id="student-sprite" class="sleeping" style="width:80px; height:80px;"></div>
-             <div style="font-size:40px; align-self:center;">VS</div>
-             <div id="teacher-sprite" class="looking" style="width:80px; height:80px;"></div>
+             <div class="sprite student-sleeping"></div>
+             <div style="font-size:20px; align-self:center;">VS</div>
+             <div class="sprite teacher-angry"></div>
         </div>
-        <p class="blink" style="font-size: 14px; margin-top: 20px;">INSERT COIN (PRESS START)</p>
+        <p class="blink" style="font-size: 12px; margin-top: 20px;">PRESS START</p>
         <button class="btn" onclick="startGame()">GAME START</button>
-        <p id="high-score-title" style="font-size: 12px; margin-top: 30px;">TOP SCORE: 0.0</p>
+        <p id="high-score-title" style="font-size: 12px; margin-top: 30px;">TOP: 0.0</p>
     </div>
 
     <div id="game-screen" class="screen hidden">
         <div id="teacher-area">
-            <div id="teacher-sprite"></div>
+            <div id="teacher-sprite" class="sprite teacher-writing"></div>
         </div>
 
         <div id="player-area">
-            <div id="student-sprite"></div>
+            <div id="student-sprite" class="sprite student-awake"></div>
             <div id="score-board">SCORE: 0.0</div>
             <div id="high-score">HI: 0.0</div>
         </div>
@@ -193,40 +188,34 @@
     <div id="result-screen" class="screen hidden">
         <h1 style="color: var(--danger-color);">!! BUSTED !!</h1>
         <div style="display: flex; gap: 20px; justify-content: center;">
-            <div id="student-sprite" class="busted"></div>
-            <div id="teacher-sprite" class="looking"></div>
+            <div class="sprite student-busted"></div>
+            <div class="sprite teacher-angry"></div>
         </div>
-        <div class="big-score" id="final-score" style="font-size: 32px; margin: 30px 0; color: var(--accent-color);">SCORE: 0.0</div>
-        <button class="btn" onclick="location.reload()">CONTINUE?</button>
+        <div style="font-size: 32px; margin: 30px 0; color: var(--accent-color);" id="final-score">SCORE: 0.0</div>
+        <button class="btn" onclick="location.reload()">RETRY</button>
     </div>
 
     <script>
-        // 要素の取得
         const titleScreen = document.getElementById("title-screen");
         const gameScreen = document.getElementById("game-screen");
         const resultScreen = document.getElementById("result-screen");
-        // ドット絵を表示する要素
         const teacherSprite = document.getElementById("teacher-sprite");
         const studentSprite = document.getElementById("student-sprite");
-        
         const scoreEl = document.getElementById("score-board");
         const highScoreEl = document.getElementById("high-score");
         const titleHighScoreEl = document.getElementById("high-score-title");
         const playerArea = document.getElementById("player-area");
 
-        // 変数
         let isSleeping = false;
         let isTeacherLooking = false;
         let score = 0;
-        let highScore = localStorage.getItem("katoGamePixelHighScore") || 0;
+        let highScore = localStorage.getItem("katoGamePixelFixHighScore") || 0;
         let gameOver = false;
         let zzzInterval;
 
-        // ハイスコア表示更新
-        titleHighScoreEl.textContent = "TOP SCORE: " + (highScore / 10).toFixed(1);
+        titleHighScoreEl.textContent = "TOP: " + (highScore / 10).toFixed(1);
         highScoreEl.textContent = "HI: " + (highScore / 10).toFixed(1);
 
-        // ゲーム開始
         function startGame() {
             titleScreen.classList.add("hidden");
             gameScreen.classList.remove("hidden");
@@ -234,43 +223,45 @@
             gameLoop();
         }
 
-        // 先生のAI（ドット絵切り替え版）
+        // 先生の動き管理
         function updateTeacher() {
             if (gameOver) return;
-            // 通常状態（書く）
-            teacherSprite.className = ""; 
+            
+            // デフォルト：書いている
+            setTeacherState("writing");
 
             let difficulty = Math.max(800, 4000 - (score * 5)); 
             let waitTime = Math.random() * difficulty + 1000;
 
             setTimeout(() => {
-                // 予兆（チラ見）
-                teacherSprite.classList.add("peeking");
+                // チラ見
+                setTeacherState("peeking");
 
                 setTimeout(() => {
-                    // 振り返り（怒る）
-                    teacherSprite.classList.remove("peeking");
-                    teacherSprite.classList.add("looking");
+                    // 振り返る（怒り）
+                    setTeacherState("angry");
                     isTeacherLooking = true;
 
-                    // 見ている時間
                     setTimeout(() => {
                         if(!gameOver) {
                             isTeacherLooking = false;
-                            updateTeacher(); // ループ
+                            updateTeacher();
                         }
                     }, Math.random() * 1500 + 500);
 
-                }, 800); // 予兆の時間
+                }, 800); 
 
             }, waitTime);
         }
 
-        // メインループ
+        function setTeacherState(state) {
+            // クラスを全部消して、新しい状態だけつける
+            teacherSprite.className = "sprite teacher-" + state;
+        }
+
         function gameLoop() {
             setInterval(() => {
                 if (gameOver) return;
-
                 if (isSleeping) {
                     score++;
                     scoreEl.textContent = "SCORE: " + (score / 10).toFixed(1);
@@ -279,48 +270,43 @@
             }, 100);
         }
 
-        // Zzzエフェクト
         function spawnZzz() {
             const zzz = document.createElement("div");
             zzz.className = "zzz";
-            zzz.textContent = "ZZZ";
+            zzz.textContent = "z";
             zzz.style.left = "50%"; 
             zzz.style.top = "0px";
             playerArea.appendChild(zzz);
             setTimeout(() => zzz.remove(), 1500);
         }
 
-        // ゲームオーバー処理
         function endGame() {
             gameOver = true;
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("katoGamePixelHighScore", highScore);
+                localStorage.setItem("katoGamePixelFixHighScore", highScore);
             }
-            
-            // 生徒の状態を「バレた」にする
-            studentSprite.className = "busted";
+            studentSprite.className = "sprite student-busted";
             
             setTimeout(() => {
                 gameScreen.classList.add("hidden");
                 resultScreen.classList.remove("hidden");
                 document.getElementById("final-score").textContent = "SCORE: " + (score / 10).toFixed(1);
-            }, 1500); // 少し間を置いてリザルトへ
+            }, 1000);
         }
 
-        // 操作系（ドット絵切り替え）
         const startSleep = () => {
             if (!gameOver) {
                 isSleeping = true;
-                studentSprite.className = "sleeping"; // 寝るポーズ
-                if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 500);
+                studentSprite.className = "sprite student-sleeping";
+                if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400);
             }
         };
 
         const stopSleep = () => {
             if (!gameOver) {
                 isSleeping = false;
-                studentSprite.className = ""; // 起きるポーズ
+                studentSprite.className = "sprite student-awake";
                 if (zzzInterval) {
                     clearInterval(zzzInterval);
                     zzzInterval = null;
@@ -328,7 +314,6 @@
             }
         };
 
-        // イベントリスナー
         const touchLayer = document.getElementById("player-area");
         touchLayer.addEventListener("touchstart", (e) => { e.preventDefault(); startSleep(); });
         touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); });
