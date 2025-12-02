@@ -24,7 +24,6 @@
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
-        /* メニュー画面 */
         #menu-screen {
             background: linear-gradient(#444 50%, #8b4513 50%);
             perspective: 600px; overflow: hidden;
@@ -47,7 +46,6 @@
         @keyframes walkOff { 0% { transform: translateX(0); } 20% { transform: translateX(0) translateY(-10px); } 40% { transform: translateX(50px) translateY(0); } 60% { transform: translateX(100px) translateY(-10px); } 100% { transform: translateX(400px) translateY(0); } }
         @keyframes slideIn { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
 
-        /* 装備 */
         #equip-menu {
             width: 90%; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 2px solid #fff;
             display: flex; flex-direction: column; align-items: center;
@@ -61,7 +59,6 @@
         .equip-item.unlocked { border-color: #fff; }
         .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; background: #444; }
 
-        /* ゲーム画面 */
         #game-screen {
             justify-content: flex-start;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23333'/%3E%3Crect y='160' width='320' height='80' fill='%235a3a22'/%3E%3Crect x='20' y='40' width='60' height='80' fill='%2387ceeb' stroke='%23555' stroke-width='4'/%3E%3Cline x1='50' y1='40' x2='50' y2='120' stroke='%23555' stroke-width='2'/%3E%3Cline x1='20' y1='80' x2='80' y2='80' stroke='%23555' stroke-width='2'/%3E%3Crect x='240' y='50' width='60' height='40' fill='%23eee' stroke='%23ccc' stroke-width='2'/%3E%3Crect x='100' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='110' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3Crect x='200' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='210' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3C/svg%3E");
@@ -89,11 +86,9 @@
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
         @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
 
-        /* コマンドボタン類 */
         #config-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
         #exit-btn { position: absolute; top: 10px; left: 10px; font-size: 12px; cursor: pointer; background: #444; color: #fff; border: 2px solid #fff; padding: 5px; z-index: 20; }
         
-        /* 設定モーダル */
         #config-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 3000;
@@ -273,7 +268,6 @@
             renderEquipMenu();
         }
 
-        /* --- 設定・リセット機能 --- */
         function openConfig() { document.getElementById("config-modal").style.display = "flex"; }
         function closeConfig() { document.getElementById("config-modal").style.display = "none"; }
         
@@ -383,13 +377,11 @@
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { unlockedPowers.push("fukumorita"); gotPower = true; alert("福盛田先生のちから「スニーカー」を奪った！"); }
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
-            let nextStage = currentStage;
             if (currentStage === 4) {
                 if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); }
                 showEnding(); return;
             } else if(currentStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
-                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
@@ -403,6 +395,8 @@
         function returnToMenu() {
             document.getElementById("result-screen").classList.add("hidden");
             document.getElementById("menu-screen").classList.remove("hidden");
+            // ★装備メニュー更新
+            renderEquipMenu();
             if (justCleared && currentStage < 5) { 
                 justCleared = false; 
                 playWalkAnimation(); 
@@ -412,27 +406,20 @@
         }
 
         function playWalkAnimation() {
-            // ★重要修正：アニメーション開始時は「さっき倒したステージ」を表示するが
-            updateMenuVisuals(currentStage); 
+            updateMenuVisuals(currentStage); // 旧ステージ表示
             const player = document.getElementById("menu-player");
             const rival = document.getElementById("menu-rival");
-            
             rival.style.opacity = "0"; 
             player.classList.add("walk-right");
             
             setTimeout(() => {
-                // ★重要修正：アニメーション完了時に現在のステージを「次のステージ」に更新する
-                currentStage = unlockedStage; 
+                // ★修正点：アニメーション完了時にcurrentStageを最新にする
+                currentStage = unlockedStage;
                 updateMenuVisuals(currentStage); 
-                
                 rival.style.opacity = "1";
                 rival.classList.add("fade-in-right");
-                
                 player.classList.remove("walk-right");
-                
-                setTimeout(() => {
-                    rival.classList.remove("fade-in-right");
-                }, 1000);
+                setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000);
             }, 1500); 
         }
 
