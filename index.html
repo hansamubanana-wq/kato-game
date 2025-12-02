@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>加藤先生の授業で寝ろ！</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; }
+        #game-area { margin-top: 50px; font-size: 24px; font-weight: bold; }
+        #status { font-size: 100px; margin: 20px; }
+        #score { font-size: 20px; color: #333; }
+        .sleeping { color: blue; }
+        .awake { color: green; }
+        .danger { color: red; }
+    </style>
+</head>
+<body>
+    <h1>加藤先生に見つからずに寝ろ！</h1>
+    <p>スペースキーを押している間だけ寝られます。<br>先生がこっちを見たらキーを離して起きろ！</p>
+    
+    <div id="game-area">
+        <div id="teacher-status">加藤先生：黒板を書いている...</div>
+        <div id="status">😐 起きている</div>
+        <div id="score">睡眠時間: 0秒</div>
+    </div>
+
+    <script>
+        const statusEl = document.getElementById("status");
+        const teacherEl = document.getElementById("teacher-status");
+        const scoreEl = document.getElementById("score");
+        
+        let isSleeping = false;
+        let isTeacherLooking = false;
+        let score = 0;
+        let gameOver = false;
+
+        // スペースキーを押すと寝る
+        document.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && !gameOver) {
+                isSleeping = true;
+                statusEl.textContent = "😴 睡眠中...";
+                statusEl.className = "sleeping";
+            }
+        });
+
+        // スペースキーを離すと起きる
+        document.addEventListener("keyup", (e) => {
+            if (e.code === "Space") {
+                isSleeping = false;
+                statusEl.textContent = "😐 起きている";
+                statusEl.className = "awake";
+            }
+        });
+
+        // ゲームループ（睡眠時間を計測）
+        setInterval(() => {
+            if (gameOver) return;
+
+            if (isSleeping) {
+                score += 1;
+                scoreEl.textContent = "睡眠時間: " + (score / 10).toFixed(1) + "秒";
+            }
+            
+            // 先生が見ているのに寝ていたらゲームオーバー
+            if (isTeacherLooking && isSleeping) {
+                gameOver = true;
+                statusEl.textContent = "😱 バレた！！";
+                teacherEl.textContent = "加藤先生：「コラ！寝るな！」";
+                teacherEl.className = "danger";
+                alert("加藤先生に見つかりました... 記録: " + (score / 10).toFixed(1) + "秒");
+                location.reload(); // リロードして再開
+            }
+        }, 100);
+
+        // 加藤先生の動き（ランダム）
+        function teacherLoop() {
+            if (gameOver) return;
+            
+            // ランダムな時間で振り返る
+            const waitTime = Math.random() * 3000 + 2000; // 2〜5秒
+
+            setTimeout(() => {
+                isTeacherLooking = true;
+                teacherEl.textContent = "⚠️ 加藤先生が見ている！";
+                teacherEl.className = "danger";
+
+                // 1〜2秒見つめる
+                setTimeout(() => {
+                    isTeacherLooking = false;
+                    teacherEl.textContent = "加藤先生：黒板を書いている...";
+                    teacherEl.className = "";
+                    teacherLoop(); // 次のループへ
+                }, Math.random() * 1000 + 1000);
+
+            }, waitTime);
+        }
+
+        teacherLoop(); // 開始
+    </script>
+</body>
+</html>
