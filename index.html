@@ -13,7 +13,8 @@
     <meta property="og:title" content="激闘！加藤先生の授業">
     <meta property="og:type" content="website">
     <meta property="og:description" content="先生の目を盗んで居眠りしろ！スマホで遊べるブラウザゲーム。">
-    <meta property="og:url" content="https://kato-game-1.onrender.com"> <meta property="og:image" content="https://kato-game-1.onrender.com/icon.png">
+    <meta property="og:url" content="https://kato-game-1.onrender.com">
+    <meta property="og:image" content="https://kato-game-1.onrender.com/icon.png">
     <meta name="twitter:card" content="summary_large_image">
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -25,13 +26,12 @@
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-color); transition: opacity 0.3s; }
         .hidden { display: none !important; }
         
-        /* ボタンのデザイン */
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; width: 80%; }
         .btn:active { transform: translateY(4px); } 
-        .btn.cleared { border-color: var(--accent-color); color: var(--accent-color); } 
+        /* クリア済みのボタンは金色にする */
+        .btn.cleared { border-color: var(--accent-color); color: var(--accent-color); background: #333; } 
         .btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: #555; }
         
-        /* SNSボタンの色 */
         .btn-x { background: #000; border-color: #fff; }
         .btn-line { background: #06c755; border-color: #fff; }
         .btn-share { background: #555; border-color: #ccc; }
@@ -48,7 +48,6 @@
         #progress-fill { width: 0%; height: 100%; background: var(--accent-color); transition: width 0.2s; }
         .sprite { width: 140px; height: 140px; background-repeat: no-repeat; background-position: center; background-size: contain; }
         
-        /* SVGデータ (省略なし) */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
         .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23ffcccc'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23a00'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='1' width='6' height='4' fill='%23f0c0a0'/%3E%3Crect x='2' y='1' width='6' height='2' fill='%23622'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
@@ -126,7 +125,15 @@
         };
         let currentStage = 1, unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1, hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false, gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0;
         
-        function initMenu() { for(let i=1; i<=4; i++) { const btn = document.getElementById(`btn-st${i}`); if(i <= unlockedStage) { btn.disabled = false; if(i < unlockedStage) btn.classList.add("cleared"); } } }
+        function initMenu() { 
+            for(let i=1; i<=4; i++) { 
+                const btn = document.getElementById(`btn-st${i}`); 
+                if(i <= unlockedStage) { 
+                    btn.disabled = false; 
+                    if(i < unlockedStage) btn.classList.add("cleared"); // クリア済み(金色)
+                } 
+            } 
+        }
         initMenu();
         
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
@@ -137,42 +144,40 @@
         function updateProgress() { const t = teachers[currentStage]; const pct = Math.min(100, (sleepTime / t.target) * 100); document.getElementById("progress-fill").style.width = pct + "%"; if (sleepTime >= t.target) stageClear(); }
         function takeDamage() { if(isGodMode) return; hp--; updateHearts(); isInvincible = true; document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate(200); setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500); if (hp <= 0) gameOver(); }
         function updateHearts() { let h = ""; for(let i=0; i<hp; i++) h += "❤"; const heartEl = document.getElementById("hearts"); heartEl.textContent = h; if(isGodMode) heartEl.classList.add("god-mode"); }
-        function stageClear() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); if (currentStage === 4) { showEnding(); return; } if(currentStage >= unlockedStage) { unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage); } document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#2b4528"; document.getElementById("result-title").textContent = "STAGE CLEAR!"; document.getElementById("result-title").style.color = "gold"; document.getElementById("result-msg").textContent = "次の授業へ進みます"; }
+        
+        function stageClear() { 
+            clearInterval(gameLoopId); 
+            clearTimeout(teacherTimerId); 
+            
+            // ★ここが修正点！ステージ4もクリア扱いに記録する★
+            if (currentStage === 4) { 
+                if (unlockedStage < 5) {
+                    unlockedStage = 5;
+                    localStorage.setItem("soichiGameStage", unlockedStage);
+                }
+                showEnding(); 
+                return; 
+            } 
+            
+            if(currentStage >= unlockedStage) { 
+                unlockedStage++; 
+                localStorage.setItem("soichiGameStage", unlockedStage); 
+            } 
+            document.getElementById("game-screen").classList.add("hidden"); 
+            document.getElementById("result-screen").classList.remove("hidden"); 
+            document.getElementById("result-screen").style.background = "#2b4528"; 
+            document.getElementById("result-title").textContent = "STAGE CLEAR!"; 
+            document.getElementById("result-title").style.color = "gold"; 
+            document.getElementById("result-msg").textContent = "次の授業へ進みます"; 
+        }
+        
         function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; document.getElementById("result-msg").textContent = "補習決定..."; }
         function showEnding() { document.getElementById("game-screen").classList.add("hidden"); document.getElementById("ending-screen").classList.remove("hidden"); for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } }
         
-        // ▼▼▼ SNS共有機能 ▼▼▼
         const shareText = "【証明書】私は加藤・松田・菅原・福盛田先生の授業を全て寝て過ごしたことを証明します。 #加藤先生ゲーム";
-        
-        function shareX() {
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(GAME_URL)}`, '_blank');
-        }
-        
-        function shareLine() {
-            // LINEで送るリンクを作成
-            const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(GAME_URL)}`;
-            window.open(lineUrl, '_blank');
-        }
-        
-        async function shareNative() {
-            // スマホの標準共有メニューを呼び出す
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: '激闘！加藤先生の授業',
-                        text: shareText,
-                        url: GAME_URL,
-                    });
-                } catch (err) {
-                    console.log('Share canceled');
-                }
-            } else {
-                // PCなどで未対応の場合はクリップボードにコピー
-                navigator.clipboard.writeText(`${shareText} ${GAME_URL}`);
-                alert("URLをコピーしました！");
-            }
-        }
-        // ▲▲▲ ▲▲▲ ▲▲▲
+        function shareX() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(GAME_URL)}`, '_blank'); }
+        function shareLine() { const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(GAME_URL)}`; window.open(lineUrl, '_blank'); }
+        async function shareNative() { if (navigator.share) { try { await navigator.share({ title: '激闘！加藤先生の授業', text: shareText, url: GAME_URL, }); } catch (err) { console.log('Share canceled'); } } else { navigator.clipboard.writeText(`${shareText} ${GAME_URL}`); alert("URLをコピーしました！"); } }
 
         const startSleep = () => { isSleeping = true; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); };
         const stopSleep = () => { isSleeping = false; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } };
