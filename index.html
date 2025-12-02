@@ -24,14 +24,11 @@
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
+        /* メニュー画面 */
         #menu-screen {
-            background: linear-gradient(#444 50%, #8b4513 50%);
-            perspective: 600px; overflow: hidden;
-        }
-        #menu-screen::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, transparent 0, transparent 40px, rgba(0,0,0,0.2) 40px, rgba(0,0,0,0.2) 42px);
-            opacity: 0.5; pointer-events: none;
+            justify-content: flex-start;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='480' viewBox='0 0 320 480'%3E%3Cdefs%3E%3ClinearGradient id='floor' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23654321'/%3E%3Cstop offset='100%25' stop-color='%238b5a2b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='480' fill='%23222'/%3E%3Crect width='320' height='160' fill='%23444'/%3E%3Cpath d='M0,480 L320,480 L220,320 L100,320 Z' fill='url(%23floor)'/%3E%3Crect x='100' y='160' width='120' height='160' fill='%23666'/%3E%3Crect x='130' y='180' width='60' height='140' fill='%23333' border='2' stroke='%23555'/%3E%3Cpath d='M0,0 L100,160 L100,320 L0,480 Z' fill='%23888'/%3E%3Cpath d='M320,0 L220,160 L220,320 L320,480 Z' fill='%23777'/%3E%3Cline x1='0' y1='100' x2='100' y2='190' stroke='%23555' stroke-width='3'/%3E%3Cline x1='320' y1='100' x2='220' y2='190' stroke='%23555' stroke-width='3'/%3E%3C/svg%3E");
+            background-size: cover; background-position: center;
         }
 
         #face-off-area {
@@ -46,37 +43,32 @@
         @keyframes walkOff { 0% { transform: translateX(0); } 100% { transform: translateX(400px) translateY(0); } }
         @keyframes slideIn { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
 
+        /* 装備メニュー */
         #equip-menu {
             width: 90%; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; border: 2px solid #fff;
             display: flex; flex-direction: column; align-items: center; margin-top: 10px;
         }
         #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 5px; }
         #equip-desc { color: #fff; font-size: 8px; margin-top: 5px; height: 20px; }
-        
         .equip-list { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
-        .equip-item { 
-            width: 35px; height: 35px; border: 2px solid #555; background: #333; 
-            display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer;
-        }
+        .equip-item { width: 35px; height: 35px; border: 2px solid #555; background: #333; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
         .equip-item.unlocked { border-color: #fff; }
         .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 10px #ffd700; background: #444; }
 
-        /* ゲーム画面 */
+        /* ゲーム画面（背景可変） */
         #game-screen {
             justify-content: flex-start;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3Cline x1='250' y1='190' x2='310' y2='190' stroke='%23aaa'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E");
             background-size: cover; background-position: center;
-            will-change: filter, transform; /* 揺れとフィルタの最適化 */
+            will-change: filter, transform;
         }
-        
-        /* 画面シェイクのアニメーション */
-        .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shakeScreen {
-            10%, 90% { transform: translate3d(-4px, 0, 0); }
-            20%, 80% { transform: translate3d(6px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
-            40%, 60% { transform: translate3d(8px, 0, 0); }
-        }
+        /* 教室 */
+        .bg-classroom { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E"); }
+        /* 理科室 */
+        .bg-science { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23ddd'/%3E%3Crect width='320' height='120' fill='%23bbb'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23224422' stroke='%23555' stroke-width='6'/%3E%3Ctext x='20' y='160' font-size='40' opacity='0.2'>🧪</text>%3Ctext x='260' y='160' font-size='40' opacity='0.2'>💀</text>%3Crect y='220' width='320' height='20' fill='%23333'/%3E%3C/svg%3E"); }
+        /* 音楽室 */
+        .bg-music { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23d0c0a0'/%3E%3Crect width='320' height='120' fill='%23a09070'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23333' stroke='%235a3a22' stroke-width='6'/%3E%3Ctext x='150' y='70' font-size='40' fill='white'>🎼</text>%3Crect x='250' y='140' width='60' height='80' fill='%23222'/%3E%3C/svg%3E"); }
+        /* 校長室 */
+        .bg-principal { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23500'/%3E%3Crect width='320' height='120' fill='%23300'/%3E%3Crect x='60' y='20' width='200' height='80' fill='%23gold' stroke='gold' stroke-width='4' opacity='0.2'/%3E%3Crect y='220' width='320' height='20' fill='%23a00'/%3E%3Ctext x='10' y='150' font-size='30'>🏆</text>%3Ctext x='280' y='150' font-size='30'>🏺</text>%3C/svg%3E"); }
 
         #teacher-area { height: 45vh; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; z-index: 5; }
         #player-area { height: 55vh; width: 100%; background: rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-top: 4px solid #5a3a22; z-index: 10; }
@@ -101,29 +93,39 @@
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
         @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
 
+        /* 会話画面（カットイン） */
+        #dialogue-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2500;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .dialogue-box {
+            width: 90%; background: #fff; border: 4px solid #000; border-radius: 10px; padding: 15px;
+            font-family: 'New Tegomin', serif; min-height: 150px; position: relative;
+        }
+        .dialogue-name { font-weight: bold; margin-bottom: 10px; color: var(--danger-color); font-size: 14px; }
+        .dialogue-text { font-size: 14px; line-height: 1.6; color: #000; white-space: pre-wrap; }
+        .dialogue-next { position: absolute; bottom: 10px; right: 10px; animation: blink 1s infinite; font-size: 20px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* リザルトのランク */
+        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes stamp { 0% { transform: scale(3) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-20deg); opacity: 1; } }
+
+        /* ボタン等 */
         #config-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
         #exit-btn { position: absolute; top: 10px; left: 10px; font-size: 12px; cursor: pointer; background: #444; color: #fff; border: 2px solid #fff; padding: 5px; z-index: 20; }
-        
-        #config-modal, #tutorial-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 3000;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-        }
+        #config-modal, #tutorial-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .config-box { background: #333; padding: 20px; border: 2px solid #fff; text-align: center; width: 80%; }
         .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 10px; line-height: 1.6; color: #fff; }
-
         .btn-endless { display: none; width: 200px; border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; margin-top:5px; }
         .btn-ngplus { display: none; width: 200px; border-color: #ffd700; color: #ffd700; margin-top: 5px; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); } }
-
-        .chalk-missile {
-            position: absolute; width: 20px; height: 6px; background: white; border-radius: 2px;
-            top: 40%; left: 50%; transform: translateX(-50%);
-            box-shadow: 0 0 5px rgba(255,255,255,0.8); z-index: 100; animation: flyChalk 0.3s linear forwards;
-        }
+        .chalk-missile { position: absolute; width: 20px; height: 6px; background: white; border-radius: 2px; top: 40%; left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px rgba(255,255,255,0.8); z-index: 100; animation: flyChalk 0.3s linear forwards; }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
+        .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shakeScreen { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
 
-        /* ▼▼▼ Character SVGs (Updated Otani) ▼▼▼ */
+        /* SVG */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
@@ -134,11 +136,8 @@
         .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
         .sudo-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,14 L10,14 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
         .sudo-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,12 L10,12 Z' fill='%23421'/%3E%3Cpath d='M8,8 L10,20 L8,20 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
-        
-        /* 大谷（修正：黒髪・センター分け） */
-        .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3C!-- 黒髪 --%3E%3Cpath d='M10,2 L22,2 L22,8 L10,8 Z' fill='%23111'/%3E%3C!-- センター分け線 --%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%23333' stroke-width='1'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
-        .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3C!-- 黒髪センター分け --%3E%3Cpath d='M10,2 L16,2 L16,4 L10,8 Z' fill='%23111'/%3E%3Cpath d='M22,2 L16,2 L16,4 L22,8 Z' fill='%23111'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
-        
+        .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L22,2 L22,8 L10,8 Z' fill='%23111'/%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%23333' stroke-width='1'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
+        .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L16,2 L16,4 L10,8 Z' fill='%23111'/%3E%3Cpath d='M22,2 L16,2 L16,4 L22,8 Z' fill='%23111'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
         .matsumura-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3C/svg%3E"); }
         .matsumura-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='12' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='14' y='14' width='4' height='1' fill='%23000'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='12' y='18' width='2' height='14' fill='%23aaa'/%3E%3C/svg%3E"); }
         .aota-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3C/svg%3E"); }
@@ -161,6 +160,27 @@
         .btn-x { background: #000; border-color: #fff; }
         .btn-line { background: #06c755; border-color: #fff; }
         .btn-share { background: #555; border-color: #ccc; }
+        
+        /* 会話画面 */
+        #dialogue-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2500;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .dialogue-box {
+            width: 85%; background: #fff; border: 4px solid #000; border-radius: 10px; padding: 15px;
+            font-family: 'New Tegomin', serif; min-height: 120px; position: relative;
+        }
+        .dialogue-name { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
+        .name-teacher { color: var(--danger-color); }
+        .name-you { color: #4488ff; }
+        .dialogue-text { font-size: 14px; line-height: 1.5; color: #000; white-space: pre-wrap; }
+        .dialogue-next { position: absolute; bottom: 10px; right: 10px; animation: blink 1s infinite; font-size: 20px; cursor: pointer; }
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        /* リザルトのランク */
+        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes stamp { 0% { transform: scale(3) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-20deg); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -175,7 +195,7 @@
             <div id="menu-rival" class="char-box"><div id="menu-rival-sprite" class="sprite"></div><div id="menu-rival-name" class="char-label">???</div></div>
         </div>
 
-        <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:var(--danger-color);" onclick="startBattle()">BATTLE START</button>
+        <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:var(--danger-color);" onclick="startSequence()">BATTLE START</button>
         
         <button id="endless-btn" class="btn btn-endless" onclick="startEndless()">💀 ENDLESS</button>
         <button id="ng-plus-btn" class="btn btn-ngplus" style="display:none;" onclick="newGamePlus()">💪 NEW GAME +</button>
@@ -193,6 +213,14 @@
                 <div id="skill-aota" class="equip-item" onclick="equipSkill('aota')">🧥</div>
             </div>
             <div id="equip-desc">アイコンをタップで詳細表示</div>
+        </div>
+    </div>
+
+    <div id="dialogue-screen" onclick="nextDialogue()">
+        <div class="dialogue-box">
+            <div id="diag-name" class="dialogue-name"></div>
+            <div id="diag-text" class="dialogue-text"></div>
+            <div class="dialogue-next">▼</div>
         </div>
     </div>
 
@@ -234,6 +262,7 @@
 
     <div id="result-screen" class="screen hidden">
         <h1 id="result-title">FAILED</h1>
+        <div id="rank-stamp" class="rank-stamp" style="display:none;"></div>
         <p id="result-msg">廊下に立ってなさい！</p>
         <button class="btn" onclick="returnToMenu()">NEXT</button>
     </div>
@@ -257,15 +286,15 @@
     <script>
         const GAME_URL = "https://kato-game-1.onrender.com";
         const teachers = {
-            1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ...", face:"kato-face" },
-            2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook...", face:"matsuda-face" },
-            3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪", face:"sugawara-face" },
-            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH...", face:"fukumorita-face" },
-            5: { name: "sudo", label: "Social / Sudo", target: 35, speed: 1.1, blackboard: "1192 Kamakura...", face:"sudo-face" },
-            6: { name: "otani", label: "Classic / Otani", target: 40, speed: 1.3, blackboard: "Haru wa Akebono...", face:"otani-face" },
-            7: { name: "matsumura", label: "Science / Matsumura", target: 45, speed: 0.9, blackboard: "H2O + CO2...", face:"matsumura-face" },
-            8: { name: "aota", label: "FINAL / Principal Aota", target: 60, speed: 2.0, blackboard: "SILENCE IS GOLD", face:"aota-face" },
-            9: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face" }
+            1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ...", face:"kato-face", bg:"bg-classroom" },
+            2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook...", face:"matsuda-face", bg:"bg-classroom" },
+            3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪", face:"sugawara-face", bg:"bg-music" },
+            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH...", face:"fukumorita-face", bg:"bg-classroom" },
+            5: { name: "sudo", label: "Social / Sudo", target: 35, speed: 1.1, blackboard: "1192 Kamakura...", face:"sudo-face", bg:"bg-classroom" },
+            6: { name: "otani", label: "Classic / Otani", target: 40, speed: 1.3, blackboard: "Haru wa Akebono...", face:"otani-face", bg:"bg-classroom" },
+            7: { name: "matsumura", label: "Science / Matsumura", target: 45, speed: 0.9, blackboard: "H2O + CO2...", face:"matsumura-face", bg:"bg-science" },
+            8: { name: "aota", label: "FINAL / Principal Aota", target: 60, speed: 2.0, blackboard: "SILENCE IS GOLD", face:"aota-face", bg:"bg-principal" },
+            9: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face", bg:"bg-classroom" }
         };
         const skillData = {
             "kato": { name: "加藤の時計", desc: "【A】時間を3秒止める", active: true, icon: "⏱️" },
@@ -277,6 +306,18 @@
             "matsumura": { name: "松村の劇薬", desc: "【A】5秒間無敵になる", active: true, icon: "🧪" },
             "aota": { name: "校長のジャケット", desc: "【P】睡眠速度5.0倍", active: false, icon: "🧥" }
         };
+        const dialogues = {
+            1: { t: "こんなんで寝てんだったら\nお前もうマジで知らん。", s: "まさか！寝るわけないです！\n(今のうちに...)" },
+            2: { t: "Sleeping is... death.", s: "No, no! I love English!\n(zzz...)" },
+            3: { t: "しゃーべると... こんな... かんじ...", s: "（喋り方が遅くて眠くなる...）" },
+            4: { t: "アディ...ダス...？", s: "（ナイキです先生...）" },
+            5: { t: "鎌倉幕府を滅亡させます。", s: "平和にいきましょうよ...\n（スヤァ）" },
+            6: { t: "春はあけぼの...だが、\n君の寝顔は風流ではないな。", s: "いと眠し...です..." },
+            7: { t: "ちょっとお腹が鳴っちゃったな。", s: "（今のうちに寝よう）" },
+            8: { t: "我が校は100年の歴史を誇る伝統校である。\nその校長である私の御前で眠ろうなど、\n言語道断！貴様の覚悟、見せてもらおうか！", s: "（話が長い...おやすみなさい）" },
+            9: { t: "終わらない悪夢へようこそ...", s: "（記録更新してやる！）" }
+        };
+
         const teacherNames = ["kato", "matsuda", "sugawara", "fukumorita", "sudo", "otani", "matsumura", "aota"];
         
         let unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1;
@@ -290,6 +331,7 @@
         let hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false;
         let gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
         let isTimeStopped = false, sleepContinuous = 0;
+        let dialogueStep = 0;
 
         const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
         function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
@@ -306,7 +348,6 @@
                 openTutorial();
                 localStorage.setItem("soichiTutorialSeen", "true");
             }
-            // 最新ステージ（最大8）を表示
             currentStage = (unlockedStage > 8) ? 8 : unlockedStage;
             updateMenuVisuals(currentStage);
             
@@ -344,14 +385,8 @@
             Object.keys(skillData).forEach(p => {
                 const el = document.getElementById(`skill-${p}`);
                 if(el) {
-                    if (unlockedPowers.includes(p)) { 
-                        el.style.display = "flex"; 
-                        el.classList.add("unlocked"); 
-                    } else { 
-                        el.style.display = "none"; 
-                    }
-                    if (equippedPower === p) el.classList.add("selected"); 
-                    else el.classList.remove("selected");
+                    if (unlockedPowers.includes(p)) { el.style.display = "flex"; el.classList.add("unlocked"); } else { el.style.display = "none"; }
+                    if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
                 }
             });
         }
@@ -384,18 +419,47 @@
 
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
 
-        function startBattle() { launchStage(currentStage); }
-        function startEndless() { launchStage(9); }
+        // ★会話システムの開始
+        function startSequence() { startDialogue(currentStage); }
+        function startEndless() { startDialogue(9); }
 
-        function launchStage(st) {
-            initAudio();
-            currentStage = st; 
+        function startDialogue(st) {
+            currentStage = st; // 確定
+            dialogueStep = 0;
+            const d = dialogues[st] || { t: "...", s: "..." };
             
+            document.getElementById("menu-screen").classList.add("hidden");
+            document.getElementById("dialogue-screen").style.display = "flex";
+            
+            // 先生のセリフ
+            document.getElementById("diag-name").textContent = teachers[st].label.split(" / ")[1] || "TEACHER";
+            document.getElementById("diag-name").className = "dialogue-name name-teacher";
+            document.getElementById("diag-text").textContent = d.t;
+        }
+
+        function nextDialogue() {
+            dialogueStep++;
+            const st = currentStage;
+            const d = dialogues[st] || { t: "...", s: "..." };
+
+            if (dialogueStep === 1) {
+                // 生徒のセリフ
+                document.getElementById("diag-name").textContent = "YOU";
+                document.getElementById("diag-name").className = "dialogue-name name-you";
+                document.getElementById("diag-text").textContent = d.s;
+            } else {
+                // 戦闘開始
+                document.getElementById("dialogue-screen").style.display = "none";
+                realStartBattle();
+            }
+        }
+
+        function realStartBattle() {
+            initAudio();
             hp = (equippedPower === 'matsuda') ? 4 : 3;
             isTimeStopped = false; sleepContinuous = 0; isInvincible = false;
             
             const skillBtn = document.getElementById("active-skill-btn");
-            // アクティブスキル持ちかチェック
             if (equippedPower && skillData[equippedPower].active) {
                 skillBtn.style.display = "flex"; 
                 skillBtn.classList.remove("cooldown");
@@ -405,10 +469,13 @@
             }
             
             sleepTime = 0; isTeacherLooking = false; endlessSpeed = 1.0;
-            document.getElementById("menu-screen").classList.add("hidden");
             document.getElementById("game-screen").classList.remove("hidden");
             
             const t = teachers[currentStage];
+            // 背景切り替え
+            const gameScreen = document.getElementById("game-screen");
+            gameScreen.className = `screen ${t.bg}`;
+
             document.getElementById("blackboard-text").textContent = t.blackboard;
             document.getElementById("target-score").textContent = (currentStage===9) ? "∞" : t.target;
             
@@ -424,33 +491,28 @@
             initMenu();
         }
 
-        // ★汎用アクティブスキル発動
         window.activateActiveSkill = function(event) {
             if(event) event.stopPropagation(); 
             const btn = document.getElementById("active-skill-btn");
             if (btn.classList.contains("cooldown")) return;
             
             playSound('skill');
-            btn.classList.add("cooldown"); // 一回使うとクールダウン
+            btn.classList.add("cooldown");
 
             if (equippedPower === 'kato') {
-                // 加藤：時止め
                 isTimeStopped = true;
                 isTeacherLooking = false; clearTimeout(teacherTimerId);
                 const sprite = document.getElementById("teacher-sprite");
                 let tName = getTeacherName(currentStage, sprite);
                 sprite.className = `sprite ${tName}-back`; 
-                // 画面を揺らす代わりにフィルタ
                 document.getElementById("game-screen").style.filter = "invert(1)";
                 setTimeout(() => { isTimeStopped = false; document.getElementById("game-screen").style.filter = "none"; updateTeacherBehavior(); }, 3000);
             
             } else if (equippedPower === 'sudo') {
-                // 須藤：スコアゲット
                 sleepTime += 5.0;
                 updateProgress();
             
             } else if (equippedPower === 'matsumura') {
-                // 松村：無敵
                 isInvincible = true;
                 document.getElementById("student-sprite").style.opacity = "0.5";
                 setTimeout(() => { isInvincible = false; document.getElementById("student-sprite").style.opacity = "1"; }, 5000);
@@ -459,15 +521,10 @@
 
         function getTeacherName(st, spriteEl) {
             if (st === 9) {
-                // エンドレスの場合、現在のクラス名から推測
-                if(spriteEl.className.includes("kato")) return "kato";
-                if(spriteEl.className.includes("matsuda")) return "matsuda";
-                if(spriteEl.className.includes("sugawara")) return "sugawara";
-                if(spriteEl.className.includes("fukumorita")) return "fukumorita";
-                if(spriteEl.className.includes("sudo")) return "sudo";
-                if(spriteEl.className.includes("otani")) return "otani";
-                if(spriteEl.className.includes("matsumura")) return "matsumura";
-                if(spriteEl.className.includes("aota")) return "aota";
+                // エンドレスの場合
+                for (let name of teacherNames) {
+                    if (spriteEl.className.includes(name)) return name;
+                }
                 return "kato";
             }
             return teachers[st].name;
@@ -482,7 +539,7 @@
             let waitBase = 2000; 
             if (tName === 'sugawara') waitBase = 3000; 
             if (tName === 'fukumorita') waitBase = 1000;
-            if (tName === 'aota') waitBase = 800; // 青田は速い
+            if (tName === 'aota') waitBase = 800;
 
             let speed = (currentStage === 9) ? endlessSpeed : teachers[currentStage].speed;
             let randomTime = (Math.random() * waitBase + 1000) / speed;
@@ -490,7 +547,6 @@
                 if (isTimeStopped) return;
                 sprite.className = `sprite ${tName}-face`; isTeacherLooking = true;
                 
-                // 大谷先生の効果：見ている時間が短くなる
                 let lookBase = 1000;
                 if (equippedPower === 'otani') lookBase = 500; 
 
@@ -505,7 +561,7 @@
                 let speedMultiplier = 1.0;
                 if (equippedPower === 'sugawara') speedMultiplier = 1.5;
                 if (equippedPower === 'fukumorita') { let boost = 1.0 + (sleepContinuous * 0.2); if(boost > 3.0) boost = 3.0; speedMultiplier = boost; }
-                if (equippedPower === 'aota') speedMultiplier = 5.0; // 青田ジャケット
+                if (equippedPower === 'aota') speedMultiplier = 5.0;
 
                 let cheatMultiplier = isGodMode ? 5.0 : 1.0;
                 sleepTime += 0.1 * speedMultiplier * cheatMultiplier;
@@ -519,15 +575,8 @@
         function takeDamage() {
             if(isGodMode) return;
             hp--; updateHearts(); playSound('dead'); isInvincible = true;
-            
-            // 画面シェイク
-            const gameScreen = document.getElementById("game-screen");
-            gameScreen.classList.remove("shaking");
-            void gameScreen.offsetWidth; // リフロー
-            gameScreen.classList.add("shaking");
-
             const chalk = document.createElement("div"); chalk.className = "chalk-missile"; document.getElementById("game-screen").appendChild(chalk); setTimeout(() => chalk.remove(), 300);
-            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate(200);
             setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500);
             if (hp <= 0) gameOver();
         }
@@ -541,13 +590,11 @@
             if (currentStage === 2 && !unlockedPowers.includes("matsuda")) { dropped="matsuda"; gotPower = true; alert("松田先生の「ランチ」を奪った！"); }
             if (currentStage === 3 && !unlockedPowers.includes("sugawara")) { dropped="sugawara"; gotPower = true; alert("菅原先生の「タクト」を奪った！"); }
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { dropped="fukumorita"; gotPower = true; alert("福盛田先生の「スニーカー」を奪った！"); }
-            if (currentStage === 5 && !unlockedPowers.includes("sudo")) { dropped="sudo"; gotPower = true; alert("須藤先生の「暗記カード」を奪った！\n使うとスコア+5秒！"); }
-            if (currentStage === 6 && !unlockedPowers.includes("otani")) { dropped="otani"; gotPower = true; alert("大谷先生の「和歌」を奪った！\n先生がすぐ黒板に戻るようになる！"); }
-            if (currentStage === 7 && !unlockedPowers.includes("matsumura")) { dropped="matsumura"; gotPower = true; alert("松村先生の「劇薬」を奪った！\n飲むと5秒無敵！"); }
-            if (currentStage === 8 && !unlockedPowers.includes("aota")) { dropped="aota"; gotPower = true; alert("青田校長の「ジャケット」を奪った！\n睡眠速度5倍の最強装備！"); }
-            
-            if(gotPower) unlockedPowers.push(dropped);
-            localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
+            if (currentStage === 5 && !unlockedPowers.includes("sudo")) { dropped="sudo"; gotPower = true; alert("須藤先生の「暗記カード」を奪った！"); }
+            if (currentStage === 6 && !unlockedPowers.includes("otani")) { dropped="otani"; gotPower = true; alert("大谷先生の「和歌」を奪った！"); }
+            if (currentStage === 7 && !unlockedPowers.includes("matsumura")) { dropped="matsumura"; gotPower = true; alert("松村先生の「劇薬」を奪った！"); }
+            if (currentStage === 8 && !unlockedPowers.includes("aota")) { dropped="aota"; gotPower = true; alert("青田校長の「ジャケット」を奪った！"); }
+            if(gotPower) { unlockedPowers.push(dropped); localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers)); }
 
             let nextStage = currentStage;
             if (currentStage === 8) {
@@ -560,6 +607,14 @@
             }
             document.getElementById("game-screen").classList.add("hidden");
             document.getElementById("result-screen").classList.remove("hidden");
+            
+            // ランク判定
+            const stamp = document.getElementById("rank-stamp");
+            stamp.style.display = "flex";
+            if(hp === 3) stamp.textContent = "S";
+            else if(hp === 2) stamp.textContent = "A";
+            else stamp.textContent = "B";
+
             document.getElementById("result-screen").style.background = "#2b4528";
             document.getElementById("result-title").textContent = "YOU WIN!";
             document.getElementById("result-title").style.color = "gold";
@@ -582,14 +637,22 @@
             updateMenuVisuals(currentStage); const player = document.getElementById("menu-player"); const rival = document.getElementById("menu-rival");
             rival.style.opacity = "0"; player.classList.add("walk-right");
             setTimeout(() => {
-                currentStage = (unlockedStage > 8) ? 8 : unlockedStage; 
-                updateMenuVisuals(currentStage); 
+                currentStage = (unlockedStage > 8) ? 8 : unlockedStage; updateMenuVisuals(currentStage); 
                 rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right");
                 setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000);
             }, 1500); 
         }
 
-        function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (currentStage === 9) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
+        function gameOver() { 
+            clearInterval(gameLoopId); clearTimeout(teacherTimerId); 
+            document.getElementById("game-screen").classList.add("hidden"); 
+            document.getElementById("result-screen").classList.remove("hidden");
+            document.getElementById("rank-stamp").style.display = "none"; // 赤点はランクなし
+            document.getElementById("result-screen").style.background = "#500"; 
+            document.getElementById("result-title").textContent = "GAME OVER"; 
+            document.getElementById("result-title").style.color = "red"; 
+            let msg = "補習決定..."; if (currentStage === 9) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; 
+        }
         
         function showEnding() { document.getElementById("game-screen").classList.add("hidden"); document.getElementById("ending-screen").classList.remove("hidden"); for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } }
         const shareText = "【証明書】私は加藤・松田・菅原・福盛田・須藤・大谷・松村・青田校長の目を盗み、完全爆睡したことを証明します。 #加藤先生ゲーム";
