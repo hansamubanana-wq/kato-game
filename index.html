@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MATH CLASS RETRO</title>
+    <title>MATH CLASS: PIXEL PERFECT</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #222;
-            --accent-color: #5cff5c; /* レトロな緑 */
-            --danger-color: #ff4444;
-            --text-color: #fff;
+            --bg-color: #111;
+            --accent-color: #80ff80; /* 発光するような緑 */
+            --danger-color: #ff4040;
+            --text-color: #eee;
+            --crt-line-color: rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: 'Press Start 2P', cursive; /* ピクセルフォント適用 */
+            font-family: 'Press Start 2P', cursive;
             text-align: center;
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -22,10 +23,22 @@
             overflow: hidden;
             touch-action: manipulation;
             user-select: none;
-            image-rendering: pixelated; /* 画像をドット風にする魔法 */
+            image-rendering: pixelated; /* ドットをくっきり表示 */
         }
 
-        /* 共通スクリーン設定 */
+        /* ブラウン管風エフェクト */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(var(--crt-line-color) 50%, transparent 50%);
+            background-size: 100% 4px; /* 走査線の幅 */
+            pointer-events: none; /* 操作を邪魔しない */
+            z-index: 999;
+            opacity: 0.5;
+        }
+
+        /* 共通スクリーン */
         .screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -34,49 +47,46 @@
             align-items: center;
             justify-content: center;
             background: var(--bg-color);
-            transition: opacity 0.3s;
         }
-
         .hidden { display: none !important; }
 
-        /* ゲーム画面レイアウト */
+        /* ゲーム画面 */
         #game-screen { justify-content: flex-start; }
 
+        /* 教壇エリア */
         #teacher-area {
             height: 45vh;
             width: 100%;
-            border-bottom: 4px dashed var(--accent-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000;
+            border-bottom: 4px solid var(--accent-color);
+            background: #222;
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* 下揃え */
+            padding-bottom: 20px;
+            box-sizing: border-box;
         }
 
-        /* ドット絵風に見せるための巨大絵文字 */
-        .pixel-char {
-            font-size: 120px;
-            filter: contrast(1.5); /* コントラストを上げてパキッとさせる */
+        /* ドット絵を表示するボックス（先生） */
+        #teacher-sprite {
+            width: 128px;  /* ドット絵のサイズ */
+            height: 128px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center bottom;
+            /* デフォルト：書いている姿 */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAP1BMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE38ECFAAAAFXRSTlMABwwjND1DXGuFiZ6vtcrP3e7x+f47t5eJAAAC4klEQVR4nO3ba3LbMBCFYV9iCW4SJAEQvP9ta9UpV8aO0Ugy05F6/5VMnM86sgA87/b7Uf+xT+n5Hj679XzX7vXn6Q0/jN/e7s6X748/jF+c79o9f3d6w4/i+6e78uVvpx961v3v+eWz8z199tX96R3v4vsvd/zPz19/OP2w9XwP+c3d39+Vv3x6t9+P+o/9wPkePj+9Y/f69/QDP47fX9/x9fP7d3f84HzX7vXj6Y0+iO//3rX76XzX7vWn0xt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EP8FwB8/e6xT5bAAAAAASUVORK5CYII=');
+        }
+        /* チラ見 */
+        #teacher-sprite.peeking {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC6klEQVR4nO3c0W7bQAxE0aQkU26cBEgA//9rSyK1XUqU7XnLzDmH6t4g18w0tq0BPN/d7Vd9zDml53t4f3R91+79/eGGV+P31z8/7958vL3w8fmu3duPhze8in++3pV3P5z+0LPuX8+vH5/v6f3Hhxt+Ht/f/Pxr9/H7wx9a1v0Z3v77+W9Pz3f3/Pr283d48Xy726/6mHPA+R7ef33A7v3n4S89i/d/b11/d75r9/7u8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8Ibn9w/+B4QW8G77pAAAAABJRU5ErkJggg==');
+        }
+        /* 怒り */
+        #teacher-sprite.looking {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC7ElEQVR4nO3bW3LbMAyF4V5iCW5yJAEQ3P9ua9WpnJ44RiPJTEfq/VcycT7ryALwvLvtj3pMe0rP9/Bxd9vH9vHj5Q3PjV8/3pWvP17e8Nx8l7efT3e8Ot9/uSufP13+0KPuX89P75/vyf33lzd8Hn+/8/PXto+flz/0rPtbeP/721/s7/f0fHfPz+fL1/Dibruv6jHtAed7eP/4gO3j1+UvPeP7v7uunzvfpe3n0xueG7/+e3ft6/Nd2n4+veG58eu/d9e+Pt+l7efTG54bv/57d+3r813afj694bnx6793174+36Xt59Mbnht/fX3X3r//aP/69Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz+Af7nELhB9s6yAAAAAElFTkSuQmCC');
         }
 
-        #teacher {
-            transition: transform 0.1s steps(2); /* パッと切り替わる動き */
-        }
-        .writing { transform: scaleX(-1); }
-        .looking { transform: scale(1.2); color: var(--danger-color); } /* 見ると少し大きくなる */
-        
-        /* 先生のセリフ枠 */
-        #teacher-msg {
-            position: absolute;
-            top: 10px;
-            background: var(--text-color);
-            color: var(--bg-color);
-            padding: 8px;
-            font-size: 12px;
-            border: 2px solid var(--accent-color);
-            display: none;
-        }
-
+        /* プレイヤーエリア */
         #player-area {
             height: 55vh;
             width: 100%;
@@ -87,80 +97,107 @@
             align-items: center;
             justify-content: flex-start;
             padding-top: 30px;
-            border-top: 4px solid #000;
+            border-top: 4px solid var(--crt-line-color);
         }
 
-        #status-icon { font-size: 100px; margin-bottom: 20px; }
-        
-        /* Zzz アニメーション（カクカク動く） */
+        /* ドット絵を表示するボックス（生徒） */
+        #student-sprite {
+            width: 128px;
+            height: 128px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 20px;
+            /* デフォルト：起きている */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAP1BMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE38ECFAAAAFXRSTlMABwwjND1DXGuFiZ6vtcrP3e7x+f47t5eJAAAC4klEQVR4nO3ba3LbMBCFYV9iCW4SJAEQvP9ta9UpV8aO0Ugy05F6/5VMnM86sgA87/b7Uf+xT+n5Hj679XzX7vXn6Q0/jN/e7s6X748/jF+c79o9f3d6w4/i+6e78uVvpx961v3v+eWz8z199tX96R3v4vsvd/zPz19/OP2w9XwP+c3d39+Vv3x6t9+P+o/9wPkePj+9Y/f69/QDP47fX9/x9fP7d3f84HzX7vXj6Y0+iO//3rX76XzX7vWn0xt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EN/n0zt9EP8FwB8/e6xT5bAAAAAASUVORK5CYII=');
+        }
+        /* 寝ている */
+        #student-sprite.sleeping {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC6klEQVR4nO3c0W7bQAxE0aQkU26cBEgA//9rSyK1XUqU7XnLzDmH6t4g18w0tq0BPN/d7Vd9zDml53t4f3R91+79/eGGV+P31z8/7958vL3w8fmu3duPhze8in++3pV3P5z+0LPuX8+vH5/v6f3Hhxt+Ht/f/Pxr9/H7wx9a1v0Z3v77+W9Pz3f3/Pr283d48Xy726/6mHPA+R7ef33A7v3n4S89i/d/b11/d75r9/7u8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8IaVvP9z6/rT+a7d+8/DG1by/s+t60/nu3bvPw9vWMn7P7euP53v2r3/PLxhJe//3Lr+dL5r9/7z8Ibn9w/+B4QW8G77pAAAAABJRU5ErkJggg==');
+        }
+        /* バレた */
+        #student-sprite.busted {
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAQlBMVEUAAAAxMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTE27r6yAAAAFXRSTlMABg4kOEBEWmN3fo6Xn7DEzNve6/36zL4OAAAC7ElEQVR4nO3bW3LbMAyF4V5iCW5yJAEQ3P9ua9WpnJ44RiPJTEfq/VcycT7ryALwvLvtj3pMe0rP9/Bxd9vH9vHj5Q3PjV8/3pWvP17e8Nx8l7efT3e8Ot9/uSufP13+0KPuX89P75/vyf33lzd8Hn+/8/PXto+flz/0rPtbeP/721/s7/f0fHfPz+fL1/Dibruv6jHtAed7eP/4gO3j1+UvPeP7v7uunzvfpe3n0xueG7/+e3ft6/Nd2n4+veG58eu/d9e+Pt+l7efTG54bv/57d+3r813afj694bnx6793174+36Xt59Mbnht/fX3X3r//aP/69Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz67921r893afv59Ibnxq//3l37+nyXtp9Pb3hu/Prv3bWvz3dp+/n0hufGr//eXfv6fJe2n09veG78+u/dta/Pd2n7+fSG58av/95d+/p8l7afT294bvz+Af7nELhB9s6yAAAAAElFTkSuQmCC');
+            animation: shake 0.5s infinite; /* バレた時に震える */
+        }
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, 0); }
+            75% { transform: translate(5px, 0); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* Zzz アニメーション（ドット文字） */
         .zzz {
             position: absolute;
-            color: #5cff5c;
-            font-size: 24px;
-            animation: floatUpRetro 1s steps(5) forwards;
+            color: var(--accent-color);
+            font-size: 20px;
+            animation: floatUpRetro 1.5s steps(6) forwards;
         }
         @keyframes floatUpRetro {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-80px); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(2); opacity: 0; }
         }
 
         #score-board { font-size: 20px; margin: 10px; color: var(--accent-color); }
-        #high-score { font-size: 10px; color: #888; margin-top: 10px;}
+        #high-score { font-size: 12px; color: #888; margin-top: 10px;}
 
-        /* レトロボタン */
+        /* UIパーツ */
         .btn {
             font-family: 'Press Start 2P', cursive;
-            background: transparent;
-            border: 4px solid var(--accent-color);
+            background: var(--accent-color);
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
             padding: 15px 20px;
             font-size: 16px;
-            color: var(--accent-color);
+            color: #000;
             cursor: pointer;
             margin-top: 30px;
-            text-transform: uppercase;
         }
-        .btn:active { background: var(--accent-color); color: var(--bg-color); }
+        .btn:active { transform: translate(4px, 4px); box-shadow: none; }
 
-        /* タイトル画面 */
-        h1 { font-size: 24px; line-height: 1.5; color: var(--accent-color); margin-bottom: 40px; }
-        .blink { animation: blinker 1s step-end infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        /* タイトル・リザルト */
+        h1 { font-size: 24px; line-height: 1.5; color: var(--accent-color); margin-bottom: 20px; }
+        .blink { animation: blinker 0.5s step-end infinite alternate; color: var(--danger-color); }
+        @keyframes blinker { to { opacity: 0; } }
 
-        /* リザルト画面 */
-        #result-screen { background: var(--danger-color); color: #000; }
-        .big-score { font-size: 32px; margin: 30px 0; }
+        #result-screen { background: #300; color: var(--danger-color); }
     </style>
 </head>
 <body>
 
     <div id="title-screen" class="screen">
-        <h1>MATH CLASS<br>SURVIVOR</h1>
-        <div class="pixel-char" style="font-size: 60px; margin: 20px;">😴 VS 👨‍🏫</div>
-        <p style="font-size: 10px; margin-top: 40px;">HOLD SPACE / TOUCH SCREEN</p>
-        <p class="blink" style="font-size: 14px; margin-top: 20px;">PRESS START</p>
-        <button class="btn" onclick="startGame()">START GAME</button>
-        <p id="high-score-title" style="font-size: 10px; margin-top: 30px;">HI-SCORE: 0.0</p>
+        <h1>MATH CLASS<br>PIXEL PANIC</h1>
+        <div style="display: flex; gap: 20px; margin: 30px;">
+             <div id="student-sprite" class="sleeping" style="width:80px; height:80px;"></div>
+             <div style="font-size:40px; align-self:center;">VS</div>
+             <div id="teacher-sprite" class="looking" style="width:80px; height:80px;"></div>
+        </div>
+        <p class="blink" style="font-size: 14px; margin-top: 20px;">INSERT COIN (PRESS START)</p>
+        <button class="btn" onclick="startGame()">GAME START</button>
+        <p id="high-score-title" style="font-size: 12px; margin-top: 30px;">TOP SCORE: 0.0</p>
     </div>
 
     <div id="game-screen" class="screen hidden">
         <div id="teacher-area">
-            <div id="teacher-msg">...</div>
-            <div id="teacher" class="pixel-char">👨‍🏫</div>
+            <div id="teacher-sprite"></div>
         </div>
 
         <div id="player-area">
-            <div id="status-icon" class="pixel-char">😐</div>
+            <div id="student-sprite"></div>
             <div id="score-board">SCORE: 0.0</div>
             <div id="high-score">HI: 0.0</div>
         </div>
     </div>
 
     <div id="result-screen" class="screen hidden">
-        <h1 style="color: #000;">GAME OVER</h1>
-        <div class="pixel-char">🤬</div>
-        <p>FOUND BY TEACHER!</p>
-        <div class="big-score" id="final-score">SCORE: 0.0</div>
-        <button class="btn" style="border-color: #000; color:#000;" onclick="location.reload()">RETRY</button>
+        <h1 style="color: var(--danger-color);">!! BUSTED !!</h1>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <div id="student-sprite" class="busted"></div>
+            <div id="teacher-sprite" class="looking"></div>
+        </div>
+        <div class="big-score" id="final-score" style="font-size: 32px; margin: 30px 0; color: var(--accent-color);">SCORE: 0.0</div>
+        <button class="btn" onclick="location.reload()">CONTINUE?</button>
     </div>
 
     <script>
@@ -168,9 +205,10 @@
         const titleScreen = document.getElementById("title-screen");
         const gameScreen = document.getElementById("game-screen");
         const resultScreen = document.getElementById("result-screen");
-        const teacherEl = document.getElementById("teacher");
-        const teacherMsgEl = document.getElementById("teacher-msg");
-        const statusEl = document.getElementById("status-icon");
+        // ドット絵を表示する要素
+        const teacherSprite = document.getElementById("teacher-sprite");
+        const studentSprite = document.getElementById("student-sprite");
+        
         const scoreEl = document.getElementById("score-board");
         const highScoreEl = document.getElementById("high-score");
         const titleHighScoreEl = document.getElementById("high-score-title");
@@ -180,55 +218,50 @@
         let isSleeping = false;
         let isTeacherLooking = false;
         let score = 0;
-        let highScore = localStorage.getItem("katoGameRetroHighScore") || 0;
+        let highScore = localStorage.getItem("katoGamePixelHighScore") || 0;
         let gameOver = false;
         let zzzInterval;
 
         // ハイスコア表示更新
-        titleHighScoreEl.textContent = "HI-SCORE: " + (highScore / 10).toFixed(1);
+        titleHighScoreEl.textContent = "TOP SCORE: " + (highScore / 10).toFixed(1);
         highScoreEl.textContent = "HI: " + (highScore / 10).toFixed(1);
 
         // ゲーム開始
         function startGame() {
             titleScreen.classList.add("hidden");
             gameScreen.classList.remove("hidden");
-            teacherEl.classList.add("writing");
             updateTeacher();
             gameLoop();
         }
 
-        // 先生のAI（ボイス削除版）
+        // 先生のAI（ドット絵切り替え版）
         function updateTeacher() {
             if (gameOver) return;
+            // 通常状態（書く）
+            teacherSprite.className = ""; 
 
             let difficulty = Math.max(800, 4000 - (score * 5)); 
             let waitTime = Math.random() * difficulty + 1000;
 
             setTimeout(() => {
-                // 予兆（吹き出し表示）
-                teacherMsgEl.style.display = "block";
-                teacherMsgEl.textContent = "ん?";
+                // 予兆（チラ見）
+                teacherSprite.classList.add("peeking");
 
                 setTimeout(() => {
-                    // 振り返り
-                    teacherMsgEl.style.display = "none";
-                    teacherEl.classList.remove("writing");
-                    teacherEl.classList.add("looking");
-                    teacherEl.textContent = "😠";
+                    // 振り返り（怒る）
+                    teacherSprite.classList.remove("peeking");
+                    teacherSprite.classList.add("looking");
                     isTeacherLooking = true;
 
                     // 見ている時間
                     setTimeout(() => {
                         if(!gameOver) {
                             isTeacherLooking = false;
-                            teacherEl.classList.remove("looking");
-                            teacherEl.classList.add("writing");
-                            teacherEl.textContent = "👨‍🏫";
-                            updateTeacher();
+                            updateTeacher(); // ループ
                         }
                     }, Math.random() * 1500 + 500);
 
-                }, 600); // 予兆の時間
+                }, 800); // 予兆の時間
 
             }, waitTime);
         }
@@ -241,23 +274,20 @@
                 if (isSleeping) {
                     score++;
                     scoreEl.textContent = "SCORE: " + (score / 10).toFixed(1);
-                    
-                    if (isTeacherLooking) {
-                        endGame();
-                    }
+                    if (isTeacherLooking) endGame();
                 }
             }, 100);
         }
 
-        // Zzzエフェクト生成（レトロ版）
+        // Zzzエフェクト
         function spawnZzz() {
             const zzz = document.createElement("div");
             zzz.className = "zzz";
-            zzz.textContent = "Zzz";
+            zzz.textContent = "ZZZ";
             zzz.style.left = "50%"; 
-            zzz.style.top = "10px";
+            zzz.style.top = "0px";
             playerArea.appendChild(zzz);
-            setTimeout(() => zzz.remove(), 1000);
+            setTimeout(() => zzz.remove(), 1500);
         }
 
         // ゲームオーバー処理
@@ -265,29 +295,36 @@
             gameOver = true;
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("katoGameRetroHighScore", highScore);
+                localStorage.setItem("katoGamePixelHighScore", highScore);
             }
             
-            gameScreen.classList.add("hidden");
-            resultScreen.classList.remove("hidden");
-            document.getElementById("final-score").textContent = "SCORE: " + (score / 10).toFixed(1);
+            // 生徒の状態を「バレた」にする
+            studentSprite.className = "busted";
+            
+            setTimeout(() => {
+                gameScreen.classList.add("hidden");
+                resultScreen.classList.remove("hidden");
+                document.getElementById("final-score").textContent = "SCORE: " + (score / 10).toFixed(1);
+            }, 1500); // 少し間を置いてリザルトへ
         }
 
-        // 操作系
+        // 操作系（ドット絵切り替え）
         const startSleep = () => {
             if (!gameOver) {
                 isSleeping = true;
-                statusEl.textContent = "😪";
-                if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400);
+                studentSprite.className = "sleeping"; // 寝るポーズ
+                if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 500);
             }
         };
 
         const stopSleep = () => {
-            isSleeping = false;
-            statusEl.textContent = "😐";
-            if (zzzInterval) {
-                clearInterval(zzzInterval);
-                zzzInterval = null;
+            if (!gameOver) {
+                isSleeping = false;
+                studentSprite.className = ""; // 起きるポーズ
+                if (zzzInterval) {
+                    clearInterval(zzzInterval);
+                    zzzInterval = null;
+                }
             }
         };
 
