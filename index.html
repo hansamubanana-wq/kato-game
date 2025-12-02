@@ -31,18 +31,25 @@
             background-image: radial-gradient(#55b355 15%, transparent 16%), radial-gradient(#55b355 15%, transparent 16%);
             background-size: 20px 20px; background-position: 0 0, 10px 10px; position: relative;
         }
-        .map-path { position: absolute; border-top: 4px dashed #fff; height: 0; transform-origin: left center; z-index: 1; }
+        .map-path { position: absolute; border-top: 4px dashed #fff; height: 0; transform-origin: left center; z-index: 1; opacity: 0.5; }
+        .map-path.active { border-style: solid; opacity: 1; }
+
         .map-node {
             position: absolute; width: 70px; height: 70px; 
-            background: rgba(0,0,0,0.3); border: 2px solid #fff; border-radius: 10px;
+            background: rgba(0,0,0,0.3); border: 2px solid #555; border-radius: 10px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 2; cursor: pointer; transition: transform 0.2s;
         }
         .map-node:active { transform: scale(0.9); }
-        .map-node.locked { filter: grayscale(100%); opacity: 0.7; pointer-events: none; }
+        .map-node.locked { background: #333; pointer-events: none; }
+        .map-node.unlocked { border-color: #fff; background: rgba(0,0,0,0.5); }
         .map-node.cleared { border-color: gold; background: rgba(255, 215, 0, 0.3); }
-        .node-label { font-size: 8px; margin-bottom: 2px; text-shadow: 1px 1px 0 #000; }
-        .mini-sprite { width: 40px; height: 40px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+        
+        .node-label { font-size: 8px; margin-bottom: 2px; text-shadow: 1px 1px 0 #000; color: #aaa; }
+        .map-node.unlocked .node-label { color: #fff; }
+        .map-node.cleared .node-label { color: gold; }
+
+        .mini-sprite { width: 40px; height: 40px; background-size: contain; background-repeat: no-repeat; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
         /* 主人公 */
         #player-pawn {
@@ -137,30 +144,31 @@
         <p id="cheat-msg" style="color:gold; font-size:10px; display:none;">GOD MODE ACTIVATED!</p>
 
         <div id="map-container" style="position:relative; width:300px; height:400px;">
-            <div class="map-path" style="width:70px; top:325px; left:60px; transform:rotate(-45deg);"></div>
-            <div class="map-path" style="width:70px; top:250px; left:110px; transform:rotate(45deg);"></div>
-            <div class="map-path" style="width:70px; top:175px; left:170px; transform:rotate(-45deg);"></div>
+            <div id="path-1" class="map-path" style="width:70px; top:325px; left:60px; transform:rotate(-45deg);"></div>
+            <div id="path-2" class="map-path" style="width:70px; top:250px; left:110px; transform:rotate(45deg);"></div>
+            <div id="path-3" class="map-path" style="width:70px; top:175px; left:170px; transform:rotate(-45deg);"></div>
             
             <div id="node-1" class="map-node" style="bottom:20px; left:20px;" onclick="startStage(1)">
-                <div class="mini-sprite kato-face"></div>
-                <div class="node-label">Math</div>
+                <div class="mini-sprite"></div>
+                <div class="node-label"></div>
             </div>
-            <div id="node-2" class="map-node locked" style="bottom:100px; left:100px;" onclick="startStage(2)">
-                <div class="mini-sprite matsuda-face"></div>
-                <div class="node-label">English</div>
+            <div id="node-2" class="map-node" style="bottom:100px; left:100px;" onclick="startStage(2)">
+                <div class="mini-sprite"></div>
+                <div class="node-label"></div>
             </div>
-            <div id="node-3" class="map-node locked" style="bottom:180px; left:180px;" onclick="startStage(3)">
-                <div class="mini-sprite sugawara-face"></div>
-                <div class="node-label">Music</div>
+            <div id="node-3" class="map-node" style="bottom:180px; left:180px;" onclick="startStage(3)">
+                <div class="mini-sprite"></div>
+                <div class="node-label"></div>
             </div>
-            <div id="node-4" class="map-node locked" style="bottom:260px; left:100px;" onclick="startStage(4)">
-                <div class="mini-sprite fukumorita-face"></div>
-                <div class="node-label">BOSS</div>
+            <div id="node-4" class="map-node" style="bottom:260px; left:100px;" onclick="startStage(4)">
+                <div class="mini-sprite"></div>
+                <div class="node-label"></div>
             </div>
-            <div id="node-5" class="map-node locked" style="top:20px; right:20px; border-color:#ff00ff;" onclick="startStage(5)">
-                <div style="font-size:20px;">💀</div>
+            <div id="node-5" class="map-node" style="top:20px; right:20px; border-color:#ff00ff; display:none;" onclick="startStage(5)">
+                <div class="mini-sprite" style="font-size:20px;">💀</div>
                 <div class="node-label">Endless</div>
             </div>
+            
             <div id="player-pawn"></div>
         </div>
 
@@ -211,8 +219,6 @@
 
     <script>
         const GAME_URL = "https://kato-game-1.onrender.com";
-        
-        // ★★★ 先生を追加する時はここを増やす ★★★
         const teachers = {
             1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ..." },
             2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook..." },
@@ -231,7 +237,6 @@
         let hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false;
         let gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
         let isTimeStopped = false;
-        // ★追加：連続睡眠時間計測用
         let sleepContinuous = 0;
 
         const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
@@ -244,22 +249,60 @@
             else if (type === 'skill') { osc.type = 'sine'; osc.frequency.setValueAtTime(880, now); osc.frequency.linearRampToValueAtTime(1760, now+0.5); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.5); osc.start(now); osc.stop(now+0.5); }
         }
 
+        // マップ初期化
         function initMap() {
-            for(let i=1; i<=5; i++) {
-                const node = document.getElementById(`node-${i}`);
-                if (i <= unlockedStage) {
+            // ステージデータ
+            const stageData = [
+                { id: 1, face: "kato-face", label: "Math" },
+                { id: 2, face: "matsuda-face", label: "English" },
+                { id: 3, face: "sugawara-face", label: "Music" },
+                { id: 4, face: "fukumorita-face", label: "BOSS" }
+            ];
+
+            stageData.forEach(s => {
+                const node = document.getElementById(`node-${s.id}`);
+                const sprite = node.querySelector('.mini-sprite');
+                const label = node.querySelector('.node-label');
+                const path = document.getElementById(`path-${s.id-1}`);
+
+                if (s.id <= unlockedStage) {
+                    // 解放済み
                     node.classList.remove("locked");
-                    if (i < unlockedStage) node.classList.add("cleared");
+                    node.classList.add("unlocked");
+                    if (s.id < unlockedStage) {
+                        node.classList.add("cleared");
+                        if(path) path.classList.add("active");
+                    }
+                    // 正体判明
+                    sprite.className = `mini-sprite ${s.face}`;
+                    sprite.textContent = "";
+                    label.textContent = s.label;
                 } else {
+                    // 未開放（シークレット）
+                    node.classList.remove("unlocked", "cleared");
                     node.classList.add("locked");
+                    sprite.className = "mini-sprite";
+                    sprite.textContent = "🔒";
+                    label.textContent = "???";
                 }
+            });
+
+            // エンドレスモード（ステージ5）はステージ4クリア後に表示
+            const endlessNode = document.getElementById("node-5");
+            if (unlockedStage >= 5) {
+                endlessNode.style.display = "flex";
+                endlessNode.classList.remove("locked");
+                endlessNode.classList.add("unlocked");
             }
+
+            // 主人公の位置更新
             const targetNode = document.getElementById(`node-${Math.min(unlockedStage, 5)}`);
             const pawn = document.getElementById("player-pawn");
             pawn.style.bottom = targetNode.style.bottom;
             pawn.style.left = targetNode.style.left;
             pawn.style.top = targetNode.style.top;
             pawn.style.right = targetNode.style.right;
+
             renderEquipMenu();
         }
 
@@ -296,7 +339,7 @@
             currentStage = st;
             hp = (equippedPower === 'matsuda') ? 4 : 3;
             isTimeStopped = false;
-            sleepContinuous = 0; // リセット
+            sleepContinuous = 0;
             const skillBtn = document.getElementById("active-skill-btn");
             if (equippedPower === 'kato') { skillBtn.style.display = "flex"; skillBtn.classList.remove("cooldown"); } else { skillBtn.style.display = "none"; }
             sleepTime = 0; isTeacherLooking = false; endlessSpeed = 1.0;
@@ -341,22 +384,15 @@
 
         function gameLoop() {
             if (isSleeping) {
-                // 加速ロジック
                 sleepContinuous += 0.1;
                 let speedMultiplier = 1.0;
-                
-                if (equippedPower === 'sugawara') speedMultiplier = 1.5; // 常時1.5倍
-                
-                // ★福盛田のスニーカー（加速）
+                if (equippedPower === 'sugawara') speedMultiplier = 1.5;
                 if (equippedPower === 'fukumorita') {
-                    // 寝る時間が長いほど倍率アップ (1.0倍 〜 3.0倍)
                     let boost = 1.0 + (sleepContinuous * 0.2); 
                     if(boost > 3.0) boost = 3.0;
                     speedMultiplier = boost;
                 }
-
                 let cheatMultiplier = isGodMode ? 5.0 : 1.0;
-                
                 sleepTime += 0.1 * speedMultiplier * cheatMultiplier;
                 updateProgress();
                 if (isTeacherLooking && !isInvincible) takeDamage();
@@ -378,17 +414,22 @@
         function stageClear() {
             clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear');
             let gotPower = false;
-            // ドロップ判定
             if (currentStage === 1 && !unlockedPowers.includes("kato")) { unlockedPowers.push("kato"); gotPower = true; alert("加藤先生のちから「懐中時計」を手に入れた！"); }
             if (currentStage === 2 && !unlockedPowers.includes("matsuda")) { unlockedPowers.push("matsuda"); gotPower = true; alert("松田先生のちから「ランチ」を手に入れた！"); }
             if (currentStage === 3 && !unlockedPowers.includes("sugawara")) { unlockedPowers.push("sugawara"); gotPower = true; alert("菅原先生のちから「タクト」を手に入れた！"); }
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { unlockedPowers.push("fukumorita"); gotPower = true; alert("福盛田先生のちから「スニーカー」を手に入れた！\n長く寝るほど加速するぞ！"); }
-            
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
             if (currentStage === 4) { if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); } showEnding(); return; }
             if(currentStage >= unlockedStage) { unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage); }
-            document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#2b4528"; document.getElementById("result-title").textContent = "STAGE CLEAR!"; document.getElementById("result-title").style.color = "gold"; document.getElementById("result-msg").textContent = gotPower ? "新しい能力をゲット！" : "次の授業へ進みます";
+            
+            // マップに戻る前にアラートを出すか、リザルト画面へ
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("result-screen").classList.remove("hidden");
+            document.getElementById("result-screen").style.background = "#2b4528";
+            document.getElementById("result-title").textContent = "STAGE CLEAR!";
+            document.getElementById("result-title").style.color = "gold";
+            document.getElementById("result-msg").textContent = gotPower ? "新しい能力をゲット！" : "次の授業へ進みます";
         }
 
         function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (currentStage === 5) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
@@ -401,7 +442,7 @@
         const startSleep = () => { isSleeping = true; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); };
         const stopSleep = () => { 
             isSleeping = false; 
-            sleepContinuous = 0; // ★起きると加速リセット
+            sleepContinuous = 0; 
             if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; 
             if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } 
         };
