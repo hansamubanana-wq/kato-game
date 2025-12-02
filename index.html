@@ -24,12 +24,14 @@
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
-        /* メニュー画面 */
         #menu-screen {
-            justify-content: flex-start;
-            /* 廊下SVG */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='480' viewBox='0 0 320 480'%3E%3Cdefs%3E%3ClinearGradient id='floor' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23654321'/%3E%3Cstop offset='100%25' stop-color='%238b5a2b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='480' fill='%23222'/%3E%3Crect width='320' height='160' fill='%23444'/%3E%3Cpath d='M0,480 L320,480 L220,320 L100,320 Z' fill='url(%23floor)'/%3E%3Crect x='100' y='160' width='120' height='160' fill='%23666'/%3E%3Crect x='130' y='180' width='60' height='140' fill='%23333' border='2' stroke='%23555'/%3E%3Cpath d='M0,0 L100,160 L100,320 L0,480 Z' fill='%23888'/%3E%3Cpath d='M320,0 L220,160 L220,320 L320,480 Z' fill='%23777'/%3E%3Cline x1='0' y1='100' x2='100' y2='190' stroke='%23555' stroke-width='3'/%3E%3Cline x1='320' y1='100' x2='220' y2='190' stroke='%23555' stroke-width='3'/%3E%3C/svg%3E");
-            background-size: cover; background-position: center;
+            background: linear-gradient(#444 50%, #8b4513 50%);
+            perspective: 600px; overflow: hidden;
+        }
+        #menu-screen::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, transparent 0, transparent 40px, rgba(0,0,0,0.2) 40px, rgba(0,0,0,0.2) 42px);
+            opacity: 0.5; pointer-events: none;
         }
 
         #face-off-area {
@@ -44,10 +46,9 @@
         @keyframes walkOff { 0% { transform: translateX(0); } 100% { transform: translateX(400px) translateY(0); } }
         @keyframes slideIn { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
 
-        /* 装備メニュー */
         #equip-menu {
-            width: 95%; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; border: 2px solid #fff;
-            display: flex; flex-direction: column; align-items: center; margin-bottom: 10px;
+            width: 90%; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 10px; border: 2px solid #fff;
+            display: flex; flex-direction: column; align-items: center; margin-top: 10px;
         }
         #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 5px; }
         #equip-desc { color: #fff; font-size: 8px; margin-top: 5px; height: 20px; }
@@ -65,8 +66,18 @@
             justify-content: flex-start;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3Cline x1='250' y1='190' x2='310' y2='190' stroke='%23aaa'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E");
             background-size: cover; background-position: center;
-            will-change: filter; 
+            will-change: filter, transform; /* 揺れとフィルタの最適化 */
         }
+        
+        /* 画面シェイクのアニメーション */
+        .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shakeScreen {
+            10%, 90% { transform: translate3d(-4px, 0, 0); }
+            20%, 80% { transform: translate3d(6px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+            40%, 60% { transform: translate3d(8px, 0, 0); }
+        }
+
         #teacher-area { height: 45vh; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; z-index: 5; }
         #player-area { height: 55vh; width: 100%; background: rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-top: 4px solid #5a3a22; z-index: 10; }
 
@@ -112,29 +123,24 @@
         }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
 
-        /* ▼▼▼ New Characters & Bosses ▼▼▼ */
-        /* 加藤 */
+        /* ▼▼▼ Character SVGs (Updated Otani) ▼▼▼ */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
-        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y1='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
-        /* 松田 */
+        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
         .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M8,4 L24,4 L24,10 L8,10 Z' fill='%23622'/%3E%3Cpath d='M6,6 L8,6 L8,16 L6,16 Z' fill='%23622'/%3E%3Cpath d='M24,6 L26,6 L26,16 L24,16 Z' fill='%23622'/%3E%3Crect x='11' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='19' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='9' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23d00'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
-        /* 菅原 */
         .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
         .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
-        /* 福盛田 (中ボス) */
         .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3C/svg%3E"); }
         .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
-        /* 須藤 (ポニーテール・低身長) */
         .sudo-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,14 L10,14 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
         .sudo-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,12 L10,12 Z' fill='%23421'/%3E%3Cpath d='M8,8 L10,20 L8,20 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
-        /* 大谷 (長身・イケメン) */
-        .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='6' fill='%23886622'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
-        .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L22,2 L22,6 L10,8 Z' fill='%23886622'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
-        /* 松村 (禿げおじさん) */
+        
+        /* 大谷（修正：黒髪・センター分け） */
+        .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3C!-- 黒髪 --%3E%3Cpath d='M10,2 L22,2 L22,8 L10,8 Z' fill='%23111'/%3E%3C!-- センター分け線 --%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%23333' stroke-width='1'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
+        .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3C!-- 黒髪センター分け --%3E%3Cpath d='M10,2 L16,2 L16,4 L10,8 Z' fill='%23111'/%3E%3Cpath d='M22,2 L16,2 L16,4 L22,8 Z' fill='%23111'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
+        
         .matsumura-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3C/svg%3E"); }
         .matsumura-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='12' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='14' y='14' width='4' height='1' fill='%23000'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='12' y='18' width='2' height='14' fill='%23aaa'/%3E%3C/svg%3E"); }
-        /* 青田 (ラスボス・青ジャケット・ツーブロック) */
         .aota-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3C/svg%3E"); }
         .aota-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='10' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='20' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='13' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='17' y='6' width='2' height='1' fill='%23000'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000' stroke-width='2'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3Crect x='15' y='16' width='2' height='10' fill='%23a00'/%3E%3C/svg%3E"); }
 
@@ -306,7 +312,7 @@
             
             const endlessBtn = document.getElementById("endless-btn");
             const ngBtn = document.getElementById("ng-plus-btn");
-            // ステージ9（エンドレス）が解放されているか
+            
             if (unlockedStage >= 9) {
                 endlessBtn.style.display = "block";
                 ngBtn.style.display = "block";
@@ -321,13 +327,8 @@
             const t = teachers[stageNum];
             const rivalSprite = document.getElementById("menu-rival-sprite");
             const rivalName = document.getElementById("menu-rival-name");
-            rivalSprite.className = "sprite";
-            if (stageNum === 9) {
-                rivalSprite.textContent = "💀"; rivalSprite.style.fontSize = "50px"; rivalSprite.style.display = "flex"; rivalSprite.style.alignItems = "center"; rivalSprite.style.justifyContent = "center";
-                rivalName.textContent = "ENDLESS ZONE";
-            } else {
-                rivalSprite.textContent = ""; rivalSprite.className = `sprite ${t.face}`; rivalName.textContent = t.label;
-            }
+            rivalSprite.className = `sprite ${t.face}`;
+            rivalName.textContent = t.label;
         }
 
         function renderEquipMenu() {
@@ -439,6 +440,7 @@
                 const sprite = document.getElementById("teacher-sprite");
                 let tName = getTeacherName(currentStage, sprite);
                 sprite.className = `sprite ${tName}-back`; 
+                // 画面を揺らす代わりにフィルタ
                 document.getElementById("game-screen").style.filter = "invert(1)";
                 setTimeout(() => { isTimeStopped = false; document.getElementById("game-screen").style.filter = "none"; updateTeacherBehavior(); }, 3000);
             
@@ -517,8 +519,15 @@
         function takeDamage() {
             if(isGodMode) return;
             hp--; updateHearts(); playSound('dead'); isInvincible = true;
+            
+            // 画面シェイク
+            const gameScreen = document.getElementById("game-screen");
+            gameScreen.classList.remove("shaking");
+            void gameScreen.offsetWidth; // リフロー
+            gameScreen.classList.add("shaking");
+
             const chalk = document.createElement("div"); chalk.className = "chalk-missile"; document.getElementById("game-screen").appendChild(chalk); setTimeout(() => chalk.remove(), 300);
-            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate(200);
+            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500);
             if (hp <= 0) gameOver();
         }
@@ -528,7 +537,6 @@
             clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear');
             let gotPower = false;
             let dropped = "";
-            // ドロップ判定
             if (currentStage === 1 && !unlockedPowers.includes("kato")) { dropped="kato"; gotPower = true; alert("加藤先生の「懐中時計」を奪った！"); }
             if (currentStage === 2 && !unlockedPowers.includes("matsuda")) { dropped="matsuda"; gotPower = true; alert("松田先生の「ランチ」を奪った！"); }
             if (currentStage === 3 && !unlockedPowers.includes("sugawara")) { dropped="sugawara"; gotPower = true; alert("菅原先生の「タクト」を奪った！"); }
@@ -541,11 +549,13 @@
             if(gotPower) unlockedPowers.push(dropped);
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
+            let nextStage = currentStage;
             if (currentStage === 8) {
                 if (unlockedStage < 9) { unlockedStage = 9; localStorage.setItem("soichiGameStage", unlockedStage); }
                 showEnding(); return;
             } else if(currentStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
+                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
