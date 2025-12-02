@@ -21,16 +21,14 @@
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-color); transition: opacity 0.3s; }
         .hidden { display: none !important; }
         
-        .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; active: translateY(4px); }
+        .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
-        /* ▼▼▼ メニュー画面（廊下） ▼▼▼ */
+        /* メニュー画面 */
         #menu-screen {
-            /* 廊下のパース表現 */
             background: linear-gradient(#444 50%, #8b4513 50%);
             perspective: 600px; overflow: hidden;
         }
-        /* 廊下の天井と床のライン */
         #menu-screen::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(90deg, transparent 0, transparent 40px, rgba(0,0,0,0.2) 40px, rgba(0,0,0,0.2) 42px);
@@ -41,30 +39,15 @@
             display: flex; justify-content: space-between; align-items: flex-end;
             width: 80%; height: 200px; margin-bottom: 20px; position: relative;
         }
-
-        .char-box {
-            display: flex; flex-direction: column; align-items: center; 
-            transition: transform 0.5s;
-        }
+        .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; }
         .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; }
         
-        /* アニメーション用クラス */
         .walk-right { animation: walkOff 1.5s forwards linear; }
         .fade-in-right { animation: slideIn 1s forwards ease-out; }
-        
-        @keyframes walkOff {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(0) translateY(-10px); }
-            40% { transform: translateX(50px) translateY(0); }
-            60% { transform: translateX(100px) translateY(-10px); }
-            100% { transform: translateX(400px) translateY(0); }
-        }
-        @keyframes slideIn {
-            0% { transform: translateX(200px); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
+        @keyframes walkOff { 0% { transform: translateX(0); } 20% { transform: translateX(0) translateY(-10px); } 40% { transform: translateX(50px) translateY(0); } 60% { transform: translateX(100px) translateY(-10px); } 100% { transform: translateX(400px) translateY(0); } }
+        @keyframes slideIn { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
 
-        /* 装備メニュー */
+        /* 装備 */
         #equip-menu {
             width: 90%; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; border: 2px solid #fff;
             display: flex; flex-direction: column; align-items: center;
@@ -78,7 +61,7 @@
         .equip-item.unlocked { border-color: #fff; }
         .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; background: #444; }
 
-        /* ゲーム画面（教室） */
+        /* ゲーム画面 */
         #game-screen {
             justify-content: flex-start;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23333'/%3E%3Crect y='160' width='320' height='80' fill='%235a3a22'/%3E%3Crect x='20' y='40' width='60' height='80' fill='%2387ceeb' stroke='%23555' stroke-width='4'/%3E%3Cline x1='50' y1='40' x2='50' y2='120' stroke='%23555' stroke-width='2'/%3E%3Cline x1='20' y1='80' x2='80' y2='80' stroke='%23555' stroke-width='2'/%3E%3Crect x='240' y='50' width='60' height='40' fill='%23eee' stroke='%23ccc' stroke-width='2'/%3E%3Crect x='100' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='110' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3Crect x='200' y='140' width='50' height='30' fill='%238b4513'/%3E%3Crect x='210' y='170' width='30' height='10' fill='%236b3e1e'/%3E%3C/svg%3E");
@@ -105,6 +88,18 @@
         #active-skill-btn:active { transform: scale(0.9); }
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
         @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
+
+        /* コマンドボタン類 */
+        #config-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
+        #exit-btn { position: absolute; top: 10px; left: 10px; font-size: 12px; cursor: pointer; background: #444; color: #fff; border: 2px solid #fff; padding: 5px; z-index: 20; }
+        
+        /* 設定モーダル */
+        #config-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 3000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .config-box { background: #333; padding: 20px; border: 2px solid #fff; text-align: center; }
 
         .chalk-missile {
             position: absolute; width: 20px; height: 6px; background: white; border-radius: 2px;
@@ -144,20 +139,13 @@
 <body>
     <div id="menu-screen" class="screen">
         <h1 id="game-title" style="color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer;">BATTLE SELECT</h1>
+        <button id="config-btn" onclick="openConfig()">⚙️</button>
         <p id="cheat-msg" style="color:gold; font-size:10px; display:none; z-index:10;">GOD MODE!</p>
 
         <div id="face-off-area">
-            <div id="menu-player" class="char-box">
-                <div class="sprite student-awake"></div>
-                <div class="char-label">YOU</div>
-            </div>
-            
+            <div id="menu-player" class="char-box"><div class="sprite student-awake"></div><div class="char-label">YOU</div></div>
             <div style="font-size:30px; color:var(--danger-color); font-weight:bold; text-shadow:2px 2px 0 #000;">VS</div>
-            
-            <div id="menu-rival" class="char-box">
-                <div id="menu-rival-sprite" class="sprite"></div>
-                <div id="menu-rival-name" class="char-label">???</div>
-            </div>
+            <div id="menu-rival" class="char-box"><div id="menu-rival-sprite" class="sprite"></div><div id="menu-rival-name" class="char-label">???</div></div>
         </div>
 
         <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:var(--danger-color);" onclick="startBattle()">BATTLE START</button>
@@ -174,7 +162,18 @@
         </div>
     </div>
 
+    <div id="config-modal">
+        <div class="config-box">
+            <h2 style="color:var(--accent-color);">SETTINGS</h2>
+            <p style="font-size:10px; color:#aaa;">クリア情報を操作します</p>
+            <button class="btn" onclick="newGamePlus()">💪 強くてニューゲーム<br><span style="font-size:8px">(能力維持・ステージ1へ)</span></button>
+            <button class="btn" style="border-color:red; color:red;" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
+            <button class="btn" style="margin-top:20px;" onclick="closeConfig()">CLOSE</button>
+        </div>
+    </div>
+
     <div id="game-screen" class="screen hidden">
+        <button id="exit-btn" onclick="exitBattle()">↩ EXIT</button>
         <div id="teacher-area"><div id="blackboard-text"></div><div id="teacher-sprite" class="sprite"></div></div>
         <div id="player-area">
             <div id="hud"><div id="hearts">❤❤❤</div><div style="font-size:12px; color:#aaa;">TARGET: <span id="target-score">30</span>s</div></div>
@@ -214,7 +213,7 @@
             2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook...", face:"matsuda-face" },
             3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪", face:"sugawara-face" },
             4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH...", face:"fukumorita-face" },
-            5: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face" } // エンドレスは顔なしorランダム
+            5: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face" }
         };
         const teacherNames = ["kato", "matsuda", "sugawara", "fukumorita"];
         
@@ -223,11 +222,8 @@
         let equippedPower = localStorage.getItem("soichiEquippedPower");
         if (equippedPower === "null") equippedPower = null;
 
-        let currentStage = unlockedStage > 4 ? 5 : unlockedStage; // 最新ステージをセット
-        
-        // ステージクリア直後の演出フラグ
+        let currentStage = unlockedStage > 4 ? 5 : unlockedStage;
         let justCleared = false;
-
         let hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false;
         let gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
         let isTimeStopped = false, sleepContinuous = 0;
@@ -242,9 +238,7 @@
             else if (type === 'skill') { osc.type = 'sine'; osc.frequency.setValueAtTime(880, now); osc.frequency.linearRampToValueAtTime(1760, now+0.5); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.5); osc.start(now); osc.stop(now+0.5); }
         }
 
-        // メニュー初期化
         function initMenu() {
-            // 今挑戦すべきステージを表示
             currentStage = unlockedStage > 4 ? 5 : unlockedStage;
             updateMenuVisuals(currentStage);
             renderEquipMenu();
@@ -254,21 +248,12 @@
             const t = teachers[stageNum];
             const rivalSprite = document.getElementById("menu-rival-sprite");
             const rivalName = document.getElementById("menu-rival-name");
-            
-            // クラスリセット
             rivalSprite.className = "sprite";
-            
             if (stageNum === 5) {
-                // エンドレス
-                rivalSprite.textContent = "💀";
-                rivalSprite.style.fontSize = "50px";
-                rivalSprite.style.display = "flex"; rivalSprite.style.alignItems = "center"; rivalSprite.style.justifyContent = "center";
+                rivalSprite.textContent = "💀"; rivalSprite.style.fontSize = "50px"; rivalSprite.style.display = "flex"; rivalSprite.style.alignItems = "center"; rivalSprite.style.justifyContent = "center";
                 rivalName.textContent = "ENDLESS ZONE";
             } else {
-                // 通常ステージ
-                rivalSprite.textContent = "";
-                rivalSprite.className = `sprite ${t.face}`;
-                rivalName.textContent = t.label;
+                rivalSprite.textContent = ""; rivalSprite.className = `sprite ${t.face}`; rivalName.textContent = t.label;
             }
         }
 
@@ -277,11 +262,7 @@
             document.getElementById("current-equip").textContent = equippedPower ? `装備中: ${skillNames[equippedPower]}` : "装備なし";
             ["kato", "matsuda", "sugawara", "fukumorita"].forEach(p => {
                 const el = document.getElementById(`skill-${p}`);
-                if (unlockedPowers.includes(p)) {
-                    el.classList.add("unlocked"); el.style.opacity = "1"; el.style.pointerEvents = "auto";
-                } else {
-                    el.classList.remove("unlocked"); el.style.opacity = "0.3"; el.style.pointerEvents = "none";
-                }
+                if (unlockedPowers.includes(p)) { el.classList.add("unlocked"); el.style.opacity = "1"; el.style.pointerEvents = "auto"; } else { el.classList.remove("unlocked"); el.style.opacity = "0.3"; el.style.pointerEvents = "none"; }
                 if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
             });
         }
@@ -292,11 +273,27 @@
             renderEquipMenu();
         }
 
+        /* --- 設定・リセット機能 --- */
+        function openConfig() { document.getElementById("config-modal").style.display = "flex"; }
+        function closeConfig() { document.getElementById("config-modal").style.display = "none"; }
+        
+        function newGamePlus() {
+            if(confirm("能力はそのままで、ステージ1から始めますか？")) {
+                localStorage.setItem("soichiGameStage", 1);
+                location.reload();
+            }
+        }
+        function hardReset() {
+            if(confirm("本当に全てのデータを消して初期化しますか？")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
 
         function startBattle() {
             initAudio();
-            // ステージ開始
             hp = (equippedPower === 'matsuda') ? 4 : 3;
             isTimeStopped = false; sleepContinuous = 0;
             const skillBtn = document.getElementById("active-skill-btn");
@@ -314,7 +311,15 @@
             gameLoopId = setInterval(gameLoop, 100);
         }
 
-        // ゲームロジック（省略なし）
+        /* --- 撤退機能 --- */
+        function exitBattle() {
+            clearInterval(gameLoopId);
+            clearTimeout(teacherTimerId);
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("menu-screen").classList.remove("hidden");
+            initMenu(); // メニュー再描画
+        }
+
         window.activateKatoSkill = function() {
             const btn = document.getElementById("active-skill-btn");
             if (btn.classList.contains("cooldown")) return;
@@ -373,14 +378,12 @@
         function stageClear() {
             clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear');
             let gotPower = false;
-            // ドロップ処理
             if (currentStage === 1 && !unlockedPowers.includes("kato")) { unlockedPowers.push("kato"); gotPower = true; alert("加藤先生のちから「懐中時計」を奪った！"); }
             if (currentStage === 2 && !unlockedPowers.includes("matsuda")) { unlockedPowers.push("matsuda"); gotPower = true; alert("松田先生のちから「ランチ」を奪った！"); }
             if (currentStage === 3 && !unlockedPowers.includes("sugawara")) { unlockedPowers.push("sugawara"); gotPower = true; alert("菅原先生のちから「タクト」を奪った！"); }
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { unlockedPowers.push("fukumorita"); gotPower = true; alert("福盛田先生のちから「スニーカー」を奪った！"); }
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
-            // ステージ進行
             let nextStage = currentStage;
             if (currentStage === 4) {
                 if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); }
@@ -388,10 +391,8 @@
             } else if(currentStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
                 nextStage = unlockedStage;
-                justCleared = true; // アニメーション用フラグ
+                justCleared = true; 
             }
-
-            // リザルト画面へ
             document.getElementById("game-screen").classList.add("hidden");
             document.getElementById("result-screen").classList.remove("hidden");
             document.getElementById("result-screen").style.background = "#2b4528";
@@ -403,41 +404,13 @@
         function returnToMenu() {
             document.getElementById("result-screen").classList.add("hidden");
             document.getElementById("menu-screen").classList.remove("hidden");
-            
-            // クリア直後ならアニメーション再生
-            if (justCleared && currentStage < 5) {
-                justCleared = false;
-                playWalkAnimation();
-            } else {
-                initMenu(); // 通常のメニュー表示
-            }
+            if (justCleared && currentStage < 5) { justCleared = false; playWalkAnimation(); } else { initMenu(); }
         }
 
         function playWalkAnimation() {
-            // 1. 古い先生のまま
-            updateMenuVisuals(currentStage); // さっき倒した先生を表示
-            const player = document.getElementById("menu-player");
-            const rival = document.getElementById("menu-rival");
-            
-            // 2. 先生が消える（倒した感）
-            rival.style.opacity = "0"; 
-            
-            // 3. プレイヤーが右へ歩く
-            player.classList.add("walk-right");
-            
-            setTimeout(() => {
-                // 4. 次の先生をセット
-                updateMenuVisuals(unlockedStage); 
-                rival.style.opacity = "1";
-                rival.classList.add("fade-in-right");
-                
-                // 5. プレイヤー位置リセット
-                player.classList.remove("walk-right");
-                
-                setTimeout(() => {
-                    rival.classList.remove("fade-in-right"); // クラス掃除
-                }, 1000);
-            }, 1500); // 1.5秒後に切り替え
+            updateMenuVisuals(currentStage); const player = document.getElementById("menu-player"); const rival = document.getElementById("menu-rival");
+            rival.style.opacity = "0"; player.classList.add("walk-right");
+            setTimeout(() => { updateMenuVisuals(unlockedStage); rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right"); setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000); }, 1500); 
         }
 
         function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (currentStage === 5) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
