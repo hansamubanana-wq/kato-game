@@ -33,29 +33,40 @@
 
         #face-off-area {
             display: flex; justify-content: space-between; align-items: flex-end;
-            width: 80%; height: 200px; margin-bottom: 20px; position: relative; margin-top: 60px;
+            width: 90%; /* 少し広げた */
+            height: 200px; margin-bottom: 20px; position: relative; margin-top: 60px;
         }
-        .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; }
+        .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; z-index: 5; }
         .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; color: white; }
         
-        /* 選択矢印 */
+        /* ★修正：矢印のスタイル強化 */
         .select-arrow {
-            position: absolute; top: 50%; font-size: 30px; color: #fff; cursor: pointer; user-select: none;
-            text-shadow: 2px 2px 0 #000; animation: bounceX 1s infinite;
+            position: absolute; top: 40%; 
+            font-size: 40px; color: #fff; cursor: pointer; user-select: none;
+            text-shadow: 2px 2px 0 #000; 
+            z-index: 100; /* 最前面に */
+            width: 50px; height: 50px; /* タップ範囲確保 */
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.2); /* 薄く背景を入れて押しやすく */
+            border-radius: 50%;
         }
-        #arrow-left { left: 10px; }
-        #arrow-right { right: 10px; }
-        @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+        .select-arrow:active { transform: scale(0.8); background: rgba(255,255,255,0.3); }
+        #arrow-left { left: -10px; animation: bounceLeft 1s infinite; }
+        #arrow-right { right: -10px; animation: bounceRight 1s infinite; }
+        
+        @keyframes bounceLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-5px); } }
+        @keyframes bounceRight { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
 
-        /* ランクスタンプ（メニュー用） */
+        /* ランクスタンプ */
         .menu-rank {
-            position: absolute; top: -10px; right: -20px;
+            position: absolute; top: -10px; right: -10px;
             width: 50px; height: 50px; border: 3px solid red; border-radius: 50%;
             color: red; font-family: 'New Tegomin', serif; font-size: 30px;
             display: flex; align-items: center; justify-content: center;
             transform: rotate(20deg); text-shadow: 1px 1px 0 #fff;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
         .walk-right { animation: walkOff 1.5s forwards linear; }
@@ -78,11 +89,9 @@
         /* ゲーム画面 */
         #game-screen {
             justify-content: flex-start;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3Cline x1='250' y1='190' x2='310' y2='190' stroke='%23aaa'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E");
             background-size: cover; background-position: center;
             will-change: filter, transform;
         }
-        /* 各背景定義（省略せず記述） */
         .bg-classroom { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E"); }
         .bg-science { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23ddd'/%3E%3Crect width='320' height='120' fill='%23bbb'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23224422' stroke='%23555' stroke-width='6'/%3E%3Ctext x='20' y='160' font-size='40' opacity='0.2'>🧪</text>%3Ctext x='260' y='160' font-size='40' opacity='0.2'>💀</text>%3Crect y='220' width='320' height='20' fill='%23333'/%3E%3C/svg%3E"); }
         .bg-music { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23d0c0a0'/%3E%3Crect width='320' height='120' fill='%23a09070'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23333' stroke='%235a3a22' stroke-width='6'/%3E%3Ctext x='150' y='70' font-size='40' fill='white'>🎼</text>%3Crect x='250' y='140' width='60' height='80' fill='%23222'/%3E%3C/svg%3E"); }
@@ -133,13 +142,13 @@
         }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
 
-        /* SVG */
+        /* SVG Sprites */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
         .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M8,4 L24,4 L24,10 L8,10 Z' fill='%23622'/%3E%3Cpath d='M6,6 L8,6 L8,16 L6,16 Z' fill='%23622'/%3E%3Cpath d='M24,6 L26,6 L26,16 L24,16 Z' fill='%23622'/%3E%3Crect x='11' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='19' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='9' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23d00'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
-        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
-        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
         .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3C/svg%3E"); }
         .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
         .sudo-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,14 L10,14 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
@@ -677,6 +686,7 @@
                 showEnding(); return;
             } else if(battleStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
+                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
