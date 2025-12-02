@@ -311,13 +311,12 @@
             gameLoopId = setInterval(gameLoop, 100);
         }
 
-        /* --- 撤退機能 --- */
         function exitBattle() {
             clearInterval(gameLoopId);
             clearTimeout(teacherTimerId);
             document.getElementById("game-screen").classList.add("hidden");
             document.getElementById("menu-screen").classList.remove("hidden");
-            initMenu(); // メニュー再描画
+            initMenu();
         }
 
         window.activateKatoSkill = function() {
@@ -404,13 +403,37 @@
         function returnToMenu() {
             document.getElementById("result-screen").classList.add("hidden");
             document.getElementById("menu-screen").classList.remove("hidden");
-            if (justCleared && currentStage < 5) { justCleared = false; playWalkAnimation(); } else { initMenu(); }
+            if (justCleared && currentStage < 5) { 
+                justCleared = false; 
+                playWalkAnimation(); 
+            } else { 
+                initMenu(); 
+            }
         }
 
         function playWalkAnimation() {
-            updateMenuVisuals(currentStage); const player = document.getElementById("menu-player"); const rival = document.getElementById("menu-rival");
-            rival.style.opacity = "0"; player.classList.add("walk-right");
-            setTimeout(() => { updateMenuVisuals(unlockedStage); rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right"); setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000); }, 1500); 
+            // ★重要修正：アニメーション開始時は「さっき倒したステージ」を表示するが
+            updateMenuVisuals(currentStage); 
+            const player = document.getElementById("menu-player");
+            const rival = document.getElementById("menu-rival");
+            
+            rival.style.opacity = "0"; 
+            player.classList.add("walk-right");
+            
+            setTimeout(() => {
+                // ★重要修正：アニメーション完了時に現在のステージを「次のステージ」に更新する
+                currentStage = unlockedStage; 
+                updateMenuVisuals(currentStage); 
+                
+                rival.style.opacity = "1";
+                rival.classList.add("fade-in-right");
+                
+                player.classList.remove("walk-right");
+                
+                setTimeout(() => {
+                    rival.classList.remove("fade-in-right");
+                }, 1000);
+            }, 1500); 
         }
 
         function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (currentStage === 5) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
