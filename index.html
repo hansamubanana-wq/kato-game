@@ -24,6 +24,7 @@
         .btn { font-family: 'Press Start 2P', cursive; background: #444; border: 4px solid #fff; padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; box-shadow: 0 6px 0 #222; border-radius: 4px; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #222; }
         
+        /* メニュー画面 */
         #menu-screen {
             background: linear-gradient(#444 50%, #8b4513 50%);
             perspective: 600px; overflow: hidden;
@@ -78,27 +79,35 @@
         #progress-fill { width: 0%; height: 100%; background: var(--accent-color); transition: width 0.2s; }
         .sprite { width: 140px; height: 140px; background-repeat: no-repeat; background-position: center; background-size: contain; }
         
+        /* スキルボタン（修正：z-indexを高くし、クリックイベントを優先） */
         #active-skill-btn {
             position: absolute; bottom: 80px; right: 20px;
             width: 70px; height: 70px; border-radius: 50%;
             background: radial-gradient(circle, #ffeb3b, #fbc02d);
             border: 4px solid #fff; box-shadow: 0 0 15px #ffd700;
             display: none; align-items: center; justify-content: center;
-            font-size: 30px; cursor: pointer; z-index: 100; animation: glow 2s infinite;
+            font-size: 30px; cursor: pointer; z-index: 1000; animation: glow 2s infinite;
+            /* タッチのハイライトを無効化 */
+            -webkit-tap-highlight-color: transparent;
         }
         #active-skill-btn:active { transform: scale(0.9); }
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
         @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
 
+        /* コマンドボタン類 */
         #config-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
+        #help-btn { position: absolute; top: 10px; left: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
+        
         #exit-btn { position: absolute; top: 10px; left: 10px; font-size: 12px; cursor: pointer; background: #444; color: #fff; border: 2px solid #fff; padding: 5px; z-index: 20; }
         
-        #config-modal {
+        /* 設定モーダル */
+        #config-modal, #tutorial-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 3000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
-        .config-box { background: #333; padding: 20px; border: 2px solid #fff; text-align: center; }
+        .config-box { background: #333; padding: 20px; border: 2px solid #fff; text-align: center; width: 80%; }
+        .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 10px; line-height: 1.6; }
 
         /* クリア後ボタン類 */
         .btn-endless { 
@@ -122,7 +131,7 @@
 
         /* SVG */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
-        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23f0c0a0'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23a00'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
+        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='3' y='1' width='4' height='4' fill='%23ffcccc'/%3E%3Crect x='3' y='1' width='4' height='1' fill='%23222'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23000'/%3E%3Crect x='4' y='4' width='3' height='1' fill='%23a00'/%3E%3Crect x='2' y='5' width='6' height='5' fill='%23ccc'/%3E%3C/svg%3E"); }
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='1' width='6' height='4' fill='%23f0c0a0'/%3E%3Crect x='2' y='1' width='6' height='2' fill='%23622'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
         .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='1' width='6' height='4' fill='%23f0c0a0'/%3E%3Crect x='2' y='1' width='6' height='1' fill='%23622'/%3E%3Crect x='8' y='2' width='1' height='4' fill='%23622'/%3E%3Crect x='1' y='2' width='1' height='4' fill='%23622'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%23f0a'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%23f0a'/%3E%3Crect x='4' y='4' width='2' height='1' fill='%23f00'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
         .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect width='10' height='10' fill='transparent'/%3E%3Crect x='2' y='0' width='6' height='3' fill='%23321'/%3E%3Crect x='2' y='2' width='6' height='3' fill='%23e0b090'/%3E%3Crect x='1' y='5' width='8' height='5' fill='%23456'/%3E%3C/svg%3E"); }
@@ -152,6 +161,7 @@
     <div id="menu-screen" class="screen">
         <h1 id="game-title" style="color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer;">BATTLE SELECT</h1>
         <button id="config-btn" onclick="openConfig()">⚙️</button>
+        <button id="help-btn" onclick="openTutorial()">❓</button>
         <p id="cheat-msg" style="color:gold; font-size:10px; display:none; z-index:10;">GOD MODE!</p>
 
         <div id="face-off-area">
@@ -177,10 +187,23 @@
         </div>
     </div>
 
+    <div id="tutorial-modal">
+        <div class="config-box">
+            <h2 style="color:var(--accent-color);">HOW TO PLAY</h2>
+            <div class="tutorial-step">
+                1. 画面長押し（PCはスペース）で<b>居眠り</b>します。<br>
+                2. 寝ている間、スコアが溜まります。<br>
+                3. 先生がこちらを向いたら、すぐに<b>指を離して</b>起きてください！<br>
+                4. 先生を倒すと、強力な<b>能力</b>をゲットできます。装備して戦いましょう。
+            </div>
+            <button class="btn" onclick="closeTutorial()">わかった！</button>
+        </div>
+    </div>
+
     <div id="config-modal">
         <div class="config-box">
             <h2 style="color:var(--accent-color);">SETTINGS</h2>
-            <p style="font-size:10px; color:#aaa;">クリア情報を操作します</p>
+            <p style="font-size:10px; color:#aaa;">データ操作</p>
             <button class="btn" style="border-color:red; color:red;" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
             <button class="btn" style="margin-top:20px;" onclick="closeConfig()">CLOSE</button>
         </div>
@@ -193,7 +216,7 @@
             <div id="hud"><div id="hearts">❤❤❤</div><div style="font-size:12px; color:#aaa;">TARGET: <span id="target-score">30</span>s</div></div>
             <div id="progress-bar"><div id="progress-fill"></div></div>
             <div id="student-sprite" class="sprite student-awake"></div>
-            <div id="active-skill-btn" onclick="activateKatoSkill()">⏱️</div>
+            <div id="active-skill-btn" ontouchstart="activateKatoSkill(event)" onclick="activateKatoSkill(event)">⏱️</div>
             <div style="margin-top:20px; color:#ddd; font-size:12px; text-shadow:1px 1px 0 #000;">HOLD SPACE TO SLEEP</div>
         </div>
     </div>
@@ -230,7 +253,7 @@
             5: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face" }
         };
         const skillData = {
-            "kato": { name: "加藤の懐中時計", desc: "授業中に使用で時間を止める（1回のみ）" },
+            "kato": { name: "加藤の時計", desc: "授業中に使用で時間を止める（1回のみ）" },
             "matsuda": { name: "松田のランチ", desc: "ライフが1つ増える（パッシブ）" },
             "sugawara": { name: "菅原のタクト", desc: "睡眠速度が常時1.5倍になる" },
             "fukumorita": { name: "福盛田のスニーカー", desc: "長く寝るほど速度が加速する（最大3倍）" }
@@ -260,10 +283,15 @@
         }
 
         function initMenu() {
+            // チュートリアルチェック
+            if (!localStorage.getItem("soichiTutorialSeen")) {
+                openTutorial();
+                localStorage.setItem("soichiTutorialSeen", "true");
+            }
+
             currentStage = (unlockedStage > 4) ? 4 : unlockedStage;
             updateMenuVisuals(currentStage);
             
-            // クリア後のボタン制御
             const endlessBtn = document.getElementById("endless-btn");
             const ngBtn = document.getElementById("ng-plus-btn");
             
@@ -287,7 +315,6 @@
 
         function renderEquipMenu() {
             const descEl = document.getElementById("equip-desc");
-            
             if (equippedPower && skillData[equippedPower]) {
                 document.getElementById("current-equip").textContent = `装備中: ${skillData[equippedPower].name}`;
                 descEl.textContent = skillData[equippedPower].desc;
@@ -313,14 +340,16 @@
         function equipSkill(power) {
             const descEl = document.getElementById("equip-desc");
             descEl.textContent = skillData[power].desc;
-
             if (equippedPower === power) equippedPower = null; else equippedPower = power;
             localStorage.setItem("soichiEquippedPower", equippedPower);
             renderEquipMenu();
         }
 
+        /* --- モーダル制御 --- */
         function openConfig() { document.getElementById("config-modal").style.display = "flex"; }
         function closeConfig() { document.getElementById("config-modal").style.display = "none"; }
+        function openTutorial() { document.getElementById("tutorial-modal").style.display = "flex"; }
+        function closeTutorial() { document.getElementById("tutorial-modal").style.display = "none"; }
         
         function newGamePlus() {
             if(confirm("能力はそのままで、ステージ1から始めますか？")) {
@@ -369,7 +398,10 @@
             initMenu();
         }
 
-        window.activateKatoSkill = function() {
+        /* ★スマホ対応修正：イベントを受け取り伝播を止める */
+        window.activateKatoSkill = function(event) {
+            if(event) event.stopPropagation(); // ここで寝る判定（親要素）への通知を止める！
+
             const btn = document.getElementById("active-skill-btn");
             if (btn.classList.contains("cooldown")) return;
             playSound('skill'); isTimeStopped = true; btn.classList.add("cooldown");
@@ -433,11 +465,13 @@
             if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { unlockedPowers.push("fukumorita"); gotPower = true; alert("福盛田先生のちから「スニーカー」を奪った！"); }
             localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers));
 
+            let nextStage = currentStage;
             if (currentStage === 4) {
                 if (unlockedStage < 5) { unlockedStage = 5; localStorage.setItem("soichiGameStage", unlockedStage); }
                 showEnding(); return;
             } else if(currentStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
+                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
@@ -464,9 +498,7 @@
             updateMenuVisuals(currentStage); const player = document.getElementById("menu-player"); const rival = document.getElementById("menu-rival");
             rival.style.opacity = "0"; player.classList.add("walk-right");
             setTimeout(() => {
-                // currentStageはinitMenuで更新される
-                initMenu();
-                // この時点での表示をフェードイン
+                currentStage = unlockedStage; updateMenuVisuals(currentStage); 
                 rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right");
                 setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000);
             }, 1500); 
@@ -483,7 +515,20 @@
         const startSleep = () => { isSleeping = true; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); };
         const stopSleep = () => { isSleeping = false; sleepContinuous = 0; if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } };
         function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = "50%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 1500); }
-        const touchLayer = document.getElementById("player-area"); touchLayer.addEventListener("touchstart", (e) => { initAudio(); e.preventDefault(); startSleep(); }); touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); }); document.addEventListener("keydown", (e) => { if (e.code === "Space") { initAudio(); startSleep(); } }); document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
+        
+        // ★重要：スマホ対応（タッチ開始時にイベントを止めるのではなく、ボタンのタッチを優先させる）
+        const touchLayer = document.getElementById("player-area"); 
+        touchLayer.addEventListener("touchstart", (e) => { 
+            // もしタップしたのがスキルボタンなら、寝る処理をしない
+            if(e.target.id === "active-skill-btn") return;
+            initAudio(); e.preventDefault(); startSleep(); 
+        }); 
+        touchLayer.addEventListener("touchend", (e) => { 
+            if(e.target.id === "active-skill-btn") return;
+            e.preventDefault(); stopSleep(); 
+        }); 
+        
+        document.addEventListener("keydown", (e) => { if (e.code === "Space") { initAudio(); startSleep(); } }); document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
 
         initMenu();
     </script>
