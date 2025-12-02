@@ -3,267 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Survival in Math Class</title>
+    <title>激闘！加藤先生の数学</title>
     <style>
         body {
-            font-family: 'Courier New', monospace;
+            font-family: 'Verdana', sans-serif;
             text-align: center;
-            background-color: #2b4528; /* 黒板色 */
+            background-color: #222;
             color: white;
             margin: 0;
-            overflow: hidden; /* スクロール禁止 */
-            touch-action: manipulation; /* スマホでの遅延対策 */
-            user-select: none; /* テキスト選択禁止 */
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
             -webkit-user-select: none;
         }
 
-        /* 黒板エリア */
-        #blackboard {
-            border: 10px solid #8b5a2b;
-            margin: 10px;
-            height: 40vh;
-            position: relative;
-            background-image: linear-gradient(#2b4528, #1a2e18);
+        /* 共通レイアウト */
+        .screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #2b4528; /* 黒板色 */
+            transition: opacity 0.5s;
         }
 
-        /* 先生の見た目 */
-        #teacher {
-            font-size: 80px;
-            transition: transform 0.2s;
-            cursor: pointer;
+        .hidden { display: none !important; }
+
+        /* ゲーム画面 */
+        #game-screen { justify-content: flex-start; }
+
+        #teacher-area {
+            height: 40vh;
+            width: 100%;
+            position: relative;
+            background: linear-gradient(#2b4528, #1a2e18);
+            border-bottom: 5px solid #8b5a2b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .writing { transform: scaleX(-1); } /* 背中 */
-        .looking { transform: scaleX(1); } /* こっち見てる */
+
+        #teacher { font-size: 100px; transition: transform 0.1s; }
+        .writing { transform: scaleX(-1); }
         
-        /* 吹き出し */
-        #speech-bubble {
-            background: white;
-            color: black;
-            padding: 5px 10px;
-            border-radius: 10px;
+        #chalk-text {
             position: absolute;
-            top: 20px;
-            font-weight: bold;
-            display: none;
+            top: 20px; left: 20px;
+            font-family: 'serif';
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            text-align: left;
         }
 
-        /* プレイヤーエリア */
         #player-area {
-            height: 50vh;
+            height: 60vh;
+            width: 100%;
             background-color: #f0f0f0;
             color: #333;
-            padding-top: 20px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
         }
 
-        #status { font-size: 60px; margin-bottom: 10px; }
-        #score-display { font-size: 24px; font-weight: bold; }
-        #level-display { font-size: 14px; color: #666; }
-
-        /* スマホ用ボタン（画面全体をボタン化する透明レイヤー） */
-        #touch-layer {
+        #status-icon { font-size: 80px; z-index: 2; }
+        
+        /* Zzz アニメーション */
+        .zzz {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10;
+            color: blue;
+            font-weight: bold;
+            font-size: 20px;
+            animation: floatUp 1.5s linear forwards;
+            z-index: 1;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
         }
 
-        /* 緊急回避ボタン */
-        #boss-key {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: red;
-            color: white;
+        #score-board { font-size: 24px; font-weight: bold; margin: 10px; }
+        #high-score { font-size: 14px; color: #666; }
+
+        /* ボタン類 */
+        .btn {
+            background: #ff9800;
             border: none;
-            padding: 10px 20px;
-            font-size: 12px;
-            border-radius: 5px;
-            z-index: 20;
+            padding: 15px 40px;
+            font-size: 24px;
+            color: white;
+            border-radius: 50px;
+            box-shadow: 0 5px 0 #b36b00;
             cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #b36b00; }
+
+        #boss-key {
+            position: absolute; bottom: 20px; right: 20px;
+            background: red; padding: 10px; font-size: 12px;
+            box-shadow: none; border-radius: 5px;
         }
 
-        /* 偽装画面（最初は隠れている） */
-        #fake-screen {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            color: black;
-            z-index: 100;
-            text-align: left;
-            padding: 20px;
-            box-sizing: border-box;
-            font-family: serif;
-        }
+        /* タイトル・リザルト画面 */
+        h1 { font-size: 28px; margin-bottom: 10px; text-shadow: 2px 2px 0 #000; }
+        .big-score { font-size: 50px; color: yellow; font-weight: bold; }
+
     </style>
 </head>
 <body>
 
-    <div id="blackboard">
-        <div id="speech-bubble">...</div>
-        <div id="teacher">👨‍🏫</div>
-        <div style="margin-top:10px; color:#ddd; font-size:12px;">加藤先生 (数学)</div>
+    <div id="title-screen" class="screen">
+        <h1>激闘！<br>加藤先生の数学</h1>
+        <div style="font-size: 60px; margin: 20px;">😴 vs 👨‍🏫</div>
+        <p>画面長押し（PCはスペース）で寝ろ！</p>
+        <p id="high-score-title">自己ベスト: 0.0秒</p>
+        <button class="btn" onclick="startGame()">授業開始</button>
     </div>
 
-    <div id="player-area">
-        <div id="status">😐</div>
-        <div id="score-display">睡眠時間: 0.0秒</div>
-        <div id="level-display">Level 1</div>
-        <p style="font-size:12px; margin-top:20px;">PC:スペースキー / スマホ:画面長押し<br>で寝る！</p>
-        
-        <div id="touch-layer"></div>
+    <div id="game-screen" class="screen hidden">
+        <div id="teacher-area">
+            <div id="chalk-text">
+                y = ax² + bx + c<br>
+                x = {-b ± √(b² - 4ac)} / 2a
+            </div>
+            <div id="teacher">👨‍🏫</div>
+        </div>
+
+        <div id="player-area">
+            <div id="status-icon">😐</div>
+            <div id="score-board">0.0 秒</div>
+            <div id="high-score">BEST: 0.0</div>
+            
+            <button id="boss-key" class="btn">緊急回避</button>
+        </div>
     </div>
 
-    <button id="boss-key">緊急回避！</button>
-
-    <div id="fake-screen">
-        <h3>2次関数の最大・最小</h3>
-        <p>関数 y = ax^2 + bx + c のグラフにおいて...</p>
-        <p>頂点の座標は (-b/2a, -(b^2-4ac)/4a) であり...</p>
-        <hr>
-        <p style="color:gray; font-size:10px;">(画面をダブルタップして復帰)</p>
+    <div id="result-screen" class="screen hidden" style="background: #800000;">
+        <h1>バレた！！！</h1>
+        <div style="font-size: 80px;">👹</div>
+        <p>加藤先生に怒られた...</p>
+        <div class="big-score" id="final-score">0.0秒</div>
+        <button class="btn" onclick="location.reload()">再挑戦</button>
     </div>
 
     <script>
+        // 要素の取得
+        const titleScreen = document.getElementById("title-screen");
+        const gameScreen = document.getElementById("game-screen");
+        const resultScreen = document.getElementById("result-screen");
         const teacherEl = document.getElementById("teacher");
-        const bubbleEl = document.getElementById("speech-bubble");
-        const statusEl = document.getElementById("status");
-        const scoreEl = document.getElementById("score-display");
-        const levelEl = document.getElementById("level-display");
-        const fakeScreen = document.getElementById("fake-screen");
-        
+        const statusEl = document.getElementById("status-icon");
+        const scoreEl = document.getElementById("score-board");
+        const highScoreEl = document.getElementById("high-score");
+        const titleHighScoreEl = document.getElementById("high-score-title");
+        const playerArea = document.getElementById("player-area");
+
+        // 変数
         let isSleeping = false;
         let isTeacherLooking = false;
         let score = 0;
-        let level = 1;
+        let highScore = localStorage.getItem("katoGameHighScore") || 0;
         let gameOver = false;
         let teacherTimer;
-        
-        // 先生の状態管理
+        let zzzInterval;
+
+        // ハイスコア表示更新
+        titleHighScoreEl.textContent = "自己ベスト: " + (highScore / 10).toFixed(1) + "秒";
+        highScoreEl.textContent = "BEST: " + (highScore / 10).toFixed(1);
+
+        // 音声合成（先生の声）
+        const synth = window.speechSynthesis;
+        function speak(text) {
+            if (synth.speaking) return;
+            const uttr = new SpeechSynthesisUtterance(text);
+            uttr.lang = "ja-JP"; // 日本語
+            uttr.rate = 1.2; // 早口
+            uttr.pitch = 0.8; // 低い声
+            synth.speak(uttr);
+        }
+
+        // ゲーム開始
+        function startGame() {
+            titleScreen.classList.add("hidden");
+            gameScreen.classList.remove("hidden");
+            teacherEl.classList.add("writing");
+            updateTeacher();
+            gameLoop();
+        }
+
+        // 先生のAI
         function updateTeacher() {
             if (gameOver) return;
 
-            // レベルに応じて待ち時間を短縮
-            let difficulty = Math.max(500, 3000 - (level * 200)); 
+            // ランダムな時間（徐々に難しくなる）
+            let difficulty = Math.max(800, 4000 - (score * 5)); 
             let waitTime = Math.random() * difficulty + 1000;
 
             teacherTimer = setTimeout(() => {
-                // 20%の確率でフェイント（すぐ戻る）
-                const isFeint = Math.random() < 0.2;
-                
-                // 予兆
-                bubbleEl.style.display = "block";
-                bubbleEl.textContent = "ん？";
+                // 振り返る予兆（声を出す）
+                speak("おい"); 
 
                 setTimeout(() => {
-                    // 振り返る
+                    // 振り返り
                     teacherEl.classList.remove("writing");
-                    teacherEl.classList.add("looking");
-                    teacherEl.textContent = "😠"; // 怒り顔
+                    teacherEl.textContent = "😠";
                     isTeacherLooking = true;
-                    bubbleEl.style.display = "none";
 
-                    // 判定時間（フェイントなら短く、通常なら1〜2秒）
-                    const lookTime = isFeint ? 300 : (Math.random() * 1000 + 800);
-
+                    // 見ている時間
                     setTimeout(() => {
-                        // 黒板に戻る
-                        isTeacherLooking = false;
-                        teacherEl.classList.remove("looking");
-                        teacherEl.classList.add("writing");
-                        teacherEl.textContent = "👨‍🏫";
-                        
-                        // レベルアップ判定
-                        if(score > level * 50) {
-                            level++;
-                            levelEl.textContent = "Level " + level + " (先生の反応速度UP)";
+                        if(!gameOver) {
+                            isTeacherLooking = false;
+                            teacherEl.classList.add("writing");
+                            teacherEl.textContent = "👨‍🏫";
+                            updateTeacher();
                         }
+                    }, Math.random() * 1500 + 500);
 
-                        updateTeacher(); // ループ
-                    }, lookTime);
-
-                }, 500); // 予兆から振り返るまでの時間
+                }, 400); // 声が出てから振り返るまでのラグ
 
             }, waitTime);
         }
 
-        // 初期化
-        teacherEl.classList.add("writing");
-        updateTeacher();
+        // メインループ
+        function gameLoop() {
+            setInterval(() => {
+                if (gameOver) return;
 
-        // 睡眠ループ
-        setInterval(() => {
-            if (gameOver) return;
-
-            if (isSleeping) {
-                // 寝ている間スコア加算
-                score += 1;
-                scoreEl.textContent = "睡眠時間: " + (score / 10).toFixed(1) + "秒";
-                
-                // 先生が見ているのに寝ていたらアウト
-                if (isTeacherLooking) {
-                    endGame();
+                if (isSleeping) {
+                    score++;
+                    scoreEl.textContent = (score / 10).toFixed(1) + " 秒";
+                    
+                    if (isTeacherLooking) {
+                        endGame();
+                    }
                 }
-            }
-        }, 100);
-
-        function endGame() {
-            gameOver = true;
-            statusEl.textContent = "😱";
-            teacherEl.textContent = "👹"; // 鬼の形相
-            bubbleEl.style.display = "block";
-            bubbleEl.textContent = "廊下に立ってろ！";
-            document.body.style.backgroundColor = "#500000"; // 背景赤く
-            alert("バレた！ 記録: " + (score / 10).toFixed(1) + "秒");
-            location.reload();
+            }, 100);
         }
 
-        // 入力操作（PCとスマホ共通）
+        // Zzzエフェクト生成
+        function spawnZzz() {
+            const zzz = document.createElement("div");
+            zzz.className = "zzz";
+            zzz.textContent = "Zzz";
+            // 頭の近くから出す
+            zzz.style.left = "50%"; 
+            zzz.style.top = "20px";
+            playerArea.appendChild(zzz);
+
+            // アニメーション終わったら消す
+            setTimeout(() => zzz.remove(), 1500);
+        }
+
+        // ゲームオーバー処理
+        function endGame() {
+            gameOver = true;
+            
+            // ハイスコア更新
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem("katoGameHighScore", highScore);
+            }
+
+            speak("こらー！寝るなー！廊下に立ってなさい！");
+            
+            gameScreen.classList.add("hidden");
+            resultScreen.classList.remove("hidden");
+            document.getElementById("final-score").textContent = (score / 10).toFixed(1) + "秒";
+        }
+
+        // 操作系
         const startSleep = () => {
             if (!gameOver) {
                 isSleeping = true;
-                statusEl.textContent = "😴"; // 寝顔
-                document.body.style.opacity = "0.8"; // 視界が暗くなる演出
+                statusEl.textContent = "😪";
+                if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400);
             }
         };
 
         const stopSleep = () => {
             isSleeping = false;
-            statusEl.textContent = "😐"; // 真顔
-            document.body.style.opacity = "1";
+            statusEl.textContent = "😐";
+            if (zzzInterval) {
+                clearInterval(zzzInterval);
+                zzzInterval = null;
+            }
         };
 
         // イベントリスナー
-        const touchLayer = document.getElementById("touch-layer");
-        
-        // スマホ用
-        touchLayer.addEventListener("touchstart", (e) => { e.preventDefault(); startSleep(); });
+        const touchLayer = document.getElementById("player-area");
+        touchLayer.addEventListener("touchstart", (e) => { 
+            if(e.target.id !== "boss-key") { e.preventDefault(); startSleep(); }
+        });
         touchLayer.addEventListener("touchend", (e) => { e.preventDefault(); stopSleep(); });
 
-        // PC用
         document.addEventListener("keydown", (e) => { if (e.code === "Space") startSleep(); });
         document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
 
-        // 緊急回避機能
+        // 緊急回避
         document.getElementById("boss-key").addEventListener("click", () => {
-            fakeScreen.style.display = "block";
-            gameOver = true; // ゲームは一時停止（というか終了扱いで安全確保）
-            clearTimeout(teacherTimer);
-        });
-
-        // 偽装解除（ダブルタップ）
-        let lastTap = 0;
-        fakeScreen.addEventListener("click", (e) => {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            if (tapLength < 500 && tapLength > 0) {
-                location.reload(); // リロードしてゲーム再開
-            }
-            lastTap = currentTime;
+            alert("緊急回避！ 数学のページを開きました（フリ）");
+            location.reload();
         });
 
     </script>
