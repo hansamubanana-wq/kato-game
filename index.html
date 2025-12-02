@@ -35,9 +35,29 @@
             display: flex; justify-content: space-between; align-items: flex-end;
             width: 80%; height: 200px; margin-bottom: 20px; position: relative; margin-top: 60px;
         }
-        .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; }
+        .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; }
         .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; color: white; }
         
+        /* 選択矢印 */
+        .select-arrow {
+            position: absolute; top: 50%; font-size: 30px; color: #fff; cursor: pointer; user-select: none;
+            text-shadow: 2px 2px 0 #000; animation: bounceX 1s infinite;
+        }
+        #arrow-left { left: 10px; }
+        #arrow-right { right: 10px; }
+        @keyframes bounceX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+
+        /* ランクスタンプ（メニュー用） */
+        .menu-rank {
+            position: absolute; top: -10px; right: -20px;
+            width: 50px; height: 50px; border: 3px solid red; border-radius: 50%;
+            color: red; font-family: 'New Tegomin', serif; font-size: 30px;
+            display: flex; align-items: center; justify-content: center;
+            transform: rotate(20deg); text-shadow: 1px 1px 0 #fff;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+
         .walk-right { animation: walkOff 1.5s forwards linear; }
         .fade-in-right { animation: slideIn 1s forwards ease-out; }
         @keyframes walkOff { 0% { transform: translateX(0); } 100% { transform: translateX(400px) translateY(0); } }
@@ -55,19 +75,17 @@
         .equip-item.unlocked { border-color: #fff; }
         .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 10px #ffd700; background: #444; }
 
-        /* ゲーム画面（背景可変） */
+        /* ゲーム画面 */
         #game-screen {
             justify-content: flex-start;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3Cline x1='250' y1='190' x2='310' y2='190' stroke='%23aaa'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E");
             background-size: cover; background-position: center;
             will-change: filter, transform;
         }
-        /* 教室 */
+        /* 各背景定義（省略せず記述） */
         .bg-classroom { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.3'/%3E%3C/svg%3E"); }
-        /* 理科室 */
         .bg-science { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23ddd'/%3E%3Crect width='320' height='120' fill='%23bbb'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23224422' stroke='%23555' stroke-width='6'/%3E%3Ctext x='20' y='160' font-size='40' opacity='0.2'>🧪</text>%3Ctext x='260' y='160' font-size='40' opacity='0.2'>💀</text>%3Crect y='220' width='320' height='20' fill='%23333'/%3E%3C/svg%3E"); }
-        /* 音楽室 */
         .bg-music { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23d0c0a0'/%3E%3Crect width='320' height='120' fill='%23a09070'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23333' stroke='%235a3a22' stroke-width='6'/%3E%3Ctext x='150' y='70' font-size='40' fill='white'>🎼</text>%3Crect x='250' y='140' width='60' height='80' fill='%23222'/%3E%3C/svg%3E"); }
-        /* 校長室 */
         .bg-principal { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23500'/%3E%3Crect width='320' height='120' fill='%23300'/%3E%3Crect x='60' y='20' width='200' height='80' fill='%23gold' stroke='gold' stroke-width='4' opacity='0.2'/%3E%3Crect y='220' width='320' height='20' fill='%23a00'/%3E%3Ctext x='10' y='150' font-size='30'>🏆</text>%3Ctext x='280' y='150' font-size='30'>🏺</text>%3C/svg%3E"); }
 
         #teacher-area { height: 45vh; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; z-index: 5; }
@@ -93,37 +111,27 @@
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
         @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
 
-        /* 会話画面（カットイン） */
-        #dialogue-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 2500;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .dialogue-box {
-            width: 90%; background: #fff; border: 4px solid #000; border-radius: 10px; padding: 15px;
-            font-family: 'New Tegomin', serif; min-height: 150px; position: relative;
-        }
-        .dialogue-name { font-weight: bold; margin-bottom: 10px; color: var(--danger-color); font-size: 14px; }
-        .dialogue-text { font-size: 14px; line-height: 1.6; color: #000; white-space: pre-wrap; }
-        .dialogue-next { position: absolute; bottom: 10px; right: 10px; animation: blink 1s infinite; font-size: 20px; }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* リザルトのランク */
-        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes stamp { 0% { transform: scale(3) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-20deg); opacity: 1; } }
-
-        /* ボタン等 */
         #config-btn { position: absolute; top: 10px; right: 10px; font-size: 20px; cursor: pointer; background: none; border: none; z-index: 20; }
         #exit-btn { position: absolute; top: 10px; left: 10px; font-size: 12px; cursor: pointer; background: #444; color: #fff; border: 2px solid #fff; padding: 5px; z-index: 20; }
-        #config-modal, #tutorial-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        
+        #config-modal, #tutorial-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 3000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
         .config-box { background: #333; padding: 20px; border: 2px solid #fff; text-align: center; width: 80%; }
         .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 10px; line-height: 1.6; color: #fff; }
+
         .btn-endless { display: none; width: 200px; border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; margin-top:5px; }
         .btn-ngplus { display: none; width: 200px; border-color: #ffd700; color: #ffd700; margin-top: 5px; }
-        .chalk-missile { position: absolute; width: 20px; height: 6px; background: white; border-radius: 2px; top: 40%; left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px rgba(255,255,255,0.8); z-index: 100; animation: flyChalk 0.3s linear forwards; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); } }
+
+        .chalk-missile {
+            position: absolute; width: 20px; height: 6px; background: white; border-radius: 2px;
+            top: 40%; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 0 5px rgba(255,255,255,0.8); z-index: 100; animation: flyChalk 0.3s linear forwards;
+        }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
-        .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes shakeScreen { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
 
         /* SVG */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
@@ -190,9 +198,16 @@
         <p id="cheat-msg" style="color:gold; font-size:10px; display:none; z-index:10;">GOD MODE!</p>
 
         <div id="face-off-area">
+            <div id="arrow-left" class="select-arrow" onclick="changeStage(-1)">◀</div>
+            <div id="arrow-right" class="select-arrow" onclick="changeStage(1)">▶</div>
+
             <div id="menu-player" class="char-box"><div class="sprite student-awake"></div><div class="char-label">YOU</div></div>
             <div style="font-size:30px; color:var(--danger-color); font-weight:bold; text-shadow:2px 2px 0 #000;">VS</div>
-            <div id="menu-rival" class="char-box"><div id="menu-rival-sprite" class="sprite"></div><div id="menu-rival-name" class="char-label">???</div></div>
+            <div id="menu-rival" class="char-box">
+                <div id="menu-rival-sprite" class="sprite"></div>
+                <div id="menu-rival-name" class="char-label">???</div>
+                <div id="menu-rank-display" class="menu-rank" style="display:none;"></div>
+            </div>
         </div>
 
         <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:var(--danger-color);" onclick="startSequence()">BATTLE START</button>
@@ -322,11 +337,17 @@
         
         let unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1;
         let unlockedPowers = JSON.parse(localStorage.getItem("soichiPowers")) || [];
+        let stageRanks = JSON.parse(localStorage.getItem("soichiRanks")) || {}; // ★ランク保存用 {1:'S', 2:'B'}
+        
         let equippedPower = localStorage.getItem("soichiEquippedPower");
         if (equippedPower === "null") equippedPower = null;
 
-        let currentStage = (unlockedStage > 8) ? 8 : unlockedStage;
+        // メニューで表示中のステージ（デフォルトは最新解放ステージ、ただしクリア後は8まで）
+        let currentMenuStage = (unlockedStage > 8) ? 8 : unlockedStage; 
         
+        // 実際にバトル開始するステージ
+        let battleStage = 1;
+
         let justCleared = false;
         let hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false;
         let gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
@@ -348,8 +369,9 @@
                 openTutorial();
                 localStorage.setItem("soichiTutorialSeen", "true");
             }
-            currentStage = (unlockedStage > 8) ? 8 : unlockedStage;
-            updateMenuVisuals(currentStage);
+            // 起動時は最新ステージに合わせる
+            currentMenuStage = (unlockedStage > 8) ? 8 : unlockedStage;
+            updateMenuVisuals(currentMenuStage);
             
             const endlessBtn = document.getElementById("endless-btn");
             const ngBtn = document.getElementById("ng-plus-btn");
@@ -364,12 +386,44 @@
             renderEquipMenu();
         }
 
+        // ★ステージ切り替え（矢印）
+        function changeStage(dir) {
+            // ステージ1〜8（エンドレスは別ボタンなので含めない）の範囲で、かつ解放済みのもの
+            let max = (unlockedStage > 8) ? 8 : unlockedStage;
+            let next = currentMenuStage + dir;
+            if (next < 1) next = max;
+            if (next > max) next = 1;
+            
+            currentMenuStage = next;
+            updateMenuVisuals(currentMenuStage);
+        }
+
         function updateMenuVisuals(stageNum) {
             const t = teachers[stageNum];
             const rivalSprite = document.getElementById("menu-rival-sprite");
             const rivalName = document.getElementById("menu-rival-name");
+            const rankDisplay = document.getElementById("menu-rank-display");
+            
+            // 矢印の表示制御（1つしかないなら消す）
+            const leftArrow = document.getElementById("arrow-left");
+            const rightArrow = document.getElementById("arrow-right");
+            if (unlockedStage <= 1) {
+                leftArrow.style.display = "none"; rightArrow.style.display = "none";
+            } else {
+                leftArrow.style.display = "block"; rightArrow.style.display = "block";
+            }
+
             rivalSprite.className = `sprite ${t.face}`;
             rivalName.textContent = t.label;
+
+            // ★ランク表示
+            const rank = stageRanks[stageNum];
+            if (rank) {
+                rankDisplay.textContent = rank;
+                rankDisplay.style.display = "flex";
+            } else {
+                rankDisplay.style.display = "none";
+            }
         }
 
         function renderEquipMenu() {
@@ -385,8 +439,14 @@
             Object.keys(skillData).forEach(p => {
                 const el = document.getElementById(`skill-${p}`);
                 if(el) {
-                    if (unlockedPowers.includes(p)) { el.style.display = "flex"; el.classList.add("unlocked"); } else { el.style.display = "none"; }
-                    if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
+                    if (unlockedPowers.includes(p)) { 
+                        el.style.display = "flex"; 
+                        el.classList.add("unlocked"); 
+                    } else { 
+                        el.style.display = "none"; 
+                    }
+                    if (equippedPower === p) el.classList.add("selected"); 
+                    else el.classList.remove("selected");
                 }
             });
         }
@@ -407,6 +467,7 @@
         function newGamePlus() {
             if(confirm("能力はそのままで、ステージ1から始めますか？")) {
                 localStorage.setItem("soichiGameStage", 1);
+                localStorage.removeItem("soichiRanks"); // ランクもリセットするかはお好みですが、NG+ならリセットが自然
                 location.reload();
             }
         }
@@ -419,19 +480,18 @@
 
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
 
-        // ★会話システムの開始
-        function startSequence() { startDialogue(currentStage); }
+        // 開始ボタン：現在表示中のステージを開始
+        function startSequence() { startDialogue(currentMenuStage); }
         function startEndless() { startDialogue(9); }
 
         function startDialogue(st) {
-            currentStage = st; // 確定
+            battleStage = st; // 戦闘ステージ確定
             dialogueStep = 0;
             const d = dialogues[st] || { t: "...", s: "..." };
             
             document.getElementById("menu-screen").classList.add("hidden");
             document.getElementById("dialogue-screen").style.display = "flex";
             
-            // 先生のセリフ
             document.getElementById("diag-name").textContent = teachers[st].label.split(" / ")[1] || "TEACHER";
             document.getElementById("diag-name").className = "dialogue-name name-teacher";
             document.getElementById("diag-text").textContent = d.t;
@@ -439,16 +499,14 @@
 
         function nextDialogue() {
             dialogueStep++;
-            const st = currentStage;
+            const st = battleStage;
             const d = dialogues[st] || { t: "...", s: "..." };
 
             if (dialogueStep === 1) {
-                // 生徒のセリフ
                 document.getElementById("diag-name").textContent = "YOU";
                 document.getElementById("diag-name").className = "dialogue-name name-you";
                 document.getElementById("diag-text").textContent = d.s;
             } else {
-                // 戦闘開始
                 document.getElementById("dialogue-screen").style.display = "none";
                 realStartBattle();
             }
@@ -471,13 +529,12 @@
             sleepTime = 0; isTeacherLooking = false; endlessSpeed = 1.0;
             document.getElementById("game-screen").classList.remove("hidden");
             
-            const t = teachers[currentStage];
-            // 背景切り替え
+            const t = teachers[battleStage];
             const gameScreen = document.getElementById("game-screen");
             gameScreen.className = `screen ${t.bg}`;
 
             document.getElementById("blackboard-text").textContent = t.blackboard;
-            document.getElementById("target-score").textContent = (currentStage===9) ? "∞" : t.target;
+            document.getElementById("target-score").textContent = (battleStage===9) ? "∞" : t.target;
             
             updateHearts(); updateProgress(); updateTeacherBehavior();
             gameLoopId = setInterval(gameLoop, 100);
@@ -503,7 +560,7 @@
                 isTimeStopped = true;
                 isTeacherLooking = false; clearTimeout(teacherTimerId);
                 const sprite = document.getElementById("teacher-sprite");
-                let tName = getTeacherName(currentStage, sprite);
+                let tName = getTeacherName(battleStage, sprite);
                 sprite.className = `sprite ${tName}-back`; 
                 document.getElementById("game-screen").style.filter = "invert(1)";
                 setTimeout(() => { isTimeStopped = false; document.getElementById("game-screen").style.filter = "none"; updateTeacherBehavior(); }, 3000);
@@ -521,7 +578,6 @@
 
         function getTeacherName(st, spriteEl) {
             if (st === 9) {
-                // エンドレスの場合
                 for (let name of teacherNames) {
                     if (spriteEl.className.includes(name)) return name;
                 }
@@ -532,8 +588,8 @@
 
         function updateTeacherBehavior() {
             if (isTimeStopped) return;
-            let tName = teachers[currentStage].name;
-            if (currentStage === 9) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; }
+            let tName = teachers[battleStage].name;
+            if (battleStage === 9) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; }
             const sprite = document.getElementById("teacher-sprite"); sprite.className = `sprite ${tName}-back`; isTeacherLooking = false;
             
             let waitBase = 2000; 
@@ -541,7 +597,7 @@
             if (tName === 'fukumorita') waitBase = 1000;
             if (tName === 'aota') waitBase = 800;
 
-            let speed = (currentStage === 9) ? endlessSpeed : teachers[currentStage].speed;
+            let speed = (battleStage === 9) ? endlessSpeed : teachers[battleStage].speed;
             let randomTime = (Math.random() * waitBase + 1000) / speed;
             teacherTimerId = setTimeout(() => {
                 if (isTimeStopped) return;
@@ -550,7 +606,7 @@
                 let lookBase = 1000;
                 if (equippedPower === 'otani') lookBase = 500; 
 
-                let lookTime = (currentStage === 9) ? Math.max(400, lookBase - endlessSpeed*50) : lookBase;
+                let lookTime = (battleStage === 9) ? Math.max(400, lookBase - endlessSpeed*50) : lookBase;
                 setTimeout(() => { updateTeacherBehavior(); }, lookTime);
             }, randomTime);
         }
@@ -570,13 +626,19 @@
             }
         }
 
-        function updateProgress() { if(currentStage === 9) { document.getElementById("progress-bar").style.display = "none"; document.getElementById("target-score").textContent = sleepTime.toFixed(1); } else { const t = teachers[currentStage]; const pct = Math.min(100, (sleepTime / t.target) * 100); document.getElementById("progress-fill").style.width = pct + "%"; if (sleepTime >= t.target) stageClear(); } }
+        function updateProgress() { if(battleStage === 9) { document.getElementById("progress-bar").style.display = "none"; document.getElementById("target-score").textContent = sleepTime.toFixed(1); } else { const t = teachers[battleStage]; const pct = Math.min(100, (sleepTime / t.target) * 100); document.getElementById("progress-fill").style.width = pct + "%"; if (sleepTime >= t.target) stageClear(); } }
         
         function takeDamage() {
             if(isGodMode) return;
             hp--; updateHearts(); playSound('dead'); isInvincible = true;
+            
+            const gameScreen = document.getElementById("game-screen");
+            gameScreen.classList.remove("shaking");
+            void gameScreen.offsetWidth;
+            gameScreen.classList.add("shaking");
+
             const chalk = document.createElement("div"); chalk.className = "chalk-missile"; document.getElementById("game-screen").appendChild(chalk); setTimeout(() => chalk.remove(), 300);
-            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate(200);
+            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
             setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500);
             if (hp <= 0) gameOver();
         }
@@ -586,34 +648,44 @@
             clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear');
             let gotPower = false;
             let dropped = "";
-            if (currentStage === 1 && !unlockedPowers.includes("kato")) { dropped="kato"; gotPower = true; alert("加藤先生の「懐中時計」を奪った！"); }
-            if (currentStage === 2 && !unlockedPowers.includes("matsuda")) { dropped="matsuda"; gotPower = true; alert("松田先生の「ランチ」を奪った！"); }
-            if (currentStage === 3 && !unlockedPowers.includes("sugawara")) { dropped="sugawara"; gotPower = true; alert("菅原先生の「タクト」を奪った！"); }
-            if (currentStage === 4 && !unlockedPowers.includes("fukumorita")) { dropped="fukumorita"; gotPower = true; alert("福盛田先生の「スニーカー」を奪った！"); }
-            if (currentStage === 5 && !unlockedPowers.includes("sudo")) { dropped="sudo"; gotPower = true; alert("須藤先生の「暗記カード」を奪った！"); }
-            if (currentStage === 6 && !unlockedPowers.includes("otani")) { dropped="otani"; gotPower = true; alert("大谷先生の「和歌」を奪った！"); }
-            if (currentStage === 7 && !unlockedPowers.includes("matsumura")) { dropped="matsumura"; gotPower = true; alert("松村先生の「劇薬」を奪った！"); }
-            if (currentStage === 8 && !unlockedPowers.includes("aota")) { dropped="aota"; gotPower = true; alert("青田校長の「ジャケット」を奪った！"); }
+            if (battleStage === 1 && !unlockedPowers.includes("kato")) { dropped="kato"; gotPower = true; alert("加藤先生の「懐中時計」を奪った！"); }
+            if (battleStage === 2 && !unlockedPowers.includes("matsuda")) { dropped="matsuda"; gotPower = true; alert("松田先生の「ランチ」を奪った！"); }
+            if (battleStage === 3 && !unlockedPowers.includes("sugawara")) { dropped="sugawara"; gotPower = true; alert("菅原先生の「タクト」を奪った！"); }
+            if (battleStage === 4 && !unlockedPowers.includes("fukumorita")) { dropped="fukumorita"; gotPower = true; alert("福盛田先生の「スニーカー」を奪った！"); }
+            if (battleStage === 5 && !unlockedPowers.includes("sudo")) { dropped="sudo"; gotPower = true; alert("須藤先生の「暗記カード」を奪った！"); }
+            if (battleStage === 6 && !unlockedPowers.includes("otani")) { dropped="otani"; gotPower = true; alert("大谷先生の「和歌」を奪った！"); }
+            if (battleStage === 7 && !unlockedPowers.includes("matsumura")) { dropped="matsumura"; gotPower = true; alert("松村先生の「劇薬」を奪った！"); }
+            if (battleStage === 8 && !unlockedPowers.includes("aota")) { dropped="aota"; gotPower = true; alert("青田校長の「ジャケット」を奪った！"); }
+            
             if(gotPower) { unlockedPowers.push(dropped); localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers)); }
 
-            let nextStage = currentStage;
-            if (currentStage === 8) {
+            // ★ランク保存ロジック
+            let rank = "B";
+            if(hp === 3) rank = "S";
+            else if(hp === 2) rank = "A";
+            
+            // 既存ランクより良ければ更新
+            const currentRank = stageRanks[battleStage];
+            const rankOrder = { "S": 3, "A": 2, "B": 1, undefined: 0 };
+            if (rankOrder[rank] > rankOrder[currentRank]) {
+                stageRanks[battleStage] = rank;
+                localStorage.setItem("soichiRanks", JSON.stringify(stageRanks));
+            }
+
+            if (battleStage === 8) {
                 if (unlockedStage < 9) { unlockedStage = 9; localStorage.setItem("soichiGameStage", unlockedStage); }
                 showEnding(); return;
-            } else if(currentStage >= unlockedStage) {
+            } else if(battleStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
-                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
             document.getElementById("result-screen").classList.remove("hidden");
             
-            // ランク判定
+            // ランク表示
             const stamp = document.getElementById("rank-stamp");
             stamp.style.display = "flex";
-            if(hp === 3) stamp.textContent = "S";
-            else if(hp === 2) stamp.textContent = "A";
-            else stamp.textContent = "B";
+            stamp.textContent = rank;
 
             document.getElementById("result-screen").style.background = "#2b4528";
             document.getElementById("result-title").textContent = "YOU WIN!";
@@ -625,34 +697,39 @@
             document.getElementById("result-screen").classList.add("hidden");
             document.getElementById("menu-screen").classList.remove("hidden");
             renderEquipMenu();
-            if (justCleared && currentStage < 9) { 
+            if (justCleared && battleStage < 9) { 
                 justCleared = false; 
                 playWalkAnimation(); 
             } else { 
-                initMenu(); 
+                // クリア後は戦ったステージのままにする（再戦しやすくするため）
+                currentMenuStage = battleStage;
+                // ただし、もし新しいステージが解放されたなら、そっちに進めるように
+                if (unlockedStage > currentMenuStage && unlockedStage <= 8) {
+                     currentMenuStage = unlockedStage;
+                }
+                updateMenuVisuals(currentMenuStage); 
             }
         }
 
         function playWalkAnimation() {
-            updateMenuVisuals(currentStage); const player = document.getElementById("menu-player"); const rival = document.getElementById("menu-rival");
+            // アニメーション開始時は「戦ったステージ」
+            currentMenuStage = battleStage; 
+            updateMenuVisuals(currentMenuStage); 
+            
+            const player = document.getElementById("menu-player");
+            const rival = document.getElementById("menu-rival");
             rival.style.opacity = "0"; player.classList.add("walk-right");
+            
             setTimeout(() => {
-                currentStage = (unlockedStage > 8) ? 8 : unlockedStage; updateMenuVisuals(currentStage); 
+                // アニメーション完了後は「次のステージ」
+                currentMenuStage = unlockedStage > 8 ? 8 : unlockedStage; 
+                updateMenuVisuals(currentMenuStage); 
                 rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right");
                 setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000);
             }, 1500); 
         }
 
-        function gameOver() { 
-            clearInterval(gameLoopId); clearTimeout(teacherTimerId); 
-            document.getElementById("game-screen").classList.add("hidden"); 
-            document.getElementById("result-screen").classList.remove("hidden");
-            document.getElementById("rank-stamp").style.display = "none"; // 赤点はランクなし
-            document.getElementById("result-screen").style.background = "#500"; 
-            document.getElementById("result-title").textContent = "GAME OVER"; 
-            document.getElementById("result-title").style.color = "red"; 
-            let msg = "補習決定..."; if (currentStage === 9) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; 
-        }
+        function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("rank-stamp").style.display = "none"; document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (battleStage === 9) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
         
         function showEnding() { document.getElementById("game-screen").classList.add("hidden"); document.getElementById("ending-screen").classList.remove("hidden"); for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } }
         const shareText = "【証明書】私は加藤・松田・菅原・福盛田・須藤・大谷・松村・青田校長の目を盗み、完全爆睡したことを証明します。 #加藤先生ゲーム";
