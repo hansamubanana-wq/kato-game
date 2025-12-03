@@ -20,14 +20,6 @@
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-color); transition: opacity 0.3s; }
         .hidden { display: none !important; }
         
-        /* 名前入力画面 */
-        #name-screen { background: #111; z-index: 4000; }
-        input[type="text"] {
-            font-family: 'New Tegomin', serif; font-size: 20px; padding: 10px; text-align: center;
-            border: 2px solid var(--accent-color); border-radius: 5px; background: #333; color: #fff;
-            margin-bottom: 20px; width: 70%;
-        }
-
         .btn { 
             font-family: 'Press Start 2P', cursive; 
             background: linear-gradient(to bottom, #555, #333); 
@@ -121,14 +113,13 @@
             position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 10px; 
             border-top: 6px solid #5a3a22; z-index: 10;
         }
-        /* 机 */
         #player-desk {
             position: absolute; bottom: 0; width: 100%; height: 120px;
             background: linear-gradient(#8b4513, #5a3a22), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.05' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23a0522d' surfaceScale='2'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100' height='100' fill='%238b4513'/%3E%3Crect width='100' height='100' fill='url(%23noise)' opacity='0.3'/%3E%3C/svg%3E");
             background-blend-mode: multiply;
             border-top: 8px solid #a0522d; box-shadow: inset 0 10px 20px rgba(0,0,0,0.5); 
             z-index: 15;
-            pointer-events: none; /* 重要：タップ透過 */
+            pointer-events: none; /* タップ透過 */
         }
 
         #blackboard-text { 
@@ -184,7 +175,7 @@
         #exit-btn { position: absolute; top: 15px; left: 15px; font-size: 12px; cursor: pointer; background: linear-gradient(to bottom, #cc3333, #992222); color: #fff; border: 2px solid #fff; padding: 8px; border-radius: 5px; z-index: 20; box-shadow: 0 4px 0 #660000; }
         #exit-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #660000; }
         
-        #config-modal, #tutorial-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #config-modal, #tutorial-modal, #name-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .config-box { background: #222; padding: 20px; border: 4px solid #fff; text-align: center; width: 80%; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 11px; line-height: 1.8; color: #ddd; font-family: 'New Tegomin', serif; }
 
@@ -200,7 +191,19 @@
         #start-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #ffd700; font-weight: bold; text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 2000; display: none; animation: popOut 1s forwards; }
         @keyframes popOut { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
 
-        /* SVG Sprites (Ver 32.0 High-Res) */
+        /* ★ パリィボタン（修正済み） */
+        #parry-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 120px; height: 120px; background: radial-gradient(circle, #00aaff, #0055aa);
+            border: 4px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; /* 最前面 */
+            box-shadow: 0 0 20px #00aaff; animation: pulseParry 0.5s infinite;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes pulseParry { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } 100% { transform: translate(-50%, -50%) scale(1); } }
+
+        /* SVG Sprites */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3Crect x='20' y='16' width='4' height='16' fill='%23aaa' opacity='0.3'/%3E%3C/svg%3E"); }
         .kato-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23222'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
@@ -266,9 +269,58 @@
         
         #start-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #ffd700; font-weight: bold; text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 2000; display: none; animation: popOut 1s forwards; }
         @keyframes popOut { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+        
+        #cutin-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #000, #222); z-index: 5000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .cutin-vs { font-size: 50px; color: red; font-weight: bold; text-shadow: 4px 4px 0 #000; animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .cutin-teacher { width: 200px; height: 200px; background-size: contain; background-repeat: no-repeat; background-position: center; animation: slideInRight 0.5s ease-out; }
+        .cutin-name { font-size: 20px; color: white; margin-top: 10px; font-family: 'New Tegomin', serif; animation: fadeIn 1s ease-in; }
+        
+        #skill-cutin {
+            position: fixed; top: 30%; left: 0; width: 100%; height: 120px;
+            background: linear-gradient(90deg, rgba(0,0,0,0), rgba(255,0,0,0.8), rgba(0,0,0,0));
+            z-index: 4000; display: none; align-items: center; justify-content: center;
+            color: white; font-family: 'New Tegomin', serif; text-shadow: 2px 2px 0 #000;
+            transform: translateX(100%); transition: transform 0.2s ease-out;
+        }
+        .skill-text { font-size: 24px; font-weight: bold; }
+        .skill-sub { font-size: 12px; color: #ffd700; }
+        
+        @keyframes zoomIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes slideInRight { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        /* ★パリィボタン */
+        #parry-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 120px; height: 120px; background: radial-gradient(circle, #00aaff, #0055aa);
+            border: 4px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; box-shadow: 0 0 20px #00aaff; animation: pulseParry 0.5s infinite;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes pulseParry { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } 100% { transform: translate(-50%, -50%) scale(1); } }
     </style>
 </head>
 <body>
+    <div id="cutin-screen">
+        <div class="cutin-vs">VS</div>
+        <div id="cutin-img" class="cutin-teacher"></div>
+        <div id="cutin-text" class="cutin-name"></div>
+    </div>
+
+    <div id="skill-cutin">
+        <div style="text-align:center;">
+            <div id="skill-name" class="skill-text"></div>
+            <div id="skill-effect" class="skill-sub"></div>
+        </div>
+    </div>
+
+    <div id="parry-btn" ontouchstart="attemptParry(event)" onclick="attemptParry(event)">🛡️<br>PARRY!</div>
+
     <div id="name-screen" class="screen">
         <h1 style="color:var(--accent-color); font-size:20px; margin-bottom:20px;">ENTER NAME</h1>
         <input type="text" id="player-name-input" placeholder="YOUR NAME" maxlength="8">
@@ -329,8 +381,7 @@
                 1. 画面長押し（PCはスペース）で<b>居眠り</b>します。<br>
                 2. 先生が<b>横を向いたら（Side）</b>警戒！<br>
                 3. 先生が<b>こっちを向く（Front）前</b>に指を離して起きろ！<br>
-                4. 2秒以上寝続けると<b>ゾーン</b>に入りスコア倍増！<br>
-                5. 先生を倒して<b>能力</b>をゲットしよう。
+                4. 必殺技が来たら<b>PARRYボタン</b>をタップ！
             </div>
             <button class="btn" onclick="closeTutorial()">わかった！</button>
         </div>
@@ -353,9 +404,7 @@
 
     <div id="game-screen" class="screen hidden">
         <div id="time-filter"></div>
-        
         <div id="start-overlay">START!</div>
-
         <button id="exit-btn" onclick="exitBattle()">↩ EXIT</button>
         <div id="teacher-area">
             <div id="blackboard-text"></div>
@@ -402,15 +451,15 @@
     <script>
         const GAME_URL = "https://kato-game-1.onrender.com";
         const teachers = {
-            1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ...", face:"kato-face", bg:"bg-classroom" },
-            2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook...", face:"matsuda-face", bg:"bg-classroom" },
-            3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪", face:"sugawara-face", bg:"bg-music" },
-            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH...", face:"fukumorita-face", bg:"bg-classroom" },
-            5: { name: "sudo", label: "Social / Sudo", target: 35, speed: 1.1, blackboard: "1192 Kamakura...", face:"sudo-face", bg:"bg-classroom" },
-            6: { name: "otani", label: "Classic / Otani", target: 40, speed: 1.3, blackboard: "Haru wa Akebono...", face:"otani-face", bg:"bg-classroom" },
-            7: { name: "matsumura", label: "Science / Matsumura", target: 45, speed: 0.9, blackboard: "H2O + CO2...", face:"matsumura-face", bg:"bg-science" },
-            8: { name: "aota", label: "FINAL / Principal Aota", target: 60, speed: 2.0, blackboard: "SILENCE IS GOLD", face:"aota-face", bg:"bg-principal" },
-            9: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face", bg:"bg-classroom" }
+            1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ...", face:"kato-face", bg:"bg-classroom", skill:"逆回転時計" },
+            2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook...", face:"matsuda-face", bg:"bg-classroom", skill:"没収ランチ" },
+            3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪", face:"sugawara-face", bg:"bg-music", skill:"フォルテシモ" },
+            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH...", face:"fukumorita-face", bg:"bg-classroom", skill:"神速巡回" },
+            5: { name: "sudo", label: "Social / Sudo", target: 35, speed: 1.1, blackboard: "1192 Kamakura...", face:"sudo-face", bg:"bg-classroom", skill:"歴史の重み" },
+            6: { name: "otani", label: "Classic / Otani", target: 40, speed: 1.3, blackboard: "Haru wa Akebono...", face:"otani-face", bg:"bg-classroom", skill:"儚き夢" },
+            7: { name: "matsumura", label: "Science / Matsumura", target: 45, speed: 0.9, blackboard: "H2O + CO2...", face:"matsumura-face", bg:"bg-science", skill:"劇薬散布" },
+            8: { name: "aota", label: "FINAL / Principal Aota", target: 60, speed: 2.0, blackboard: "SILENCE IS GOLD", face:"aota-face", bg:"bg-principal", skill:"絶対威圧" },
+            9: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face", bg:"bg-classroom", skill:"ランダム" }
         };
         const skillData = {
             "kato": { name: "加藤の時計", desc: "【A】時間を3秒止める", active: true, icon: "⏱️" },
@@ -453,6 +502,9 @@
         let isTimeStopped = false, sleepContinuous = 0;
         let dialogueStep = 0;
         let isInputBlocked = false;
+        
+        let skillCoolDown = false; 
+        let isParryWindowOpen = false; // パリィ受付中か
 
         const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
         function initAudio() { try { if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch(e){} }
@@ -463,6 +515,8 @@
                 if (type === 'dead') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
                 else if (type === 'clear') { osc.type = 'square'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now+0.1); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
                 else if (type === 'skill') { osc.type = 'sine'; osc.frequency.setValueAtTime(880, now); osc.frequency.linearRampToValueAtTime(1760, now+0.5); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.5); osc.start(now); osc.stop(now+0.5); }
+                else if (type === 'cutin') { osc.type = 'triangle'; osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(100, now+0.3); gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+                else if (type === 'parry') { osc.type = 'square'; osc.frequency.setValueAtTime(1200, now); osc.frequency.exponentialRampToValueAtTime(2000, now+0.1); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.2); osc.start(now); osc.stop(now+0.2); }
             } catch(e){}
         }
 
@@ -530,18 +584,11 @@
             const rivalSprite = document.getElementById("menu-rival-sprite");
             const rivalName = document.getElementById("menu-rival-name");
             const rankDisplay = document.getElementById("menu-rank-display");
-            
             const leftArrow = document.getElementById("arrow-left");
             const rightArrow = document.getElementById("arrow-right");
-            if (unlockedStage <= 1) {
-                leftArrow.style.display = "none"; rightArrow.style.display = "none";
-            } else {
-                leftArrow.style.display = "block"; rightArrow.style.display = "block";
-            }
-
+            if (unlockedStage <= 1) { leftArrow.style.display = "none"; rightArrow.style.display = "none"; } else { leftArrow.style.display = "block"; rightArrow.style.display = "block"; }
             rivalSprite.className = `sprite ${t.face}`;
             rivalName.textContent = t.label;
-
             const rank = stageRanks[stageNum];
             rankDisplay.classList.remove("god");
             if (rank) {
@@ -562,18 +609,11 @@
                 document.getElementById("current-equip").textContent = "装備なし";
                 descEl.textContent = "アイコンをタップで詳細表示";
             }
-            
             Object.keys(skillData).forEach(p => {
                 const el = document.getElementById(`skill-${p}`);
                 if(el) {
-                    if (unlockedPowers.includes(p)) { 
-                        el.style.display = "flex"; 
-                        el.classList.add("unlocked"); 
-                    } else { 
-                        el.style.display = "none"; 
-                    }
-                    if (equippedPower === p) el.classList.add("selected"); 
-                    else el.classList.remove("selected");
+                    if (unlockedPowers.includes(p)) { el.style.display = "flex"; el.classList.add("unlocked"); } else { el.style.display = "none"; }
+                    if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
                 }
             });
         }
@@ -614,10 +654,8 @@
             battleStage = st;
             dialogueStep = 0;
             const d = dialogues[st] || { t: "...", s: "..." };
-            
             document.getElementById("menu-screen").classList.add("hidden");
             document.getElementById("dialogue-screen").style.display = "flex";
-            
             document.getElementById("diag-name").textContent = teachers[st].label.split(" / ")[1] || "TEACHER";
             document.getElementById("diag-name").className = "dialogue-name name-teacher";
             document.getElementById("diag-text").textContent = d.t;
@@ -627,15 +665,26 @@
             dialogueStep++;
             const st = battleStage;
             const d = dialogues[st] || { t: "...", s: "..." };
-
             if (dialogueStep === 1) {
                 document.getElementById("diag-name").textContent = playerName || "YOU";
                 document.getElementById("diag-name").className = "dialogue-name name-you";
                 document.getElementById("diag-text").textContent = d.s;
             } else {
                 document.getElementById("dialogue-screen").style.display = "none";
-                realStartBattle();
+                showVsCutin();
             }
+        }
+
+        function showVsCutin() {
+            const screen = document.getElementById("cutin-screen");
+            const img = document.getElementById("cutin-img");
+            const txt = document.getElementById("cutin-text");
+            const t = teachers[battleStage];
+            img.className = `cutin-teacher ${t.face}`;
+            txt.textContent = t.label.split(" / ")[1] || "TEACHER";
+            screen.style.display = "flex";
+            playSound('cutin');
+            setTimeout(() => { screen.style.display = "none"; realStartBattle(); }, 2000);
         }
 
         function realStartBattle() {
@@ -645,9 +694,10 @@
             
             hp = (equippedPower === 'matsuda') ? 4 : 3;
             isTimeStopped = false; sleepContinuous = 0; isInvincible = false;
-            
             isSleeping = false; 
             isInputBlocked = true; 
+            skillCoolDown = false;
+            isParryWindowOpen = false; // Reset
             setTimeout(() => { isInputBlocked = false; }, 500); 
             
             const skillBtn = document.getElementById("active-skill-btn");
@@ -674,8 +724,7 @@
             document.getElementById("blackboard-text").textContent = t.blackboard;
             document.getElementById("target-score").textContent = (battleStage===9) ? "∞" : t.target;
             document.getElementById("student-sprite").className = "sprite student-awake"; 
-
-            // スタート演出
+            
             const overlay = document.getElementById("start-overlay");
             overlay.style.display = "block";
             setTimeout(() => { overlay.style.display = "none"; }, 1000);
@@ -695,13 +744,10 @@
         window.activateActiveSkill = function(event) {
             if(event) event.stopPropagation(); 
             if(isInputBlocked) return;
-            
             const btn = document.getElementById("active-skill-btn");
             if (btn.classList.contains("cooldown")) return;
-            
             playSound('skill');
             btn.classList.add("cooldown");
-
             if (equippedPower === 'kato') {
                 isTimeStopped = true;
                 isTeacherLooking = false; clearTimeout(teacherTimerId);
@@ -710,13 +756,9 @@
                 sprite.className = `sprite ${tName}-back`; 
                 document.getElementById("game-screen").style.filter = "invert(1)";
                 document.getElementById("warning-bubble").style.display = "none";
-
                 setTimeout(() => { isTimeStopped = false; document.getElementById("game-screen").style.filter = "none"; updateTeacherBehavior(); }, 3000);
-            
             } else if (equippedPower === 'sudo') {
-                sleepTime += 5.0;
-                updateProgress();
-            
+                sleepTime += 5.0; updateProgress();
             } else if (equippedPower === 'matsumura') {
                 isInvincible = true;
                 document.getElementById("student-sprite").style.opacity = "0.5";
@@ -726,16 +768,116 @@
 
         function getTeacherName(st, spriteEl) {
             if (st === 9) {
-                for (let name of teacherNames) {
-                    if (spriteEl.className.includes(name)) return name;
-                }
+                for (let name of teacherNames) { if (spriteEl.className.includes(name)) return name; }
                 return "kato";
             }
             return teachers[st].name;
         }
 
+        // ★先生のスキル発動とパリィ
+        function triggerTeacherSkill() {
+            if(skillCoolDown || isTimeStopped || battleStage === 9) return; 
+            if(Math.random() > 0.1) return;
+
+            skillCoolDown = true;
+            setTimeout(() => { skillCoolDown = false; }, 8000);
+
+            const t = teachers[battleStage];
+            const cutin = document.getElementById("skill-cutin");
+            const skillName = document.getElementById("skill-name");
+            const skillEffect = document.getElementById("skill-effect");
+            const parryBtn = document.getElementById("parry-btn");
+
+            skillName.textContent = t.skill;
+            skillEffect.textContent = getSkillEffectText(battleStage);
+            cutin.style.display = "flex";
+            cutin.style.transform = "translateX(0)";
+            playSound('cutin');
+            
+            // パリィ受付開始
+            isParryWindowOpen = true;
+            parryBtn.style.display = "flex";
+
+            setTimeout(() => {
+                // パリィ受付終了
+                isParryWindowOpen = false;
+                parryBtn.style.display = "none";
+                cutin.style.transform = "translateX(100%)";
+                setTimeout(() => { cutin.style.display = "none"; }, 200);
+                
+                // 成功してなければ効果発動
+                if (!isParried) {
+                    applyTeacherSkillEffect(battleStage);
+                }
+                isParried = false; // リセット
+
+            }, 1000); // 1秒間チャンス
+        }
+
+        let isParried = false;
+        window.attemptParry = function(event) {
+            if(event) event.stopPropagation();
+            if(isParryWindowOpen) {
+                isParried = true;
+                isParryWindowOpen = false;
+                document.getElementById("parry-btn").style.display = "none";
+                playSound('parry');
+                // パリィ成功ボーナス
+                sleepTime += 3.0;
+                const gameScreen = document.getElementById("game-screen");
+                gameScreen.style.filter = "brightness(2)"; // フラッシュ
+                setTimeout(() => { gameScreen.style.filter = "none"; }, 100);
+                updateProgress();
+            }
+        };
+
+        function getSkillEffectText(st) {
+            switch(st) {
+                case 1: return "睡眠ゲージ減少";
+                case 2: return "睡眠ゲージ減少";
+                case 3: return "先生加速";
+                case 4: return "即時振り返り";
+                case 5: return "睡眠禁止";
+                case 6: return "視界不良";
+                case 7: return "視界不良";
+                case 8: return "ダメージ";
+                default: return "";
+            }
+        }
+
+        function applyTeacherSkillEffect(st) {
+            if(st === 1) { sleepTime = Math.max(0, sleepTime - 5); updateProgress(); } 
+            if(st === 2) { sleepTime = Math.max(0, sleepTime - 10); updateProgress(); } 
+            if(st === 3) { endlessSpeed = 2.0; setTimeout(() => { endlessSpeed = 1.0; }, 5000); } 
+            if(st === 4) { 
+                clearTimeout(teacherTimerId);
+                const sprite = document.getElementById("teacher-sprite");
+                let tName = teachers[battleStage].name;
+                sprite.className = `sprite ${tName}-face`;
+                isTeacherLooking = true;
+                setTimeout(() => { updateTeacherBehavior(); }, 1000);
+            }
+            if(st === 5) { 
+                isInputBlocked = true; 
+                document.getElementById("student-sprite").style.filter = "grayscale(100%)";
+                setTimeout(() => { isInputBlocked = false; document.getElementById("student-sprite").style.filter = "none"; }, 3000);
+            }
+            if(st === 6) { 
+                document.getElementById("game-screen").style.filter = "blur(5px) hue-rotate(90deg)";
+                setTimeout(() => { document.getElementById("game-screen").style.filter = "none"; }, 4000);
+            }
+            if(st === 7) { 
+                document.getElementById("game-screen").style.filter = "brightness(0)";
+                setTimeout(() => { document.getElementById("game-screen").style.filter = "none"; }, 3000);
+            }
+            if(st === 8) { takeDamage(); }
+        }
+
         function updateTeacherBehavior() {
             if (isTimeStopped) return;
+            
+            triggerTeacherSkill();
+
             let tName = teachers[battleStage].name;
             if (battleStage === 9) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; }
             const sprite = document.getElementById("teacher-sprite"); 
@@ -749,6 +891,8 @@
             if (tName === 'aota') waitBase = 800;
 
             let speed = (battleStage === 9) ? endlessSpeed : teachers[battleStage].speed;
+            if(battleStage === 3 && endlessSpeed === 2.0) speed = 2.0;
+
             let randomTime = (Math.random() * waitBase + 1000) / speed;
             teacherTimerId = setTimeout(() => {
                 if (isTimeStopped) return;
@@ -918,6 +1062,7 @@
             const godNote = document.getElementById("god-mode-note"); if(usedGodMode) { godNote.style.display = "block"; } else { godNote.style.display = "none"; }
             for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } 
         }
+        
         const shareText = `【卒業証明書】私、${playerName || "名無し"}は加藤・松田・菅原・福盛田・須藤・大谷・松村・青田校長の目を盗み、完全爆睡したことを証明します！ #加藤先生ゲーム`;
         function shareX() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(GAME_URL)}`, '_blank'); }
         function shareLine() { const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(GAME_URL)}`; window.open(lineUrl, '_blank'); }
@@ -940,11 +1085,11 @@
         
         const touchLayer = document.getElementById("player-area"); 
         touchLayer.addEventListener("touchstart", (e) => { 
-            if(e.target.id === "active-skill-btn") return;
+            if(e.target.id === "active-skill-btn" || e.target.id === "parry-btn") return; // ★パリィボタンも除外
             initAudio(); e.preventDefault(); startSleep(); 
         }); 
         touchLayer.addEventListener("touchend", (e) => { 
-            if(e.target.id === "active-skill-btn") return;
+            if(e.target.id === "active-skill-btn" || e.target.id === "parry-btn") return;
             e.preventDefault(); stopSleep(); 
         }); 
         document.addEventListener("keydown", (e) => { 
