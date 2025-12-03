@@ -7,36 +7,337 @@
     
     <link rel="icon" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-    <link rel="manifest" href="manifest.json">
-
     <meta property="og:title" content="激闘！加藤先生の授業 RPG">
-    <meta property="og:description" content="先生の能力を奪って進め！新感覚・居眠りバトルRPG。">
-    <meta property="og:image" content="https://kato-game-1.onrender.com/icon.png">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root { --bg-color: #1a1a1a; --accent-color: #ffd700; --danger-color: #ff4444; }
+        body { font-family: 'Press Start 2P', cursive; text-align: center; background-color: var(--bg-color); color: #eee; margin: 0; overflow: hidden; touch-action: manipulation; user-select: none; image-rendering: pixelated; }
+        .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-color); transition: opacity 0.3s; }
+        .hidden { display: none !important; }
+        
+        .btn { 
+            font-family: 'Press Start 2P', cursive; 
+            background: linear-gradient(to bottom, #555, #333); 
+            border: 1px solid #888; border-bottom: 4px solid #111;
+            padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; 
+            text-shadow: 1px 1px 0 #000; border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+        
+        /* メニュー画面 */
+        #menu-screen {
+            justify-content: flex-start;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='480' viewBox='0 0 320 480'%3E%3Cdefs%3E%3ClinearGradient id='floor' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%235a3a22'/%3E%3Cstop offset='100%25' stop-color='%233e2b19'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='480' fill='%23222'/%3E%3Crect width='320' height='160' fill='%23444'/%3E%3Cpath d='M0,480 L320,480 L220,320 L100,320 Z' fill='url(%23floor)'/%3E%3Crect x='100' y='160' width='120' height='160' fill='%23666'/%3E%3Crect x='130' y='180' width='60' height='140' fill='%233a3a3a' border='2' stroke='%23555'/%3E%3Cpath d='M0,0 L100,160 L100,320 L0,480 Z' fill='%23888'/%3E%3Cpath d='M320,0 L220,160 L220,320 L320,480 Z' fill='%23777'/%3E%3Cline x1='0' y1='100' x2='100' y2='190' stroke='%23555' stroke-width='3'/%3E%3Cline x1='320' y1='100' x2='220' y2='190' stroke='%23555' stroke-width='3'/%3E%3C/svg%3E");
+            background-size: cover; background-position: center;
+        }
+        #menu-screen::after, #game-screen::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 50%, rgba(0,0,0,0.5) 100%);
+            pointer-events: none; z-index: 10;
+        }
+
+        #face-off-area {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            width: 85%; height: 220px; margin-bottom: 20px; position: relative; margin-top: 60px; z-index: 5;
+        }
+        .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; z-index: 5; }
+        .char-label { 
+            font-size: 10px; margin-top: 5px; background: #000; border: 1px solid #fff;
+            padding: 3px 8px; border-radius: 4px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            font-family: 'New Tegomin', serif;
+        }
+        
+        .select-arrow {
+            position: absolute; top: 40%; 
+            font-size: 30px; color: #fff; cursor: pointer; user-select: none;
+            text-shadow: 2px 2px 0 #000; z-index: 100; 
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(to bottom, #444, #222); border: 2px solid #fff; border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .select-arrow:active { transform: scale(0.9) translateY(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        #arrow-left { left: -10px; }
+        #arrow-right { right: -10px; }
+
+        .menu-rank {
+            position: absolute; top: -10px; right: -10px;
+            width: 40px; height: 40px; border: 3px solid red; border-radius: 50%;
+            color: red; font-family: 'New Tegomin', serif; font-size: 24px;
+            display: flex; align-items: center; justify-content: center;
+            transform: rotate(20deg); background: rgba(255, 255, 255, 0.9); 
+            z-index: 10; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+        .menu-rank.god { border-color: purple; color: purple; font-size: 12px; font-weight: bold; }
+
+        .walk-right { animation: walkOff 1.5s forwards linear; }
+        .fade-in-right { animation: slideIn 1s forwards ease-out; }
+        @keyframes walkOff { 0% { transform: translateX(0); } 100% { transform: translateX(400px) translateY(0); } }
+        @keyframes slideIn { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+
+        #equip-menu {
+            width: 92%; background: rgba(20,20,20,0.9); padding: 10px; border-radius: 8px; border: 2px solid #555;
+            display: flex; flex-direction: column; align-items: center; margin-top: 10px; z-index: 20; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 5px; }
+        #equip-desc { color: #ccc; font-size: 9px; margin-top: 5px; height: 20px; line-height: 1.4; font-family: 'New Tegomin', serif; }
+        .equip-list { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .equip-item { 
+            width: 38px; height: 38px; border: 2px solid #555; background: #333; 
+            display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; border-radius: 4px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+        .equip-item.unlocked { border-color: #888; background: linear-gradient(to bottom, #555, #444); }
+        .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 10px #ffd700, inset 0 0 5px rgba(255,215,0,0.5); background: linear-gradient(to bottom, #665500, #443300); }
+
+        /* ゲーム画面 */
+        #game-screen {
+            justify-content: flex-start;
+            background-size: cover; background-position: center;
+            will-change: filter, transform;
+        }
+        /* 背景SVG */
+        .bg-classroom { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.5'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3C/svg%3E"); }
+        .bg-science { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23ccc'/%3E%3Crect width='320' height='120' fill='%23aaa'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23224422' stroke='%23555' stroke-width='6'/%3E%3Ctext x='20' y='160' font-size='40' opacity='0.3'>🧪</text>%3Ctext x='260' y='160' font-size='40' opacity='0.3'>💀</text>%3Crect y='220' width='320' height='20' fill='%23222'/%3E%3C/svg%3E"); }
+        .bg-music { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23d0c0a0'/%3E%3Crect width='320' height='120' fill='%23a09070'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23222' stroke='%235a3a22' stroke-width='6'/%3E%3Ctext x='140' y='70' font-size='40' fill='white' opacity='0.5'>🎼</text>%3Crect x='260' y='140' width='60' height='100' fill='%23111'/%3E%3C/svg%3E"); }
+        .bg-principal { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23400'/%3E%3Crect width='320' height='120' fill='%23200'/%3E%3Crect x='60' y='20' width='200' height='80' fill='%23gold' stroke='gold' stroke-width='4' opacity='0.3'/%3E%3Crect y='220' width='320' height='20' fill='%23800'/%3E%3Ctext x='10' y='150' font-size='30'>🏆</text>%3Ctext x='280' y='150' font-size='30'>🏺</text>%3C/svg%3E"); }
+
+        #teacher-area { height: 45vh; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 30px; z-index: 5; }
+        #player-area { 
+            height: 55vh; width: 100%; background: rgba(20,20,20,0.6); 
+            position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 10px; 
+            border-top: 6px solid #5a3a22; z-index: 10;
+        }
+        #player-desk {
+            position: absolute; bottom: 0; width: 100%; height: 120px;
+            background: linear-gradient(#8b4513, #5a3a22), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.05' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23a0522d' surfaceScale='2'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100' height='100' fill='%238b4513'/%3E%3Crect width='100' height='100' fill='url(%23noise)' opacity='0.3'/%3E%3C/svg%3E");
+            background-blend-mode: multiply;
+            border-top: 8px solid #a0522d; box-shadow: inset 0 10px 20px rgba(0,0,0,0.5); 
+            z-index: 15;
+            pointer-events: none; /* タップ透過 */
+        }
+
+        #blackboard-text { 
+            position: absolute; top: 30px; width: 80%; left:10%; text-align: center; 
+            font-family: 'New Tegomin', serif; font-size: 16px; color: rgba(255,255,255,0.9); 
+            text-shadow: 1px 1px 2px #000; z-index: 6;
+        }
+        
+        #hud { width: 90%; display: flex; justify-content: space-between; margin-bottom: 5px; align-items: center; z-index: 20; position: relative; }
+        #hearts-container { display: flex; gap: 5px; }
+        .heart-icon { width: 24px; height: 24px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4444' stroke='%23cc0000' stroke-width='1' stroke-linejoin='round'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5)); transition: transform 0.2s; }
+        .heart-icon.lost { transform: scale(1.5); opacity: 0; transition: all 0.3s ease-out; }
+        .heart-icon.god { filter: hue-rotate(270deg) drop-shadow(1px 1px 2px rgba(0,0,0,0.5)); }
+        
+        #progress-container { 
+            width: 100%; height: 18px; background: #222; border: 2px solid #444; border-radius: 10px; 
+            overflow: hidden; margin-top: 5px; position: relative; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 20;
+        }
+        #progress-fill { 
+            width: 0%; height: 100%; 
+            background: linear-gradient(45deg, #ff9800 25%, #ffd700 25%, #ffd700 50%, #ff9800 50%, #ff9800 75%, #ffd700 75%, #ffd700);
+            background-size: 20px 20px; animation: progress-stripe 1s linear infinite;
+            transition: width 0.2s; box-shadow: 0 0 5px #ffd700;
+        }
+        @keyframes progress-stripe { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
+        #progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 10px; color: #fff; line-height: 18px; font-weight: bold; text-shadow: 1px 1px 1px #000; }
+
+        .sprite { width: 160px; height: 160px; background-repeat: no-repeat; background-position: center; background-size: contain; position: relative; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); z-index: 10; }
+        
+        #warning-bubble {
+            position: absolute; top: -30px; right: -20px;
+            background: #fff; color: #000; padding: 5px 10px; border-radius: 10px; border: 2px solid #000;
+            font-size: 12px; font-weight: bold; display: none; z-index: 20;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+        #warning-bubble::after { content: ""; position: absolute; bottom: -6px; left: 10px; border-width: 6px 6px 0; border-style: solid; border-color: #fff transparent; display: block; width: 0; }
+
+        #active-skill-btn {
+            position: absolute; bottom: 130px; right: 20px;
+            width: 70px; height: 70px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d);
+            border: 4px solid #fff; box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,255,0,0.5);
+            display: none; align-items: center; justify-content: center;
+            font-size: 30px; cursor: pointer; z-index: 1000; animation: glow 2s infinite;
+            -webkit-tap-highlight-color: transparent; text-shadow: 1px 1px 2px #000;
+        }
+        #active-skill-btn:active { transform: scale(0.9); }
+        #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
+        @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700, 0 0 50px #ffeb3b;} }
+
+        #config-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; background: none; border: none; z-index: 20; filter: drop-shadow(1px 1px 0 #000); }
+        #exit-btn { position: absolute; top: 15px; left: 15px; font-size: 12px; cursor: pointer; background: linear-gradient(to bottom, #cc3333, #992222); color: #fff; border: 2px solid #fff; padding: 8px; border-radius: 5px; z-index: 20; box-shadow: 0 4px 0 #660000; }
+        #exit-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #660000; }
+        
+        #config-modal, #tutorial-modal, #name-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .config-box { background: #222; padding: 20px; border: 4px solid #fff; text-align: center; width: 80%; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 11px; line-height: 1.8; color: #ddd; font-family: 'New Tegomin', serif; }
+
+        .btn-endless { display: none; width: 200px; border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; margin-top:5px; background: linear-gradient(to bottom, #400, #200); }
+        .btn-ngplus { display: none; width: 200px; border-color: #ffd700; color: #ffd700; margin-top: 5px; background: linear-gradient(to bottom, #440, #220); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); } }
+
+        .chalk-missile { position: absolute; width: 20px; height: 6px; background: white; border-radius: 2px; top: 40%; left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px rgba(255,255,255,0.8); z-index: 100; animation: flyChalk 0.3s linear forwards; }
+        @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
+        .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shakeScreen { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
+        
+        #start-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #ffd700; font-weight: bold; text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 2000; display: none; animation: popOut 1s forwards; }
+        @keyframes popOut { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+
+        /* ★ パリィボタン（修正済み） */
+        #parry-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 120px; height: 120px; background: radial-gradient(circle, #00aaff, #0055aa);
+            border: 4px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; /* 最前面 */
+            box-shadow: 0 0 20px #00aaff; animation: pulseParry 0.5s infinite;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes pulseParry { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } 100% { transform: translate(-50%, -50%) scale(1); } }
+
+        /* SVG Sprites */
+        .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3Crect x='20' y='16' width='4' height='16' fill='%23aaa' opacity='0.3'/%3E%3C/svg%3E"); }
+        .kato-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23222'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+        .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3Crect x='20' y='16' width='6' height='16' fill='%23a89fb8' opacity='0.3'/%3E%3C/svg%3E"); }
+        .matsuda-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='6' fill='%23622'/%3E%3Crect x='21' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23d8bfd8'/%3E%3Crect x='2' y='6' width='8' height='14' fill='%23622'/%3E%3C/svg%3E"); }
+        .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M8,4 L24,4 L24,10 L8,10 Z' fill='%23622'/%3E%3Cpath d='M6,6 L8,6 L8,16 L6,16 Z' fill='%23622'/%3E%3Cpath d='M24,6 L26,6 L26,16 L24,16 Z' fill='%23622'/%3E%3Crect x='11' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='19' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='9' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23d00'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
+        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3Crect x='20' y='16' width='6' height='16' fill='%23234' opacity='0.3'/%3E%3C/svg%3E"); }
+        .sugawara-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8,2 L24,2 L24,10 L8,10 Z' fill='%23331'/%3E%3Crect x='10' y='8' width='12' height='8' fill='%23e0b090'/%3E%3Ccircle cx='22' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Crect x='20' y='16' width='4' height='16' fill='%23000' opacity='0.3'/%3E%3C/svg%3E"); }
+        .fukumorita-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23111'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23111'/%3E%3C/svg%3E"); }
+        .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+        .sudo-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,14 L10,14 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3Crect x='20' y='20' width='4' height='12' fill='%23336633' opacity='0.3'/%3E%3C/svg%3E"); }
+        .sudo-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='12' y='8' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='8' width='10' height='6' fill='%23421'/%3E%3Cpath d='M10,10 L6,16 L8,18 L12,12 Z' fill='%23421'/%3E%3Crect x='21' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='20' width='12' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
+        .sudo-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,12 L10,12 Z' fill='%23421'/%3E%3Cpath d='M8,8 L10,20 L8,20 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
+        .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L22,2 L22,8 L10,8 Z' fill='%23111'/%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%23333' stroke-width='1'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='20' y='14' width='4' height='18' fill='%23aaaaff' opacity='0.3'/%3E%3C/svg%3E"); }
+        .otani-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='6' fill='%23111'/%3E%3Crect x='21' y='6' width='2' height='2' fill='%23008'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='10' y='14' width='12' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
+        .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L16,2 L16,4 L10,8 Z' fill='%23111'/%3E%3Cpath d='M22,2 L16,2 L16,4 L22,8 Z' fill='%23111'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
+        .matsumura-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='20' y='18' width='4' height='14' fill='%23ccc' opacity='0.3'/%3E%3C/svg%3E"); }
+        .matsumura-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='20' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='10' y='18' width='12' height='14' fill='%23eee'/%3E%3C/svg%3E"); }
+        .matsumura-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='12' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='14' y='14' width='4' height='1' fill='%23000'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='12' y='18' width='2' height='14' fill='%23aaa'/%3E%3C/svg%3E"); }
+        .aota-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3Crect x='20' y='14' width='4' height='18' fill='%23000050' opacity='0.3'/%3E%3C/svg%3E"); }
+        .aota-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='4' fill='%23222'/%3E%3Crect x='21' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='8' y='14' width='14' height='18' fill='%23000080'/%3E%3C/svg%3E"); }
+        .aota-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='10' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='20' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='13' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='17' y='6' width='2' height='1' fill='%23000'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000' stroke-width='2'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3Crect x='15' y='16' width='2' height='10' fill='%23a00'/%3E%3C/svg%3E"); }
+
+        .student-awake { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='8' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%234488ff'/%3E%3C/svg%3E"); }
+        .student-sleep { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='12' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='12' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='16' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='16' width='2' height='1' fill='%23000'/%3E%3Crect x='8' y='24' width='16' height='8' fill='%234488ff'/%3E%3C/svg%3E"); }
+        .student-hurt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23ccf'/%3E%3Crect x='10' y='8' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='2' fill='%23000'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%234488ff'/%3E%3C/svg%3E"); animation: shake 0.2s infinite; }
+        @keyframes shake { 0% { transform: translate(0, 0); } 25% { transform: translate(-5px, 0); } 75% { transform: translate(5px, 0); } 100% { transform: translate(0, 0); } }
+        .zzz { position: absolute; color: cyan; font-size: 14px; animation: floatUp 1.5s ease-out forwards; text-shadow: 1px 1px 0 #000; opacity: 0.8; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { opacity: 1; transform: translateY(-20px) scale(1); } 100% { transform: translateY(-80px) scale(1.2); opacity: 0; } }
+        .god-mode { color: gold !important; text-shadow: 0 0 10px gold !important; }
+        
+        #ending-screen { background: #111; z-index: 2000; }
+        #certificate { width: 90%; background: #fff; color: #000; padding: 20px; border: 10px double #ffd700; font-family: 'New Tegomin', serif; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); animation: popIn 1s ease-out; position: relative; }
+        @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .confetti { position: absolute; width: 10px; height: 10px; background: #f00; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+        
+        .btn-x { background: linear-gradient(to bottom, #333, #000); border-color: #fff; }
+        .btn-line { background: linear-gradient(to bottom, #00c300, #009900); border-color: #fff; }
+        .btn-share { background: linear-gradient(to bottom, #777, #555); border-color: #ccc; }
+        
+        #dialogue-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 2500;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .dialogue-box {
+            width: 85%; background: #fff; border: 4px solid #000; border-radius: 10px; padding: 15px;
+            font-family: 'New Tegomin', serif; min-height: 120px; position: relative;
+            display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .dialogue-name { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
+        .name-teacher { color: var(--danger-color); }
+        .name-you { color: #4488ff; }
+        .dialogue-text { font-size: 14px; line-height: 1.5; color: #000; white-space: pre-wrap; text-align: center; }
+        .dialogue-next { position: absolute; bottom: 10px; right: 10px; animation: blink 1s infinite; font-size: 20px; cursor: pointer; }
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        @keyframes stamp { 0% { transform: scale(3) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-20deg); opacity: 1; } }
+        
+        #start-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 50px; color: #ffd700; font-weight: bold; text-shadow: 2px 2px 0 #000; pointer-events: none; z-index: 2000; display: none; animation: popOut 1s forwards; }
+        @keyframes popOut { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+        
+        #cutin-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, #000, #222); z-index: 5000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .cutin-vs { font-size: 50px; color: red; font-weight: bold; text-shadow: 4px 4px 0 #000; animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .cutin-teacher { width: 200px; height: 200px; background-size: contain; background-repeat: no-repeat; background-position: center; animation: slideInRight 0.5s ease-out; }
+        .cutin-name { font-size: 20px; color: white; margin-top: 10px; font-family: 'New Tegomin', serif; animation: fadeIn 1s ease-in; }
+        
+        #skill-cutin {
+            position: fixed; top: 30%; left: 0; width: 100%; height: 120px;
+            background: linear-gradient(90deg, rgba(0,0,0,0), rgba(255,0,0,0.8), rgba(0,0,0,0));
+            z-index: 4000; display: none; align-items: center; justify-content: center;
+            color: white; font-family: 'New Tegomin', serif; text-shadow: 2px 2px 0 #000;
+            transform: translateX(100%); transition: transform 0.2s ease-out;
+        }
+        .skill-text { font-size: 24px; font-weight: bold; }
+        .skill-sub { font-size: 12px; color: #ffd700; }
+        
+        @keyframes zoomIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        @keyframes slideInRight { 0% { transform: translateX(200px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        /* ★パリィボタン */
+        #parry-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 120px; height: 120px; background: radial-gradient(circle, #00aaff, #0055aa);
+            border: 4px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
+            display: none; align-items: center; justify-content: center;
+            z-index: 9999; box-shadow: 0 0 20px #00aaff; animation: pulseParry 0.5s infinite;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        @keyframes pulseParry { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } 100% { transform: translate(-50%, -50%) scale(1); } }
+    </style>
 </head>
 <body>
+    <div id="cutin-screen">
+        <div class="cutin-vs">VS</div>
+        <div id="cutin-img" class="cutin-teacher"></div>
+        <div id="cutin-text" class="cutin-name"></div>
+    </div>
+
+    <div id="skill-cutin">
+        <div style="text-align:center;">
+            <div id="skill-name" class="skill-text"></div>
+            <div id="skill-effect" class="skill-sub"></div>
+        </div>
+    </div>
+
+    <div id="parry-btn" ontouchstart="attemptParry(event)" onclick="attemptParry(event)">🛡️<br>PARRY!</div>
+
     <div id="name-screen" class="screen">
-        <h1 class="modal-title">ENTER NAME</h1>
+        <h1 style="color:var(--accent-color); font-size:20px; margin-bottom:20px;">ENTER NAME</h1>
         <input type="text" id="player-name-input" placeholder="YOUR NAME" maxlength="8">
         <button class="btn" onclick="submitName()">OK</button>
     </div>
 
     <div id="menu-screen" class="screen hidden">
-        <h1 id="game-title">BATTLE SELECT</h1>
+        <h1 id="game-title" style="color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer; border-radius: 5px;">BATTLE SELECT</h1>
         <button id="config-btn" onclick="openConfig()">⚙️</button>
-        <p id="cheat-msg">GOD MODE!</p>
+        <p id="cheat-msg" style="color:gold; font-size:10px; display:none; z-index:10;">GOD MODE!</p>
 
         <div id="face-off-area">
             <div id="arrow-left" class="select-arrow" onclick="changeStage(-1)">◀</div>
             <div id="arrow-right" class="select-arrow" onclick="changeStage(1)">▶</div>
 
             <div id="menu-player" class="char-box"><div class="sprite student-awake"></div><div class="char-label">YOU</div></div>
-            <div class="vs-text" style="font-size:30px; color:#ff4444; font-weight:bold; text-shadow:2px 2px 0 #000;">VS</div>
+            <div style="font-size:30px; color:var(--danger-color); font-weight:bold; text-shadow:2px 2px 0 #000;">VS</div>
             <div id="menu-rival" class="char-box">
                 <div id="menu-rival-sprite" class="sprite"></div>
                 <div id="menu-rival-name" class="char-label">???</div>
@@ -44,7 +345,7 @@
             </div>
         </div>
 
-        <button id="start-btn" class="btn start-btn" onclick="startSequence()">BATTLE START</button>
+        <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:linear-gradient(to bottom, #ff4444, #cc0000); border-color:#ffcccc;" onclick="startSequence()">BATTLE START</button>
         
         <button id="endless-btn" class="btn btn-endless" onclick="startEndless()">💀 ENDLESS</button>
         <button id="ng-plus-btn" class="btn btn-ngplus" style="display:none;" onclick="newGamePlus()">💪 NEW GAME +</button>
@@ -75,7 +376,7 @@
 
     <div id="tutorial-modal">
         <div class="config-box">
-            <h2 class="modal-title">HOW TO PLAY</h2>
+            <h2 style="color:var(--accent-color);">HOW TO PLAY</h2>
             <div class="tutorial-step">
                 1. 画面長押し（PCはスペース）で<b>居眠り</b>します。<br>
                 2. 先生が<b>横を向いたら（Side）</b>警戒！<br>
@@ -88,63 +389,40 @@
 
     <div id="config-modal">
         <div class="config-box">
-            <h2 class="modal-title">SETTINGS</h2>
-            <p class="modal-desc">メニュー</p>
+            <h2 style="color:var(--accent-color);">SETTINGS</h2>
+            <p style="font-size:10px; color:#aaa;">メニュー</p>
             <div style="margin: 10px 0;">
-                名前: <input type="text" id="config-name-input" placeholder="Name">
-                <button class="btn small-btn" onclick="changeName()">変更</button>
+                名前: <input type="text" id="config-name-input" style="width:60%; font-size:12px; padding:5px;">
+                <button class="btn" style="font-size:10px; padding:5px;" onclick="changeName()">変更</button>
             </div>
-            <button class="btn help-btn" onclick="openTutorial()">❓ 遊び方を見る</button>
+            <button class="btn" style="border-color:#aaa; color:#fff;" onclick="openTutorial()">❓ 遊び方を見る</button>
             <br><br>
-            <button class="btn reset-btn" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
-            <button class="btn close-btn" onclick="closeConfig()">CLOSE</button>
+            <button class="btn" style="border-color:red; color:red; background:linear-gradient(to bottom, #300, #100);" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
+            <button class="btn" style="margin-top:20px;" onclick="closeConfig()">CLOSE</button>
         </div>
     </div>
 
     <div id="game-screen" class="screen hidden">
         <div id="time-filter"></div>
         <div id="start-overlay">START!</div>
-
         <button id="exit-btn" onclick="exitBattle()">↩ EXIT</button>
-        
         <div id="teacher-area">
             <div id="blackboard-text"></div>
             <div id="warning-bubble">!</div>
             <div id="teacher-sprite" class="sprite"></div>
         </div>
-        
         <div id="player-area">
             <div id="player-desk"></div>
             <div id="hud">
                 <div id="hearts-container"></div>
-                <div class="target-text">TARGET: <span id="target-score">30</span>s</div>
+                <div style="font-size:12px; color:#fff; font-weight:bold; text-shadow: 1px 1px 2px #000;">TARGET: <span id="target-score">30</span>s</div>
             </div>
-            <div id="progress-container">
-                <div id="progress-fill"></div>
-                <div id="progress-text">0%</div>
-            </div>
+            <div id="progress-container"><div id="progress-fill"></div><div id="progress-text">0%</div></div>
             <div id="student-sprite" class="sprite student-awake"></div>
-            
             <div id="active-skill-btn" ontouchstart="activateActiveSkill(event)" onclick="activateActiveSkill(event)">✨</div>
-            
-            <div class="hold-text" style="position:absolute; bottom:10px; width:100%; text-align:center; color:#ddd; font-size:10px;">HOLD SPACE TO SLEEP</div>
+            <div style="margin-top:20px; color:#ddd; font-size:10px; text-shadow:1px 1px 0 #000; position:absolute; bottom:10px;">HOLD SPACE TO SLEEP</div>
         </div>
     </div>
-
-    <div id="cutin-screen">
-        <div class="cutin-vs">VS</div>
-        <div id="cutin-img" class="cutin-teacher"></div>
-        <div id="cutin-text" class="cutin-name"></div>
-    </div>
-
-    <div id="skill-cutin">
-        <div style="text-align:center;">
-            <div id="skill-name" class="skill-text"></div>
-            <div id="skill-effect" class="skill-sub"></div>
-        </div>
-    </div>
-
-    <div id="parry-btn" ontouchstart="attemptParry(event)" onclick="attemptParry(event)">🛡️<br>PARRY!</div>
 
     <div id="result-screen" class="screen hidden">
         <h1 id="result-title">FAILED</h1>
@@ -155,12 +433,12 @@
 
     <div id="ending-screen" class="screen hidden">
         <div id="certificate">
-            <h2 class="cert-title">睡眠卒業証書</h2>
+            <h2 style="border-bottom: 2px solid #000; display:inline-block; margin-bottom:20px;">睡眠卒業証書</h2>
             <p><span id="cert-name"></span> 殿</p>
-            <p class="cert-body">あなたは全ての先生の目を盗み<br>青田校長すらも乗り越え<br>完全爆睡したことを証します。</p>
-            <p id="god-mode-note">※ゴッドモードの使用を検知しました。</p>
-            <p class="cert-footer">2025年 睡眠委員会</p>
-            <div class="cert-stamp">💮</div>
+            <p style="font-size:12px; line-height:2;">あなたは全ての先生の目を盗み<br>青田校長すらも乗り越え<br>完全爆睡したことを証します。</p>
+            <p id="god-mode-note" style="font-size:10px; color:purple; display:none; margin-top:10px;">※ゴッドモードの使用を検知しました。</p>
+            <p style="text-align:right; margin-top:20px;">2025年 睡眠委員会</p>
+            <div style="font-size:40px; margin-top:10px;">💮</div>
         </div>
         <div class="share-container">
             <button class="btn btn-x" onclick="shareX()">Xで自慢</button>
@@ -170,6 +448,659 @@
         <button class="btn" onclick="location.reload()" style="margin-top:20px;">タイトルへ戻る</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const GAME_URL = "https://kato-game-1.onrender.com";
+        const teachers = {
+            1: { name: "kato", label: "Math / Kato", target: 15, speed: 1.0, blackboard: "y = ax² + ...", face:"kato-face", bg:"bg-classroom", skill:"逆回転時計" },
+            2: { name: "matsuda", label: "English / Matsuda", target: 20, speed: 1.2, blackboard: "Open your textbook...", face:"matsuda-face", bg:"bg-classroom", skill:"没収ランチ" },
+            3: { name: "sugawara", label: "Music / Sugawara", target: 25, speed: 0.8, blackboard: "♪ ~ ♫ ~ ♪", face:"sugawara-face", bg:"bg-music", skill:"フォルテシモ" },
+            4: { name: "fukumorita", label: "Boss / Fukumorita", target: 30, speed: 1.5, blackboard: "FUTURE PATH...", face:"fukumorita-face", bg:"bg-classroom", skill:"神速巡回" },
+            5: { name: "sudo", label: "Social / Sudo", target: 35, speed: 1.1, blackboard: "1192 Kamakura...", face:"sudo-face", bg:"bg-classroom", skill:"歴史の重み" },
+            6: { name: "otani", label: "Classic / Otani", target: 40, speed: 1.3, blackboard: "Haru wa Akebono...", face:"otani-face", bg:"bg-classroom", skill:"儚き夢" },
+            7: { name: "matsumura", label: "Science / Matsumura", target: 45, speed: 0.9, blackboard: "H2O + CO2...", face:"matsumura-face", bg:"bg-science", skill:"劇薬散布" },
+            8: { name: "aota", label: "FINAL / Principal Aota", target: 60, speed: 2.0, blackboard: "SILENCE IS GOLD", face:"aota-face", bg:"bg-principal", skill:"絶対威圧" },
+            9: { name: "endless", label: "ENDLESS SURVIVAL", target: 9999, speed: 1.0, blackboard: "SURVIVAL MODE", face:"fukumorita-face", bg:"bg-classroom", skill:"ランダム" }
+        };
+        const skillData = {
+            "kato": { name: "加藤の時計", desc: "【A】時間を3秒止める", active: true, icon: "⏱️" },
+            "matsuda": { name: "松田のランチ", desc: "【P】ライフ+1", active: false, icon: "❤️" },
+            "sugawara": { name: "菅原のタクト", desc: "【P】睡眠速度1.5倍", active: false, icon: "🎵" },
+            "fukumorita": { name: "福盛田のスニーカー", desc: "【P】寝るほど加速(最大3倍)", active: false, icon: "👟" },
+            "sudo": { name: "須藤の暗記カード", desc: "【A】一瞬で5秒分スコア獲得", active: true, icon: "📜" },
+            "otani": { name: "大谷の和歌", desc: "【P】先生が見る時間が短くなる", active: false, icon: "🌸" },
+            "matsumura": { name: "松村の劇薬", desc: "【A】5秒間無敵になる", active: true, icon: "🧪" },
+            "aota": { name: "校長のジャケット", desc: "【P】睡眠速度5.0倍", active: false, icon: "🧥" }
+        };
+        const dialogues = {
+            1: { t: "こんなんで寝てんだったら\nお前もうマジで知らん。", s: "まさか！寝るわけないです！\n(今のうちに...)" },
+            2: { t: "Sleeping is... death.", s: "No, no! I love English!\n(zzz...)" },
+            3: { t: "しゃーべると... こんな... かんじ...", s: "（喋り方が遅くて眠くなる...）" },
+            4: { t: "アディ...ダス...？", s: "（ナイキです先生...）" },
+            5: { t: "鎌倉幕府を滅亡させます。", s: "平和にいきましょうよ...\n（スヤァ）" },
+            6: { t: "春はあけぼの...だが、\n君の寝顔は風流ではないな。", s: "いと眠し...です..." },
+            7: { t: "ちょっとお腹が鳴っちゃったな。", s: "（今のうちに寝よう）" },
+            8: { t: "我が校は100年の歴史を誇る伝統校である。\nその校長である私の御前で眠ろうなど、\n言語道断！貴様の覚悟、見せてもらおうか！", s: "（話が長い...おやすみなさい）" },
+            9: { t: "終わらない悪夢へようこそ...", s: "（記録更新してやる！）" }
+        };
+
+        const teacherNames = ["kato", "matsuda", "sugawara", "fukumorita", "sudo", "otani", "matsumura", "aota"];
+        
+        let playerName = localStorage.getItem("soichiPlayerName") || "";
+        let unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1;
+        let unlockedPowers = JSON.parse(localStorage.getItem("soichiPowers")) || [];
+        let stageRanks = JSON.parse(localStorage.getItem("soichiRanks")) || {};
+        
+        let equippedPower = localStorage.getItem("soichiEquippedPower");
+        if (equippedPower === "null") equippedPower = null;
+
+        let currentMenuStage = (unlockedStage > 8) ? 8 : unlockedStage; 
+        let battleStage = 1;
+
+        let justCleared = false;
+        let hp = 3, sleepTime = 0, isSleeping = false, isTeacherLooking = false, isInvincible = false;
+        let gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
+        let isTimeStopped = false, sleepContinuous = 0;
+        let dialogueStep = 0;
+        let isInputBlocked = false;
+        
+        let skillCoolDown = false; 
+        let isParryWindowOpen = false; // パリィ受付中か
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
+        function initAudio() { try { if (!audioCtx) audioCtx = new AudioContext(); if (audioCtx.state === 'suspended') audioCtx.resume(); } catch(e){} }
+        function playSound(type) {
+            try {
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); const now = audioCtx.currentTime;
+                if (type === 'dead') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now); osc.frequency.linearRampToValueAtTime(50, now+0.3); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+                else if (type === 'clear') { osc.type = 'square'; osc.frequency.setValueAtTime(440, now); osc.frequency.setValueAtTime(880, now+0.1); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+                else if (type === 'skill') { osc.type = 'sine'; osc.frequency.setValueAtTime(880, now); osc.frequency.linearRampToValueAtTime(1760, now+0.5); gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now+0.5); osc.start(now); osc.stop(now+0.5); }
+                else if (type === 'cutin') { osc.type = 'triangle'; osc.frequency.setValueAtTime(400, now); osc.frequency.linearRampToValueAtTime(100, now+0.3); gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0, now+0.3); osc.start(now); osc.stop(now+0.3); }
+                else if (type === 'parry') { osc.type = 'square'; osc.frequency.setValueAtTime(1200, now); osc.frequency.exponentialRampToValueAtTime(2000, now+0.1); gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now+0.2); osc.start(now); osc.stop(now+0.2); }
+            } catch(e){}
+        }
+
+        window.onload = function() {
+            if(!playerName) {
+                document.getElementById("name-screen").classList.remove("hidden");
+            } else {
+                initMenu();
+                document.getElementById("menu-screen").classList.remove("hidden");
+            }
+        };
+
+        function submitName() {
+            const input = document.getElementById("player-name-input");
+            if(input.value.trim() === "") return;
+            playerName = input.value.trim();
+            localStorage.setItem("soichiPlayerName", playerName);
+            document.getElementById("name-screen").classList.add("hidden");
+            initMenu();
+            document.getElementById("menu-screen").classList.remove("hidden");
+        }
+
+        function changeName() {
+            const input = document.getElementById("config-name-input");
+            if(input.value.trim() !== "") {
+                playerName = input.value.trim();
+                localStorage.setItem("soichiPlayerName", playerName);
+                alert("名前を変更しました");
+            }
+        }
+
+        function initMenu() {
+            if (!localStorage.getItem("soichiTutorialSeen")) {
+                openTutorial();
+                localStorage.setItem("soichiTutorialSeen", "true");
+            }
+            currentMenuStage = (unlockedStage > 8) ? 8 : unlockedStage;
+            updateMenuVisuals(currentMenuStage);
+            
+            const endlessBtn = document.getElementById("endless-btn");
+            const ngBtn = document.getElementById("ng-plus-btn");
+            
+            if (unlockedStage >= 9) {
+                endlessBtn.style.display = "block";
+                ngBtn.style.display = "block";
+            } else {
+                endlessBtn.style.display = "none";
+                ngBtn.style.display = "none";
+            }
+            renderEquipMenu();
+            document.getElementById("config-name-input").value = playerName;
+        }
+
+        function changeStage(dir) {
+            let max = (unlockedStage > 8) ? 8 : unlockedStage;
+            let next = currentMenuStage + dir;
+            if (next < 1) next = max;
+            if (next > max) next = 1;
+            currentMenuStage = next;
+            updateMenuVisuals(currentMenuStage);
+        }
+
+        function updateMenuVisuals(stageNum) {
+            const t = teachers[stageNum];
+            const rivalSprite = document.getElementById("menu-rival-sprite");
+            const rivalName = document.getElementById("menu-rival-name");
+            const rankDisplay = document.getElementById("menu-rank-display");
+            const leftArrow = document.getElementById("arrow-left");
+            const rightArrow = document.getElementById("arrow-right");
+            if (unlockedStage <= 1) { leftArrow.style.display = "none"; rightArrow.style.display = "none"; } else { leftArrow.style.display = "block"; rightArrow.style.display = "block"; }
+            rivalSprite.className = `sprite ${t.face}`;
+            rivalName.textContent = t.label;
+            const rank = stageRanks[stageNum];
+            rankDisplay.classList.remove("god");
+            if (rank) {
+                rankDisplay.textContent = rank;
+                rankDisplay.style.display = "flex";
+                if (rank === "チート") rankDisplay.classList.add("god");
+            } else {
+                rankDisplay.style.display = "none";
+            }
+        }
+
+        function renderEquipMenu() {
+            const descEl = document.getElementById("equip-desc");
+            if (equippedPower && skillData[equippedPower]) {
+                document.getElementById("current-equip").textContent = `装備中: ${skillData[equippedPower].name}`;
+                descEl.textContent = skillData[equippedPower].desc;
+            } else {
+                document.getElementById("current-equip").textContent = "装備なし";
+                descEl.textContent = "アイコンをタップで詳細表示";
+            }
+            Object.keys(skillData).forEach(p => {
+                const el = document.getElementById(`skill-${p}`);
+                if(el) {
+                    if (unlockedPowers.includes(p)) { el.style.display = "flex"; el.classList.add("unlocked"); } else { el.style.display = "none"; }
+                    if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
+                }
+            });
+        }
+
+        function equipSkill(power) {
+            const descEl = document.getElementById("equip-desc");
+            descEl.textContent = skillData[power].desc;
+            if (equippedPower === power) equippedPower = null; else equippedPower = power;
+            localStorage.setItem("soichiEquippedPower", equippedPower);
+            renderEquipMenu();
+        }
+
+        function openConfig() { document.getElementById("config-modal").style.display = "flex"; }
+        function closeConfig() { document.getElementById("config-modal").style.display = "none"; }
+        function openTutorial() { document.getElementById("tutorial-modal").style.display = "flex"; }
+        function closeTutorial() { document.getElementById("tutorial-modal").style.display = "none"; }
+        
+        function newGamePlus() {
+            if(confirm("能力はそのままで、ステージ1から始めますか？")) {
+                localStorage.setItem("soichiGameStage", 1);
+                localStorage.removeItem("soichiRanks");
+                location.reload();
+            }
+        }
+        function hardReset() {
+            if(confirm("本当に全てのデータを消して初期化しますか？")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
+
+        function startSequence() { startDialogue(currentMenuStage); }
+        function startEndless() { startDialogue(9); }
+
+        function startDialogue(st) {
+            battleStage = st;
+            dialogueStep = 0;
+            const d = dialogues[st] || { t: "...", s: "..." };
+            document.getElementById("menu-screen").classList.add("hidden");
+            document.getElementById("dialogue-screen").style.display = "flex";
+            document.getElementById("diag-name").textContent = teachers[st].label.split(" / ")[1] || "TEACHER";
+            document.getElementById("diag-name").className = "dialogue-name name-teacher";
+            document.getElementById("diag-text").textContent = d.t;
+        }
+
+        function nextDialogue() {
+            dialogueStep++;
+            const st = battleStage;
+            const d = dialogues[st] || { t: "...", s: "..." };
+            if (dialogueStep === 1) {
+                document.getElementById("diag-name").textContent = playerName || "YOU";
+                document.getElementById("diag-name").className = "dialogue-name name-you";
+                document.getElementById("diag-text").textContent = d.s;
+            } else {
+                document.getElementById("dialogue-screen").style.display = "none";
+                showVsCutin();
+            }
+        }
+
+        function showVsCutin() {
+            const screen = document.getElementById("cutin-screen");
+            const img = document.getElementById("cutin-img");
+            const txt = document.getElementById("cutin-text");
+            const t = teachers[battleStage];
+            img.className = `cutin-teacher ${t.face}`;
+            txt.textContent = t.label.split(" / ")[1] || "TEACHER";
+            screen.style.display = "flex";
+            playSound('cutin');
+            setTimeout(() => { screen.style.display = "none"; realStartBattle(); }, 2000);
+        }
+
+        function realStartBattle() {
+            initAudio();
+            if(gameLoopId) clearInterval(gameLoopId);
+            if(teacherTimerId) clearTimeout(teacherTimerId);
+            
+            hp = (equippedPower === 'matsuda') ? 4 : 3;
+            isTimeStopped = false; sleepContinuous = 0; isInvincible = false;
+            isSleeping = false; 
+            isInputBlocked = true; 
+            skillCoolDown = false;
+            isParryWindowOpen = false; // Reset
+            setTimeout(() => { isInputBlocked = false; }, 500); 
+            
+            const skillBtn = document.getElementById("active-skill-btn");
+            if (equippedPower && skillData[equippedPower].active) {
+                skillBtn.style.display = "flex"; 
+                skillBtn.classList.remove("cooldown");
+                skillBtn.textContent = skillData[equippedPower].icon;
+            } else { 
+                skillBtn.style.display = "none"; 
+            }
+            
+            sleepTime = 0; isTeacherLooking = false; endlessSpeed = 1.0;
+            document.getElementById("game-screen").classList.remove("hidden");
+            
+            const t = teachers[battleStage];
+            const gameScreen = document.getElementById("game-screen");
+            gameScreen.className = `screen ${t.bg}`;
+
+            const timeFilter = document.getElementById("time-filter");
+            timeFilter.className = "";
+            if (battleStage >= 4 && battleStage <= 6) timeFilter.className = "time-sunset";
+            if (battleStage >= 7) timeFilter.className = "time-night";
+
+            document.getElementById("blackboard-text").textContent = t.blackboard;
+            document.getElementById("target-score").textContent = (battleStage===9) ? "∞" : t.target;
+            document.getElementById("student-sprite").className = "sprite student-awake"; 
+            
+            const overlay = document.getElementById("start-overlay");
+            overlay.style.display = "block";
+            setTimeout(() => { overlay.style.display = "none"; }, 1000);
+
+            updateHearts(); updateProgress(); updateTeacherBehavior();
+            gameLoopId = setInterval(gameLoop, 100);
+        }
+
+        function exitBattle() {
+            clearInterval(gameLoopId);
+            clearTimeout(teacherTimerId);
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("menu-screen").classList.remove("hidden");
+            initMenu();
+        }
+
+        window.activateActiveSkill = function(event) {
+            if(event) event.stopPropagation(); 
+            if(isInputBlocked) return;
+            const btn = document.getElementById("active-skill-btn");
+            if (btn.classList.contains("cooldown")) return;
+            playSound('skill');
+            btn.classList.add("cooldown");
+            if (equippedPower === 'kato') {
+                isTimeStopped = true;
+                isTeacherLooking = false; clearTimeout(teacherTimerId);
+                const sprite = document.getElementById("teacher-sprite");
+                let tName = getTeacherName(battleStage, sprite);
+                sprite.className = `sprite ${tName}-back`; 
+                document.getElementById("game-screen").style.filter = "invert(1)";
+                document.getElementById("warning-bubble").style.display = "none";
+                setTimeout(() => { isTimeStopped = false; document.getElementById("game-screen").style.filter = "none"; updateTeacherBehavior(); }, 3000);
+            } else if (equippedPower === 'sudo') {
+                sleepTime += 5.0; updateProgress();
+            } else if (equippedPower === 'matsumura') {
+                isInvincible = true;
+                document.getElementById("student-sprite").style.opacity = "0.5";
+                setTimeout(() => { isInvincible = false; document.getElementById("student-sprite").style.opacity = "1"; }, 5000);
+            }
+        };
+
+        function getTeacherName(st, spriteEl) {
+            if (st === 9) {
+                for (let name of teacherNames) { if (spriteEl.className.includes(name)) return name; }
+                return "kato";
+            }
+            return teachers[st].name;
+        }
+
+        // ★先生のスキル発動とパリィ
+        function triggerTeacherSkill() {
+            if(skillCoolDown || isTimeStopped || battleStage === 9) return; 
+            if(Math.random() > 0.1) return;
+
+            skillCoolDown = true;
+            setTimeout(() => { skillCoolDown = false; }, 8000);
+
+            const t = teachers[battleStage];
+            const cutin = document.getElementById("skill-cutin");
+            const skillName = document.getElementById("skill-name");
+            const skillEffect = document.getElementById("skill-effect");
+            const parryBtn = document.getElementById("parry-btn");
+
+            skillName.textContent = t.skill;
+            skillEffect.textContent = getSkillEffectText(battleStage);
+            cutin.style.display = "flex";
+            cutin.style.transform = "translateX(0)";
+            playSound('cutin');
+            
+            // パリィ受付開始
+            isParryWindowOpen = true;
+            parryBtn.style.display = "flex";
+
+            setTimeout(() => {
+                // パリィ受付終了
+                isParryWindowOpen = false;
+                parryBtn.style.display = "none";
+                cutin.style.transform = "translateX(100%)";
+                setTimeout(() => { cutin.style.display = "none"; }, 200);
+                
+                // 成功してなければ効果発動
+                if (!isParried) {
+                    applyTeacherSkillEffect(battleStage);
+                }
+                isParried = false; // リセット
+
+            }, 1000); // 1秒間チャンス
+        }
+
+        let isParried = false;
+        window.attemptParry = function(event) {
+            if(event) event.stopPropagation();
+            if(isParryWindowOpen) {
+                isParried = true;
+                isParryWindowOpen = false;
+                document.getElementById("parry-btn").style.display = "none";
+                playSound('parry');
+                // パリィ成功ボーナス
+                sleepTime += 3.0;
+                const gameScreen = document.getElementById("game-screen");
+                gameScreen.style.filter = "brightness(2)"; // フラッシュ
+                setTimeout(() => { gameScreen.style.filter = "none"; }, 100);
+                updateProgress();
+            }
+        };
+
+        function getSkillEffectText(st) {
+            switch(st) {
+                case 1: return "睡眠ゲージ減少";
+                case 2: return "睡眠ゲージ減少";
+                case 3: return "先生加速";
+                case 4: return "即時振り返り";
+                case 5: return "睡眠禁止";
+                case 6: return "視界不良";
+                case 7: return "視界不良";
+                case 8: return "ダメージ";
+                default: return "";
+            }
+        }
+
+        function applyTeacherSkillEffect(st) {
+            if(st === 1) { sleepTime = Math.max(0, sleepTime - 5); updateProgress(); } 
+            if(st === 2) { sleepTime = Math.max(0, sleepTime - 10); updateProgress(); } 
+            if(st === 3) { endlessSpeed = 2.0; setTimeout(() => { endlessSpeed = 1.0; }, 5000); } 
+            if(st === 4) { 
+                clearTimeout(teacherTimerId);
+                const sprite = document.getElementById("teacher-sprite");
+                let tName = teachers[battleStage].name;
+                sprite.className = `sprite ${tName}-face`;
+                isTeacherLooking = true;
+                setTimeout(() => { updateTeacherBehavior(); }, 1000);
+            }
+            if(st === 5) { 
+                isInputBlocked = true; 
+                document.getElementById("student-sprite").style.filter = "grayscale(100%)";
+                setTimeout(() => { isInputBlocked = false; document.getElementById("student-sprite").style.filter = "none"; }, 3000);
+            }
+            if(st === 6) { 
+                document.getElementById("game-screen").style.filter = "blur(5px) hue-rotate(90deg)";
+                setTimeout(() => { document.getElementById("game-screen").style.filter = "none"; }, 4000);
+            }
+            if(st === 7) { 
+                document.getElementById("game-screen").style.filter = "brightness(0)";
+                setTimeout(() => { document.getElementById("game-screen").style.filter = "none"; }, 3000);
+            }
+            if(st === 8) { takeDamage(); }
+        }
+
+        function updateTeacherBehavior() {
+            if (isTimeStopped) return;
+            
+            triggerTeacherSkill();
+
+            let tName = teachers[battleStage].name;
+            if (battleStage === 9) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; }
+            const sprite = document.getElementById("teacher-sprite"); 
+            sprite.className = `sprite ${tName}-back`; 
+            isTeacherLooking = false;
+            document.getElementById("warning-bubble").style.display = "none";
+            
+            let waitBase = 2000; 
+            if (tName === 'sugawara') waitBase = 3000; 
+            if (tName === 'fukumorita') waitBase = 1000;
+            if (tName === 'aota') waitBase = 800;
+
+            let speed = (battleStage === 9) ? endlessSpeed : teachers[battleStage].speed;
+            if(battleStage === 3 && endlessSpeed === 2.0) speed = 2.0;
+
+            let randomTime = (Math.random() * waitBase + 1000) / speed;
+            teacherTimerId = setTimeout(() => {
+                if (isTimeStopped) return;
+                document.getElementById("warning-bubble").style.display = "block";
+                sprite.className = `sprite ${tName}-side`;
+                
+                setTimeout(() => {
+                    if (isTimeStopped) return;
+                    document.getElementById("warning-bubble").style.display = "none";
+                    sprite.className = `sprite ${tName}-face`; 
+                    isTeacherLooking = true;
+                    
+                    let lookBase = 1000;
+                    if (equippedPower === 'otani') lookBase = 500; 
+                    let lookTime = (battleStage === 9) ? Math.max(400, lookBase - endlessSpeed*50) : lookBase;
+                    
+                    setTimeout(() => { updateTeacherBehavior(); }, lookTime);
+
+                }, 300); 
+
+            }, randomTime);
+        }
+
+        function gameLoop() {
+            if (isSleeping) {
+                sleepContinuous += 0.1;
+                let speedMultiplier = 1.0;
+                if (sleepContinuous > 2.0) document.getElementById("game-screen").classList.add("zone-active");
+                else document.getElementById("game-screen").classList.remove("zone-active");
+
+                if (equippedPower === 'sugawara') speedMultiplier = 1.5;
+                if (equippedPower === 'fukumorita') { let boost = 1.0 + (sleepContinuous * 0.2); if(boost > 3.0) boost = 3.0; speedMultiplier = boost; }
+                if (equippedPower === 'aota') speedMultiplier = 5.0;
+
+                let cheatMultiplier = isGodMode ? 5.0 : 1.0;
+                sleepTime += 0.1 * speedMultiplier * cheatMultiplier;
+                updateProgress();
+                if (isTeacherLooking && !isInvincible) takeDamage();
+            }
+        }
+
+        function updateProgress() { 
+            if(battleStage === 9) { 
+                document.getElementById("progress-container").style.display = "none"; 
+                document.getElementById("target-score").textContent = sleepTime.toFixed(1); 
+            } else { 
+                document.getElementById("progress-container").style.display = "block";
+                const t = teachers[battleStage]; 
+                const pct = Math.min(100, (sleepTime / t.target) * 100); 
+                document.getElementById("progress-fill").style.width = pct + "%"; 
+                document.getElementById("progress-text").textContent = Math.floor(pct) + "%";
+                if (sleepTime >= t.target) stageClear(); 
+            } 
+        }
+        
+        function takeDamage() {
+            if(isGodMode) return;
+            hp--; updateHearts(); playSound('dead'); isInvincible = true;
+            
+            const gameScreen = document.getElementById("game-screen");
+            gameScreen.classList.remove("shaking");
+            void gameScreen.offsetWidth;
+            gameScreen.classList.add("shaking");
+
+            const chalk = document.createElement("div"); chalk.className = "chalk-missile"; document.getElementById("game-screen").appendChild(chalk); setTimeout(() => chalk.remove(), 300);
+            document.getElementById("student-sprite").className = "sprite student-hurt"; document.getElementById("game-screen").style.backgroundColor = "#500"; if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500);
+            if (hp <= 0) gameOver();
+        }
+        
+        function updateHearts() { 
+            const container = document.getElementById("hearts-container");
+            container.innerHTML = ""; 
+            const maxHp = (equippedPower === 'matsuda') ? 4 : 3;
+            for(let i=0; i<maxHp; i++) {
+                const heart = document.createElement("div");
+                heart.className = "heart-icon";
+                if (i >= hp) { heart.style.backgroundImage = "var(--heart-empty-svg)"; heart.classList.add("lost"); }
+                if(isGodMode) heart.classList.add("god");
+                container.appendChild(heart);
+            }
+        }
+
+        function stageClear() {
+            clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear');
+            let gotPower = false;
+            let dropped = "";
+            if (battleStage === 1 && !unlockedPowers.includes("kato")) { dropped="kato"; gotPower = true; alert("加藤先生の「懐中時計」を奪った！"); }
+            if (battleStage === 2 && !unlockedPowers.includes("matsuda")) { dropped="matsuda"; gotPower = true; alert("松田先生の「ランチ」を奪った！"); }
+            if (battleStage === 3 && !unlockedPowers.includes("sugawara")) { dropped="sugawara"; gotPower = true; alert("菅原先生の「タクト」を奪った！"); }
+            if (battleStage === 4 && !unlockedPowers.includes("fukumorita")) { dropped="fukumorita"; gotPower = true; alert("福盛田先生の「スニーカー」を奪った！"); }
+            if (battleStage === 5 && !unlockedPowers.includes("sudo")) { dropped="sudo"; gotPower = true; alert("須藤先生の「暗記カード」を奪った！"); }
+            if (battleStage === 6 && !unlockedPowers.includes("otani")) { dropped="otani"; gotPower = true; alert("大谷先生の「和歌」を奪った！"); }
+            if (battleStage === 7 && !unlockedPowers.includes("matsumura")) { dropped="matsumura"; gotPower = true; alert("松村先生の「劇薬」を奪った！"); }
+            if (battleStage === 8 && !unlockedPowers.includes("aota")) { dropped="aota"; gotPower = true; alert("青田校長の「ジャケット」を奪った！"); }
+            
+            if(gotPower) { unlockedPowers.push(dropped); localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers)); }
+
+            let rank = "B";
+            if (isGodMode) { rank = "チート"; } else if(hp >= 3) { rank = "S"; } else if(hp === 2) { rank = "A"; }
+            
+            const currentRank = stageRanks[battleStage];
+            const rankOrder = { "S": 4, "A": 3, "B": 2, "チート": 1, undefined: 0 };
+            if (rankOrder[rank] > rankOrder[currentRank] || (rank === "チート" && !currentRank)) {
+                 stageRanks[battleStage] = rank;
+                 localStorage.setItem("soichiRanks", JSON.stringify(stageRanks));
+            }
+
+            if (battleStage === 8) {
+                if (unlockedStage < 9) { unlockedStage = 9; localStorage.setItem("soichiGameStage", unlockedStage); }
+                showEnding(); return;
+            } else if(battleStage >= unlockedStage) {
+                unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
+                justCleared = true; 
+            }
+            document.getElementById("game-screen").classList.add("hidden");
+            document.getElementById("result-screen").classList.remove("hidden");
+            
+            const stamp = document.getElementById("rank-stamp");
+            stamp.style.display = "flex";
+            stamp.textContent = rank;
+            stamp.classList.remove("god");
+            if (rank === "チート") stamp.classList.add("god");
+
+            document.getElementById("result-screen").style.background = "#2b4528";
+            document.getElementById("result-title").textContent = "YOU WIN!";
+            document.getElementById("result-title").style.color = "gold";
+            document.getElementById("result-msg").textContent = gotPower ? "新しい能力をゲット！" : "次の相手へ...";
+        }
+
+        function returnToMenu() {
+            document.getElementById("result-screen").classList.add("hidden");
+            document.getElementById("menu-screen").classList.remove("hidden");
+            renderEquipMenu();
+            if (justCleared && battleStage < 9) { 
+                justCleared = false; 
+                playWalkAnimation(); 
+            } else { 
+                currentMenuStage = battleStage;
+                if (unlockedStage > currentMenuStage && unlockedStage <= 8) { currentMenuStage = unlockedStage; }
+                updateMenuVisuals(currentMenuStage); 
+            }
+        }
+
+        function playWalkAnimation() {
+            currentMenuStage = battleStage; 
+            updateMenuVisuals(currentMenuStage); 
+            const player = document.getElementById("menu-player");
+            const rival = document.getElementById("menu-rival");
+            rival.style.opacity = "0"; player.classList.add("walk-right");
+            setTimeout(() => {
+                currentMenuStage = unlockedStage > 8 ? 8 : unlockedStage; 
+                updateMenuVisuals(currentMenuStage); 
+                rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right");
+                setTimeout(() => { rival.classList.remove("fade-in-right"); }, 1000);
+            }, 1500); 
+        }
+
+        function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("rank-stamp").style.display = "none"; document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (battleStage === 9) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
+        
+        function showEnding() { 
+            document.getElementById("game-screen").classList.add("hidden"); 
+            document.getElementById("ending-screen").classList.remove("hidden"); 
+            // 名前表示
+            document.getElementById("cert-name").textContent = playerName || "名無し";
+            let usedGodMode = false; for(let i=1; i<=8; i++) { if(stageRanks[i] === "チート") usedGodMode = true; }
+            const godNote = document.getElementById("god-mode-note"); if(usedGodMode) { godNote.style.display = "block"; } else { godNote.style.display = "none"; }
+            for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } 
+        }
+        
+        const shareText = `【卒業証明書】私、${playerName || "名無し"}は加藤・松田・菅原・福盛田・須藤・大谷・松村・青田校長の目を盗み、完全爆睡したことを証明します！ #加藤先生ゲーム`;
+        function shareX() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(GAME_URL)}`, '_blank'); }
+        function shareLine() { const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(GAME_URL)}`; window.open(lineUrl, '_blank'); }
+        async function shareNative() { if (navigator.share) { try { await navigator.share({ title: '激闘！加藤先生の授業', text: shareText, url: GAME_URL, }); } catch (err) { console.log('Share canceled'); } } else { navigator.clipboard.writeText(`${shareText} ${GAME_URL}`); alert("URLをコピーしました！"); } }
+        
+        const startSleep = () => { 
+            if(isInputBlocked || isSleeping) return;
+            isSleeping = true; 
+            if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-sleep"; 
+            if (!zzzInterval) zzzInterval = setInterval(spawnZzz, 400); 
+        };
+        const stopSleep = () => { 
+            isSleeping = false; 
+            sleepContinuous = 0; 
+            document.getElementById("game-screen").classList.remove("zone-active");
+            if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; 
+            if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } 
+        };
+        function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = (50 + (Math.random()*20-10)) + "%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 2000); }
+        
+        const touchLayer = document.getElementById("player-area"); 
+        touchLayer.addEventListener("touchstart", (e) => { 
+            if(e.target.id === "active-skill-btn" || e.target.id === "parry-btn") return; // ★パリィボタンも除外
+            initAudio(); e.preventDefault(); startSleep(); 
+        }); 
+        touchLayer.addEventListener("touchend", (e) => { 
+            if(e.target.id === "active-skill-btn" || e.target.id === "parry-btn") return;
+            e.preventDefault(); stopSleep(); 
+        }); 
+        document.addEventListener("keydown", (e) => { 
+            if (e.code === "Space") { 
+                if(isInputBlocked) return;
+                initAudio(); startSleep(); 
+            } 
+        }); 
+        document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
+
+        initMenu();
+    </script>
 </body>
 </html>
