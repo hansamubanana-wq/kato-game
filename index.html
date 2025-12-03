@@ -15,19 +15,27 @@
     <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
     
     <style>
-        :root { --bg-color: #1a1a1a; --accent-color: #ffd700; --danger-color: #ff4444; --text-color: #eee; }
+        :root { 
+            --bg-color: #1a1a1a; --accent-color: #ffd700; --danger-color: #ff4444; --text-color: #eee;
+            /* リッチなハートアイコンの定義 */
+            --heart-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4444' stroke='%23cc0000' stroke-width='1' stroke-linejoin='round'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E");
+            --heart-empty-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E");
+        }
         body { font-family: 'Press Start 2P', cursive; text-align: center; background-color: var(--bg-color); color: var(--text-color); margin: 0; overflow: hidden; touch-action: manipulation; user-select: none; image-rendering: pixelated; }
         .screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-color); transition: opacity 0.3s; }
         .hidden { display: none !important; }
         
+        /* リッチなボタンデザイン */
         .btn { 
             font-family: 'Press Start 2P', cursive; 
-            background: linear-gradient(to bottom, #555, #333); 
-            border: 2px solid #888; border-bottom: 4px solid #111;
+            background: linear-gradient(to bottom, #666, #444); 
+            border: 1px solid #888; border-bottom: 4px solid #222;
             padding: 15px; font-size: 14px; color: #fff; cursor: pointer; margin: 5px; 
             text-shadow: 1px 1px 0 #000; border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.1s;
         }
-        .btn:active { transform: translateY(3px); border-bottom-width: 2px; }
+        .btn:active { transform: translateY(3px); border-bottom-width: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
         
         /* メニュー画面 */
         #menu-screen {
@@ -35,10 +43,10 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='480' viewBox='0 0 320 480'%3E%3Cdefs%3E%3ClinearGradient id='floor' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%235a3a22'/%3E%3Cstop offset='100%25' stop-color='%233e2b19'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='320' height='480' fill='%23222'/%3E%3Crect width='320' height='160' fill='%23444'/%3E%3Cpath d='M0,480 L320,480 L220,320 L100,320 Z' fill='url(%23floor)'/%3E%3Crect x='100' y='160' width='120' height='160' fill='%23666'/%3E%3Crect x='130' y='180' width='60' height='140' fill='%233a3a3a' border='2' stroke='%23555'/%3E%3Cpath d='M0,0 L100,160 L100,320 L0,480 Z' fill='%23888'/%3E%3Cpath d='M320,0 L220,160 L220,320 L320,480 Z' fill='%23777'/%3E%3Cline x1='0' y1='100' x2='100' y2='190' stroke='%23555' stroke-width='3'/%3E%3Cline x1='320' y1='100' x2='220' y2='190' stroke='%23555' stroke-width='3'/%3E%3C/svg%3E");
             background-size: cover; background-position: center;
         }
-        /* ライティング効果 */
+        /* ★修正: ビネット効果を弱くした */
         #menu-screen::after, #game-screen::after {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.6) 100%);
+            background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.3) 100%);
             pointer-events: none; z-index: 10;
         }
 
@@ -49,7 +57,7 @@
         .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; z-index: 5; }
         .char-label { 
             font-size: 10px; margin-top: 5px; background: #000; border: 1px solid #fff;
-            padding: 3px 8px; border-radius: 4px; color: white; 
+            padding: 3px 8px; border-radius: 4px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         
         .select-arrow {
@@ -58,9 +66,9 @@
             text-shadow: 2px 2px 0 #000; z-index: 100; 
             width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
             background: linear-gradient(to bottom, #444, #222); border: 2px solid #fff; border-radius: 50%;
-            box-shadow: 0 4px 0 #000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
         }
-        .select-arrow:active { transform: scale(0.9) translateY(2px); box-shadow: 0 2px 0 #000; }
+        .select-arrow:active { transform: scale(0.9) translateY(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         #arrow-left { left: -10px; }
         #arrow-right { right: -10px; }
 
@@ -81,17 +89,18 @@
 
         #equip-menu {
             width: 92%; background: rgba(20,20,20,0.9); padding: 10px; border-radius: 8px; border: 2px solid #555;
-            display: flex; flex-direction: column; align-items: center; margin-top: 10px; z-index: 20;
+            display: flex; flex-direction: column; align-items: center; margin-top: 10px; z-index: 20; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
         }
         #current-equip { color: #ffd700; font-size: 10px; margin-bottom: 5px; }
-        #equip-desc { color: #ccc; font-size: 9px; margin-top: 5px; height: 20px; line-height: 1.4; }
+        #equip-desc { color: #ccc; font-size: 9px; margin-top: 5px; height: 20px; line-height: 1.4; font-family: 'New Tegomin', serif; }
         .equip-list { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .equip-item { 
             width: 38px; height: 38px; border: 2px solid #555; background: #333; 
             display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; border-radius: 4px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
         }
-        .equip-item.unlocked { border-color: #888; background: #444; }
-        .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 10px #ffd700; background: #554400; }
+        .equip-item.unlocked { border-color: #888; background: linear-gradient(to bottom, #555, #444); }
+        .equip-item.selected { border-color: #ffd700; box-shadow: 0 0 10px #ffd700, inset 0 0 5px rgba(255,215,0,0.5); background: linear-gradient(to bottom, #665500, #443300); }
 
         /* ゲーム画面 */
         #game-screen {
@@ -99,7 +108,7 @@
             background-size: cover; background-position: center;
             will-change: filter, transform;
         }
-        /* リマスター版背景SVG */
+        /* リマスター版背景SVG（変更なし） */
         .bg-classroom { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.5'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3C/svg%3E"); }
         .bg-science { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23ccc'/%3E%3Crect width='320' height='120' fill='%23aaa'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23224422' stroke='%23555' stroke-width='6'/%3E%3Ctext x='20' y='160' font-size='40' opacity='0.3'>🧪</text>%3Ctext x='260' y='160' font-size='40' opacity='0.3'>💀</text>%3Crect y='220' width='320' height='20' fill='%23222'/%3E%3C/svg%3E"); }
         .bg-music { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23d0c0a0'/%3E%3Crect width='320' height='120' fill='%23a09070'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23333' stroke='%235a3a22' stroke-width='6'/%3E%3Ctext x='140' y='70' font-size='40' fill='white' opacity='0.5'>🎼</text>%3Crect x='260' y='140' width='60' height='100' fill='%23111'/%3E%3C/svg%3E"); }
@@ -111,57 +120,72 @@
             position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 10px; 
             border-top: 6px solid #5a3a22; z-index: 10;
         }
-        /* ★追加: 自分の机の描画 */
+        /* ★修正: 自分の机に木目テクスチャを追加 */
         #player-desk {
             position: absolute; bottom: 0; width: 100%; height: 120px;
-            background: linear-gradient(#8b4513, #5a3a22);
-            border-top: 8px solid #a0522d;
-            z-index: 15; /* キャラの手前 */
-            display: flex; justify-content: center; align-items: center;
-            color: rgba(0,0,0,0.3); font-size: 10px;
+            background: linear-gradient(#8b4513, #5a3a22), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.05' numOctaves='3' result='noise'/%3E%3CfeDiffuseLighting in='noise' lighting-color='%23a0522d' surfaceScale='2'%3E%3CfeDistantLight azimuth='45' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='100' height='100' fill='%238b4513'/%3E%3Crect width='100' height='100' fill='url(%23noise)' opacity='0.3'/%3E%3C/svg%3E");
+            background-blend-mode: multiply;
+            border-top: 8px solid #a0522d; box-shadow: inset 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 15;
         }
 
         #blackboard-text { 
             position: absolute; top: 30px; width: 80%; left:10%; text-align: center; 
-            font-family: serif; font-size: 14px; color: rgba(255,255,255,0.9); 
+            font-family: 'New Tegomin', serif; font-size: 16px; color: rgba(255,255,255,0.9); 
             text-shadow: 1px 1px 2px #000; z-index: 6;
         }
         
         #hud { width: 90%; display: flex; justify-content: space-between; margin-bottom: 5px; align-items: center; }
-        #hearts { color: var(--danger-color); font-size: 24px; text-shadow: 2px 2px 0 #000; letter-spacing: 2px; }
         
-        #progress-container { width: 100%; height: 16px; background: #333; border: 2px solid #fff; border-radius: 8px; overflow: hidden; margin-top: 5px; position: relative; }
-        #progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff9800, #ffd700); transition: width 0.2s; }
-        #progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 10px; color: #000; line-height: 16px; font-weight: bold; }
+        /* ★修正: リッチなハートアイコン表示 */
+        #hearts-container { display: flex; gap: 5px; }
+        .heart-icon { width: 24px; height: 24px; background-image: var(--heart-svg); background-size: contain; background-repeat: no-repeat; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5)); transition: transform 0.2s; }
+        .heart-icon.lost { transform: scale(1.5); opacity: 0; transition: all 0.3s ease-out; }
+        .heart-icon.god { filter: hue-rotate(270deg) drop-shadow(1px 1px 2px rgba(0,0,0,0.5)); } /* ゴッドモードは紫色 */
+
+        /* ★修正: リッチなゲージ表示（ストライプアニメーション） */
+        #progress-container { 
+            width: 100%; height: 18px; background: #222; border: 2px solid #444; border-radius: 10px; 
+            overflow: hidden; margin-top: 5px; position: relative; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        #progress-fill { 
+            width: 0%; height: 100%; 
+            background: linear-gradient(45deg, #ff9800 25%, #ffd700 25%, #ffd700 50%, #ff9800 50%, #ff9800 75%, #ffd700 75%, #ffd700);
+            background-size: 20px 20px; animation: progress-stripe 1s linear infinite;
+            transition: width 0.2s; box-shadow: 0 0 5px #ffd700;
+        }
+        @keyframes progress-stripe { 0% { background-position: 0 0; } 100% { background-position: 20px 20px; } }
+        #progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 10px; color: #fff; line-height: 18px; font-weight: bold; text-shadow: 1px 1px 1px #000; }
 
         .sprite { width: 160px; height: 160px; background-repeat: no-repeat; background-position: center; background-size: contain; position: relative; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
         
         #active-skill-btn {
             position: absolute; bottom: 130px; right: 20px;
             width: 70px; height: 70px; border-radius: 50%;
-            background: radial-gradient(circle, #ffeb3b, #fbc02d);
-            border: 4px solid #fff; box-shadow: 0 0 15px #ffd700;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d);
+            border: 4px solid #fff; box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,255,0,0.5);
             display: none; align-items: center; justify-content: center;
             font-size: 30px; cursor: pointer; z-index: 1000; animation: glow 2s infinite;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; text-shadow: 1px 1px 2px #000;
         }
         #active-skill-btn:active { transform: scale(0.9); }
         #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
-        @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700;} }
+        @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700, 0 0 50px #ffeb3b;} }
 
         #config-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; background: none; border: none; z-index: 20; filter: drop-shadow(1px 1px 0 #000); }
-        #exit-btn { position: absolute; top: 15px; left: 15px; font-size: 12px; cursor: pointer; background: #cc3333; color: #fff; border: 2px solid #fff; padding: 8px; border-radius: 5px; z-index: 20; box-shadow: 0 4px 0 #880000; }
-        
+        #exit-btn { position: absolute; top: 15px; left: 15px; font-size: 12px; cursor: pointer; background: linear-gradient(to bottom, #cc3333, #992222); color: #fff; border: 2px solid #fff; padding: 8px; border-radius: 5px; z-index: 20; box-shadow: 0 4px 0 #660000; }
+        #exit-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #660000; }
+
         #config-modal, #tutorial-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 3000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
-        .config-box { background: #222; padding: 20px; border: 4px solid #fff; text-align: center; width: 80%; border-radius: 10px; }
-        .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 11px; line-height: 1.8; color: #ddd; }
+        .config-box { background: #222; padding: 20px; border: 4px solid #fff; text-align: center; width: 80%; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .tutorial-step { margin-bottom: 15px; text-align: left; font-size: 11px; line-height: 1.8; color: #ddd; font-family: 'New Tegomin', serif; }
 
-        .btn-endless { display: none; width: 200px; border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; margin-top:5px; background: #300; }
-        .btn-ngplus { display: none; width: 200px; border-color: #ffd700; color: #ffd700; margin-top: 5px; background: #330; }
+        .btn-endless { display: none; width: 200px; border-color: #ff00ff; color: #ff00ff; animation: pulse 1s infinite; margin-top:5px; background: linear-gradient(to bottom, #400, #200); }
+        .btn-ngplus { display: none; width: 200px; border-color: #ffd700; color: #ffd700; margin-top: 5px; background: linear-gradient(to bottom, #440, #220); }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 255, 0); } }
 
         .chalk-missile {
@@ -173,43 +197,28 @@
         .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shakeScreen { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
 
-        /* リマスター版SVGスプライト（影付き） */
-        /* 加藤 */
+        /* リマスター版SVGスプライト（変更なし） */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3Crect x='20' y='16' width='4' height='16' fill='%23aaa' opacity='0.3'/%3E%3C/svg%3E"); }
         .kato-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23222'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
         .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
-
-        /* 松田 */
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3Crect x='20' y='16' width='6' height='16' fill='%23a89fb8' opacity='0.3'/%3E%3C/svg%3E"); }
         .matsuda-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='6' fill='%23622'/%3E%3Crect x='21' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23d8bfd8'/%3E%3Crect x='2' y='6' width='8' height='14' fill='%23622'/%3E%3C/svg%3E"); }
         .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M8,4 L24,4 L24,10 L8,10 Z' fill='%23622'/%3E%3Cpath d='M6,6 L8,6 L8,16 L6,16 Z' fill='%23622'/%3E%3Cpath d='M24,6 L26,6 L26,16 L24,16 Z' fill='%23622'/%3E%3Crect x='11' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='19' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='9' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23d00'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
-
-        /* 菅原 */
         .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3Crect x='20' y='16' width='6' height='16' fill='%23234' opacity='0.3'/%3E%3C/svg%3E"); }
         .sugawara-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8,2 L24,2 L24,10 L8,10 Z' fill='%23331'/%3E%3Crect x='10' y='8' width='12' height='8' fill='%23e0b090'/%3E%3Ccircle cx='22' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23456'/%3E%3C/svg%3E"); }
         .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
-
-        /* 福盛田 */
         .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Crect x='20' y='16' width='4' height='16' fill='%23000' opacity='0.3'/%3E%3C/svg%3E"); }
         .fukumorita-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23111'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23111'/%3E%3C/svg%3E"); }
         .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
-
-        /* 須藤 */
         .sudo-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,14 L10,14 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3Crect x='20' y='20' width='4' height='12' fill='%23336633' opacity='0.3'/%3E%3C/svg%3E"); }
         .sudo-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='12' y='8' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='8' width='10' height='6' fill='%23421'/%3E%3Cpath d='M10,10 L6,16 L8,18 L12,12 Z' fill='%23421'/%3E%3Crect x='21' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='20' width='12' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
         .sudo-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,12 L10,12 Z' fill='%23421'/%3E%3Cpath d='M8,8 L10,20 L8,20 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
-
-        /* 大谷 */
         .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L22,2 L22,8 L10,8 Z' fill='%23111'/%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%23333' stroke-width='1'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='20' y='14' width='4' height='18' fill='%23aaaaff' opacity='0.3'/%3E%3C/svg%3E"); }
         .otani-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='6' fill='%23111'/%3E%3Crect x='21' y='6' width='2' height='2' fill='%23008'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='10' y='14' width='12' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
         .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L16,2 L16,4 L10,8 Z' fill='%23111'/%3E%3Cpath d='M22,2 L16,2 L16,4 L22,8 Z' fill='%23111'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
-
-        /* 松村 */
         .matsumura-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='20' y='18' width='4' height='14' fill='%23ccc' opacity='0.3'/%3E%3C/svg%3E"); }
         .matsumura-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='20' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='10' y='18' width='12' height='14' fill='%23eee'/%3E%3C/svg%3E"); }
         .matsumura-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='12' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='14' y='14' width='4' height='1' fill='%23000'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='12' y='18' width='2' height='14' fill='%23aaa'/%3E%3C/svg%3E"); }
-
-        /* 青田 */
         .aota-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3Crect x='20' y='14' width='4' height='18' fill='%23000050' opacity='0.3'/%3E%3C/svg%3E"); }
         .aota-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='4' fill='%23222'/%3E%3Crect x='21' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='8' y='14' width='14' height='18' fill='%23000080'/%3E%3C/svg%3E"); }
         .aota-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='10' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='20' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='13' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='17' y='6' width='2' height='1' fill='%23000'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000' stroke-width='2'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3Crect x='15' y='16' width='2' height='10' fill='%23a00'/%3E%3C/svg%3E"); }
@@ -218,19 +227,20 @@
         .student-sleep { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='12' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='12' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='16' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='16' width='2' height='1' fill='%23000'/%3E%3Crect x='8' y='24' width='16' height='8' fill='%234488ff'/%3E%3C/svg%3E"); }
         .student-hurt { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23ccf'/%3E%3Crect x='10' y='8' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='2' fill='%23000'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%234488ff'/%3E%3C/svg%3E"); animation: shake 0.2s infinite; }
         @keyframes shake { 0% { transform: translate(0, 0); } 25% { transform: translate(-5px, 0); } 75% { transform: translate(5px, 0); } 100% { transform: translate(0, 0); } }
-        .zzz { position: absolute; color: cyan; font-size: 20px; animation: floatUp 1.5s steps(4) forwards; }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
+        /* ★修正: ZZZをパーティクルに変更 */
+        .zzz { position: absolute; color: #88ffff; font-family: 'Press Start 2P', cursive; font-size: 16px; animation: floatUp 2s ease-out forwards; text-shadow: 1px 1px 0 #000; opacity: 0.8; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; } 20% { opacity: 1; transform: translateY(-20px) scale(1) rotate(10deg); } 100% { transform: translateY(-100px) scale(1.5) rotate(-20deg); opacity: 0; } }
         .god-mode { color: gold !important; text-shadow: 0 0 10px gold !important; }
         
         #ending-screen { background: #111; z-index: 2000; }
-        #certificate { width: 90%; background: #fff; color: #000; padding: 20px; border: 10px double #ffd700; font-family: 'New Tegomin', serif; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); animation: popIn 1s ease-out; }
+        #certificate { width: 90%; background: #fff; color: #000; padding: 20px; border: 10px double #ffd700; font-family: 'New Tegomin', serif; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); animation: popIn 1s ease-out; position: relative; }
         @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .confetti { position: absolute; width: 10px; height: 10px; background: #f00; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
         
-        .btn-x { background: #000; border-color: #fff; }
-        .btn-line { background: #06c755; border-color: #fff; }
-        .btn-share { background: #555; border-color: #ccc; }
+        .btn-x { background: linear-gradient(to bottom, #333, #000); border-color: #fff; }
+        .btn-line { background: linear-gradient(to bottom, #00c300, #009900); border-color: #fff; }
+        .btn-share { background: linear-gradient(to bottom, #777, #555); border-color: #ccc; }
         
         #dialogue-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -240,7 +250,7 @@
         .dialogue-box {
             width: 85%; background: #fff; border: 4px solid #000; border-radius: 10px; padding: 15px;
             font-family: 'New Tegomin', serif; min-height: 120px; position: relative;
-            display: flex; flex-direction: column; justify-content: center;
+            display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
         .dialogue-name { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
         .name-teacher { color: var(--danger-color); }
@@ -249,13 +259,13 @@
         .dialogue-next { position: absolute; bottom: 10px; right: 10px; animation: blink 1s infinite; font-size: 20px; cursor: pointer; }
         @keyframes blink { 50% { opacity: 0; } }
         
-        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         @keyframes stamp { 0% { transform: scale(3) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-20deg); opacity: 1; } }
     </style>
 </head>
 <body>
     <div id="menu-screen" class="screen">
-        <h1 id="game-title" style="color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer;">BATTLE SELECT</h1>
+        <h1 id="game-title" style="color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer; border-radius: 5px;">BATTLE SELECT</h1>
         <button id="config-btn" onclick="openConfig()">⚙️</button>
         <p id="cheat-msg" style="color:gold; font-size:10px; display:none; z-index:10;">GOD MODE!</p>
 
@@ -272,7 +282,7 @@
             </div>
         </div>
 
-        <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:var(--danger-color);" onclick="startSequence()">BATTLE START</button>
+        <button id="start-btn" class="btn" style="width:200px; font-size:16px; background:linear-gradient(to bottom, #ff4444, #cc0000); border-color:#ffcccc;" onclick="startSequence()">BATTLE START</button>
         
         <button id="endless-btn" class="btn btn-endless" onclick="startEndless()">💀 ENDLESS</button>
         <button id="ng-plus-btn" class="btn btn-ngplus" style="display:none;" onclick="newGamePlus()">💪 NEW GAME +</button>
@@ -303,7 +313,7 @@
 
     <div id="tutorial-modal">
         <div class="config-box">
-            <h2 style="color:var(--accent-color);">HOW TO PLAY</h2>
+            <h2 style="color:var(--accent-color); font-family:'Press Start 2P';">HOW TO PLAY</h2>
             <div class="tutorial-step">
                 1. 画面長押し（PCはスペース）で<b>居眠り</b>します。<br>
                 2. 先生が<b>横を向いたら（Side）</b>警戒！<br>
@@ -316,11 +326,11 @@
 
     <div id="config-modal">
         <div class="config-box">
-            <h2 style="color:var(--accent-color);">SETTINGS</h2>
+            <h2 style="color:var(--accent-color); font-family:'Press Start 2P';">SETTINGS</h2>
             <p style="font-size:10px; color:#aaa;">メニュー</p>
             <button class="btn" style="border-color:#aaa; color:#fff;" onclick="openTutorial()">❓ 遊び方を見る</button>
             <br><br>
-            <button class="btn" style="border-color:red; color:red;" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
+            <button class="btn" style="border-color:red; color:red; background:linear-gradient(to bottom, #300, #100);" onclick="hardReset()">🗑️ 完全初期化<br><span style="font-size:8px">(データ全削除)</span></button>
             <button class="btn" style="margin-top:20px;" onclick="closeConfig()">CLOSE</button>
         </div>
     </div>
@@ -330,7 +340,10 @@
         <div id="teacher-area"><div id="blackboard-text"></div><div id="teacher-sprite" class="sprite"></div></div>
         <div id="player-area">
             <div id="player-desk"></div>
-            <div id="hud"><div id="hearts">❤❤❤</div><div style="font-size:12px; color:#fff; font-weight:bold;">TARGET: <span id="target-score">30</span>s</div></div>
+            <div id="hud">
+                <div id="hearts-container"></div>
+                <div style="font-size:12px; color:#fff; font-weight:bold; text-shadow: 1px 1px 2px #000;">TARGET: <span id="target-score">30</span>s</div>
+            </div>
             <div id="progress-container"><div id="progress-fill"></div><div id="progress-text">0%</div></div>
             <div id="student-sprite" class="sprite student-awake"></div>
             <div id="active-skill-btn" ontouchstart="activateActiveSkill(event)" onclick="activateActiveSkill(event)">✨</div>
@@ -414,7 +427,6 @@
         let gameLoopId, teacherTimerId, zzzInterval, isGodMode = false, tapCount = 0, endlessSpeed = 1.0;
         let isTimeStopped = false, sleepContinuous = 0;
         let dialogueStep = 0;
-        // ★バグ修正: 開始直後の入力ブロック
         let isInputBlocked = false;
 
         const AudioContext = window.AudioContext || window.webkitAudioContext; let audioCtx;
@@ -574,9 +586,9 @@
             initAudio();
             hp = (equippedPower === 'matsuda') ? 4 : 3;
             isTimeStopped = false; sleepContinuous = 0; isInvincible = false;
-            isSleeping = false; // ★明示的にリセット
-            isInputBlocked = true; // ★開始直後の入力ブロック
-            setTimeout(() => { isInputBlocked = false; }, 500); // 0.5秒後に解除
+            isSleeping = false; 
+            isInputBlocked = true; 
+            setTimeout(() => { isInputBlocked = false; }, 500); 
             
             const skillBtn = document.getElementById("active-skill-btn");
             if (equippedPower && skillData[equippedPower].active) {
@@ -596,7 +608,7 @@
 
             document.getElementById("blackboard-text").textContent = t.blackboard;
             document.getElementById("target-score").textContent = (battleStage===9) ? "∞" : t.target;
-            document.getElementById("student-sprite").className = "sprite student-awake"; // ★初期化
+            document.getElementById("student-sprite").className = "sprite student-awake"; 
 
             updateHearts(); updateProgress(); updateTeacherBehavior();
             gameLoopId = setInterval(gameLoop, 100);
@@ -612,7 +624,7 @@
 
         window.activateActiveSkill = function(event) {
             if(event) event.stopPropagation(); 
-            if(isInputBlocked) return; // ブロック中は反応しない
+            if(isInputBlocked) return; 
             
             const btn = document.getElementById("active-skill-btn");
             if (btn.classList.contains("cooldown")) return;
@@ -728,7 +740,23 @@
             setTimeout(() => { document.getElementById("game-screen").style.backgroundColor = "transparent"; isInvincible = false; if(isSleeping) document.getElementById("student-sprite").className = "sprite student-sleep"; else document.getElementById("student-sprite").className = "sprite student-awake"; }, 500);
             if (hp <= 0) gameOver();
         }
-        function updateHearts() { let h = ""; for(let i=0; i<hp; i++) h += "❤"; const heartEl = document.getElementById("hearts"); heartEl.textContent = h; if(isGodMode) heartEl.classList.add("god-mode"); }
+
+        /* ★修正: ハートの更新処理をリッチに変更 */
+        function updateHearts() { 
+            const container = document.getElementById("hearts-container");
+            container.innerHTML = ""; // 一旦クリア
+            const maxHp = (equippedPower === 'matsuda') ? 4 : 3;
+            for(let i=0; i<maxHp; i++) {
+                const heart = document.createElement("div");
+                heart.className = "heart-icon";
+                if (i >= hp) {
+                    heart.style.backgroundImage = "var(--heart-empty-svg)"; // 空のハート（もしあれば）
+                    heart.classList.add("lost"); // ダメージアニメーション
+                }
+                if(isGodMode) heart.classList.add("god");
+                container.appendChild(heart);
+            }
+        }
 
         function stageClear() {
             clearInterval(gameLoopId); clearTimeout(teacherTimerId); playSound('clear');
@@ -841,7 +869,8 @@
             if(!isInvincible) document.getElementById("student-sprite").className = "sprite student-awake"; 
             if (zzzInterval) { clearInterval(zzzInterval); zzzInterval = null; } 
         };
-        function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = "50%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 1500); }
+        /* ★修正: パーティクル用のZ */
+        function spawnZzz() { const zzz = document.createElement("div"); zzz.className = "zzz"; zzz.textContent = "z"; zzz.style.left = (50 + (Math.random()*20-10)) + "%"; zzz.style.top = "0px"; document.getElementById("player-area").appendChild(zzz); setTimeout(() => zzz.remove(), 2000); }
         
         const touchLayer = document.getElementById("player-area"); 
         touchLayer.addEventListener("touchstart", (e) => { 
