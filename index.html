@@ -20,7 +20,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="menu-screen" class="screen">
+    <div id="name-screen" class="screen">
+        <h1 class="modal-title">ENTER NAME</h1>
+        <input type="text" id="player-name-input" placeholder="YOUR NAME" maxlength="8">
+        <button class="btn" onclick="submitName()">OK</button>
+    </div>
+
+    <div id="menu-screen" class="screen hidden">
         <h1 id="game-title">BATTLE SELECT</h1>
         <button id="config-btn" onclick="openConfig()">⚙️</button>
         <p id="cheat-msg">GOD MODE!</p>
@@ -30,7 +36,7 @@
             <div id="arrow-right" class="select-arrow" onclick="changeStage(1)">▶</div>
 
             <div id="menu-player" class="char-box"><div class="sprite student-awake"></div><div class="char-label">YOU</div></div>
-            <div class="vs-text">VS</div>
+            <div class="vs-text" style="font-size:30px; color:#ff4444; font-weight:bold; text-shadow:2px 2px 0 #000;">VS</div>
             <div id="menu-rival" class="char-box">
                 <div id="menu-rival-sprite" class="sprite"></div>
                 <div id="menu-rival-name" class="char-label">???</div>
@@ -95,12 +101,6 @@
         </div>
     </div>
 
-    <div id="name-screen" class="screen">
-        <h1 class="modal-title">ENTER NAME</h1>
-        <input type="text" id="player-name-input" placeholder="YOUR NAME" maxlength="8">
-        <button class="btn" onclick="submitName()">OK</button>
-    </div>
-
     <div id="game-screen" class="screen hidden">
         <div id="time-filter"></div>
         <div id="start-overlay">START!</div>
@@ -127,7 +127,7 @@
             
             <div id="active-skill-btn" ontouchstart="activateActiveSkill(event)" onclick="activateActiveSkill(event)">✨</div>
             
-            <div class="hold-text">HOLD SPACE TO SLEEP</div>
+            <div class="hold-text" style="position:absolute; bottom:10px; width:100%; text-align:center; color:#ddd; font-size:10px;">HOLD SPACE TO SLEEP</div>
         </div>
     </div>
 

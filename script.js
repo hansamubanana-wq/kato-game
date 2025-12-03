@@ -133,15 +133,18 @@ function updateMenuVisuals(stageNum) {
     const rivalSprite = document.getElementById("menu-rival-sprite");
     const rivalName = document.getElementById("menu-rival-name");
     const rankDisplay = document.getElementById("menu-rank-display");
+    
     const leftArrow = document.getElementById("arrow-left");
     const rightArrow = document.getElementById("arrow-right");
-    
-    if (unlockedStage <= 1) { leftArrow.style.display = "none"; rightArrow.style.display = "none"; } 
-    else { leftArrow.style.display = "flex"; rightArrow.style.display = "flex"; }
-    
+    if (unlockedStage <= 1) {
+        leftArrow.style.display = "none"; rightArrow.style.display = "none";
+    } else {
+        leftArrow.style.display = "block"; rightArrow.style.display = "block";
+    }
+
     rivalSprite.className = `sprite ${t.face}`;
     rivalName.textContent = t.label;
-    
+
     const rank = stageRanks[stageNum];
     rankDisplay.classList.remove("god");
     if (rank) {
@@ -162,11 +165,18 @@ function renderEquipMenu() {
         document.getElementById("current-equip").textContent = "装備なし";
         descEl.textContent = "アイコンをタップで詳細表示";
     }
+    
     Object.keys(skillData).forEach(p => {
         const el = document.getElementById(`skill-${p}`);
         if(el) {
-            if (unlockedPowers.includes(p)) { el.style.display = "flex"; el.classList.add("unlocked"); } else { el.style.display = "none"; }
-            if (equippedPower === p) el.classList.add("selected"); else el.classList.remove("selected");
+            if (unlockedPowers.includes(p)) { 
+                el.style.display = "flex"; 
+                el.classList.add("unlocked"); 
+            } else { 
+                el.style.display = "none"; 
+            }
+            if (equippedPower === p) el.classList.add("selected"); 
+            else el.classList.remove("selected");
         }
     });
 }
@@ -207,8 +217,10 @@ function startDialogue(st) {
     battleStage = st;
     dialogueStep = 0;
     const d = dialogues[st] || { t: "...", s: "..." };
+    
     document.getElementById("menu-screen").classList.add("hidden");
     document.getElementById("dialogue-screen").style.display = "flex";
+    
     document.getElementById("diag-name").textContent = teachers[st].label.split(" / ")[1] || "TEACHER";
     document.getElementById("diag-name").className = "dialogue-name name-teacher";
     document.getElementById("diag-text").textContent = d.t;
@@ -218,6 +230,7 @@ function nextDialogue() {
     dialogueStep++;
     const st = battleStage;
     const d = dialogues[st] || { t: "...", s: "..." };
+
     if (dialogueStep === 1) {
         document.getElementById("diag-name").textContent = playerName || "YOU";
         document.getElementById("diag-name").className = "dialogue-name name-you";
@@ -545,6 +558,3 @@ touchLayer.addEventListener("touchend", (e) => {
 }); 
 document.addEventListener("keydown", (e) => { if (e.code === "Space") { if(isInputBlocked) return; initAudio(); startSleep(); } }); 
 document.addEventListener("keyup", (e) => { if (e.code === "Space") stopSleep(); });
-    </script>
-</body>
-</html>

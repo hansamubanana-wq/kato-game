@@ -30,21 +30,17 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
     pointer-events: none; z-index: 10;
 }
 
-/* タイトルなど */
 #game-title { color:#fff; font-size:16px; margin-top:20px; text-shadow:2px 2px 0 #000; background:rgba(0,0,0,0.5); padding:5px; z-index:10; cursor:pointer; border-radius: 5px; }
 #config-btn { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; background: none; border: none; z-index: 20; filter: drop-shadow(1px 1px 0 #000); }
 #cheat-msg { color:gold; font-size:10px; display:none; z-index:10; }
 
-/* 対決エリア */
 #face-off-area {
     display: flex; justify-content: space-between; align-items: flex-end;
     width: 85%; height: 220px; margin-bottom: 20px; position: relative; margin-top: 60px; z-index: 5;
 }
 .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; z-index: 5; }
 .char-label { font-size: 10px; margin-top: 5px; background: #000; border: 1px solid #fff; padding: 3px 8px; border-radius: 4px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.5); font-family: 'New Tegomin', serif; }
-.vs-text { font-size: 30px; color: var(--danger-color); font-weight: bold; text-shadow: 2px 2px 0 #000; }
 
-/* 矢印 */
 .select-arrow {
     position: absolute; top: 40%; font-size: 30px; color: #fff; cursor: pointer; user-select: none;
     text-shadow: 2px 2px 0 #000; z-index: 100; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
@@ -55,7 +51,6 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
 #arrow-left { left: -10px; }
 #arrow-right { right: -10px; }
 
-/* ランクスタンプ */
 .menu-rank {
     position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; border: 3px solid red; border-radius: 50%;
     color: red; font-family: 'New Tegomin', serif; font-size: 24px; display: flex; align-items: center; justify-content: center;
@@ -63,7 +58,7 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
 }
 .menu-rank.god { border-color: purple; color: purple; font-size: 12px; font-weight: bold; }
 
-/* 装備メニュー */
+/* 装備 */
 #equip-menu {
     width: 92%; background: rgba(20,20,20,0.9); padding: 10px; border-radius: 8px; border: 2px solid #555;
     display: flex; flex-direction: column; align-items: center; margin-top: 10px; z-index: 20; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
@@ -84,7 +79,6 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
     justify-content: flex-start; background-size: cover; background-position: center;
     will-change: filter, transform;
 }
-/* 背景バリエーション */
 .bg-classroom { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23e0e0d0'/%3E%3Crect width='320' height='120' fill='%23ccc'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%232b4528' stroke='%238b4513' stroke-width='6'/%3E%3Crect y='120' width='320' height='120' fill='%23f0f0e0'/%3E%3Crect x='10' y='130' width='60' height='80' fill='%2387ceeb' stroke='%23fff' stroke-width='4'/%3E%3Cline x1='40' y1='130' x2='40' y2='210' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='10' y1='170' x2='70' y2='170' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M0,240 L320,240 L320,220 L0,220 Z' fill='%238b4513' opacity='0.5'/%3E%3Crect x='250' y='140' width='60' height='100' fill='%23ddd' stroke='%23aaa'/%3E%3C/svg%3E"); }
 .bg-science { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23ccc'/%3E%3Crect width='320' height='120' fill='%23aaa'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23224422' stroke='%23555' stroke-width='6'/%3E%3Ctext x='20' y='160' font-size='40' opacity='0.3'>🧪</text>%3Ctext x='260' y='160' font-size='40' opacity='0.3'>💀</text>%3Crect y='220' width='320' height='20' fill='%23222'/%3E%3C/svg%3E"); }
 .bg-music { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240' viewBox='0 0 320 240'%3E%3Crect width='320' height='240' fill='%23d0c0a0'/%3E%3Crect width='320' height='120' fill='%23a09070'/%3E%3Crect x='10' y='10' width='300' height='100' fill='%23222' stroke='%235a3a22' stroke-width='6'/%3E%3Ctext x='140' y='70' font-size='40' fill='white' opacity='0.5'>🎼</text>%3Crect x='260' y='140' width='60' height='100' fill='%23111'/%3E%3C/svg%3E"); }
@@ -121,23 +115,10 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
 
 .sprite { width: 160px; height: 160px; background-repeat: no-repeat; background-position: center; background-size: contain; position: relative; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); z-index: 10; }
 
-/* 吹き出し */
-#warning-bubble {
-    position: absolute; top: -30px; right: -20px; background: #fff; color: #000; padding: 5px 10px; border-radius: 10px; border: 2px solid #000;
-    font-size: 12px; font-weight: bold; display: none; z-index: 20; box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-}
+#warning-bubble { position: absolute; top: -30px; right: -20px; background: #fff; color: #000; padding: 5px 10px; border-radius: 10px; border: 2px solid #000; font-size: 12px; font-weight: bold; display: none; z-index: 20; box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
 #warning-bubble::after { content: ""; position: absolute; bottom: -6px; left: 10px; border-width: 6px 6px 0; border-style: solid; border-color: #fff transparent; display: block; width: 0; }
 
-/* スキルボタン */
-#active-skill-btn {
-    position: absolute; bottom: 130px; right: 20px;
-    width: 70px; height: 70px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d);
-    border: 4px solid #fff; box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,255,0,0.5);
-    display: none; align-items: center; justify-content: center;
-    font-size: 30px; cursor: pointer; z-index: 1000; animation: glow 2s infinite;
-    -webkit-tap-highlight-color: transparent; text-shadow: 1px 1px 2px #000;
-}
+#active-skill-btn { position: absolute; bottom: 130px; right: 20px; width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffeb3b, #fbc02d); border: 4px solid #fff; box-shadow: 0 0 15px #ffd700, inset 0 0 10px rgba(255,255,0,0.5); display: none; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; z-index: 1000; animation: glow 2s infinite; -webkit-tap-highlight-color: transparent; text-shadow: 1px 1px 2px #000; }
 #active-skill-btn:active { transform: scale(0.9); }
 #active-skill-btn.cooldown { filter: grayscale(100%); opacity: 0.5; animation: none; pointer-events: none; }
 @keyframes glow { 0%,100%{box-shadow: 0 0 10px #ffd700;} 50%{box-shadow: 0 0 25px #ffd700, 0 0 50px #ffeb3b;} }
@@ -164,14 +145,7 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
 @keyframes popOut { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
 
 /* パリィ */
-#parry-btn {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 120px; height: 120px; background: radial-gradient(circle, #00aaff, #0055aa);
-    border: 4px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold;
-    display: none; align-items: center; justify-content: center;
-    z-index: 9999; box-shadow: 0 0 20px #00aaff; animation: pulseParry 0.5s infinite;
-    cursor: pointer; -webkit-tap-highlight-color: transparent;
-}
+#parry-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; background: radial-gradient(circle, #00aaff, #0055aa); border: 4px solid #fff; border-radius: 50%; color: #fff; font-size: 18px; font-weight: bold; display: none; align-items: center; justify-content: center; z-index: 9999; box-shadow: 0 0 20px #00aaff; animation: pulseParry 0.5s infinite; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 @keyframes pulseParry { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.1); } 100% { transform: translate(-50%, -50%) scale(1); } }
 
 /* 時間帯フィルタ */
@@ -188,22 +162,12 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
 @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { opacity: 1; transform: translateY(-20px) scale(1); } 100% { transform: translateY(-80px) scale(1.2); opacity: 0; } }
 
 /* カットイン */
-#cutin-screen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(45deg, #000, #222); z-index: 5000;
-    display: none; flex-direction: column; justify-content: center; align-items: center;
-}
+#cutin-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(45deg, #000, #222); z-index: 5000; display: none; flex-direction: column; justify-content: center; align-items: center; }
 .cutin-vs { font-size: 50px; color: red; font-weight: bold; text-shadow: 4px 4px 0 #000; animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .cutin-teacher { width: 200px; height: 200px; background-size: contain; background-repeat: no-repeat; background-position: center; animation: slideInRight 0.5s ease-out; }
 .cutin-name { font-size: 20px; color: white; margin-top: 10px; font-family: 'New Tegomin', serif; animation: fadeIn 1s ease-in; }
 
-#skill-cutin {
-    position: fixed; top: 30%; left: 0; width: 100%; height: 120px;
-    background: linear-gradient(90deg, rgba(0,0,0,0), rgba(255,0,0,0.8), rgba(0,0,0,0));
-    z-index: 4000; display: none; align-items: center; justify-content: center;
-    color: white; font-family: 'New Tegomin', serif; text-shadow: 2px 2px 0 #000;
-    transform: translateX(100%); transition: transform 0.2s ease-out;
-}
+#skill-cutin { position: fixed; top: 30%; left: 0; width: 100%; height: 120px; background: linear-gradient(90deg, rgba(0,0,0,0), rgba(255,0,0,0.8), rgba(0,0,0,0)); z-index: 4000; display: none; align-items: center; justify-content: center; color: white; font-family: 'New Tegomin', serif; text-shadow: 2px 2px 0 #000; transform: translateX(100%); transition: transform 0.2s ease-out; }
 .skill-text { font-size: 24px; font-weight: bold; }
 .skill-sub { font-size: 12px; color: #ffd700; }
 
@@ -218,7 +182,11 @@ body { font-family: 'Press Start 2P', cursive; text-align: center; background-co
 .share-container { display: flex; gap: 5px; width: 85%; justify-content: center; margin-top: 10px; }
 .share-container .btn { width: 100%; font-size: 10px; padding: 10px 5px; }
 
-/* SVG定義 */
+/* 名前入力 */
+#name-screen { background: #111; z-index: 4000; }
+input[type="text"] { font-family: 'New Tegomin', serif; font-size: 20px; padding: 10px; text-align: center; border: 2px solid var(--accent-color); border-radius: 5px; background: #333; color: #fff; margin-bottom: 20px; width: 70%; }
+
+/* キャラクター画像のSVG定義 */
 .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3Crect x='20' y='16' width='4' height='16' fill='%23aaa' opacity='0.3'/%3E%3C/svg%3E"); }
 .kato-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23222'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
 .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
