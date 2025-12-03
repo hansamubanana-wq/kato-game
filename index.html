@@ -8,9 +8,8 @@
     <link rel="icon" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta property="og:title" content="激闘！加藤先生の授業 RPG">
-    <meta property="og:description" content="先生の能力を奪って進め！新感覚・居眠りバトルRPG。">
-    <meta property="og:image" content="https://kato-game-1.onrender.com/icon.png">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
 
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap" rel="stylesheet">
@@ -33,22 +32,18 @@
 
         #face-off-area {
             display: flex; justify-content: space-between; align-items: flex-end;
-            width: 90%; /* 少し広げた */
-            height: 200px; margin-bottom: 20px; position: relative; margin-top: 60px;
+            width: 80%; height: 200px; margin-bottom: 20px; position: relative; margin-top: 60px;
         }
         .char-box { display: flex; flex-direction: column; align-items: center; transition: transform 0.5s; position: relative; z-index: 5; }
         .char-label { font-size: 10px; margin-top: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 5px; color: white; }
         
-        /* ★修正：矢印のスタイル強化 */
+        /* 選択矢印 */
         .select-arrow {
             position: absolute; top: 40%; 
             font-size: 40px; color: #fff; cursor: pointer; user-select: none;
-            text-shadow: 2px 2px 0 #000; 
-            z-index: 100; /* 最前面に */
-            width: 50px; height: 50px; /* タップ範囲確保 */
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.2); /* 薄く背景を入れて押しやすく */
-            border-radius: 50%;
+            text-shadow: 2px 2px 0 #000; z-index: 100; 
+            width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.2); border-radius: 50%;
         }
         .select-arrow:active { transform: scale(0.8); background: rgba(255,255,255,0.3); }
         #arrow-left { left: -10px; animation: bounceLeft 1s infinite; }
@@ -57,17 +52,16 @@
         @keyframes bounceLeft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-5px); } }
         @keyframes bounceRight { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
 
-        /* ランクスタンプ */
         .menu-rank {
             position: absolute; top: -10px; right: -10px;
             width: 50px; height: 50px; border: 3px solid red; border-radius: 50%;
             color: red; font-family: 'New Tegomin', serif; font-size: 30px;
             display: flex; align-items: center; justify-content: center;
             transform: rotate(20deg); text-shadow: 1px 1px 0 #fff;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.9); box-shadow: 2px 2px 5px rgba(0,0,0,0.5); z-index: 10;
         }
+        /* ゴッドモード用スタンプ */
+        .menu-rank.god { border-color: purple; color: purple; font-size: 16px; }
 
         .walk-right { animation: walkOff 1.5s forwards linear; }
         .fade-in-right { animation: slideIn 1s forwards ease-out; }
@@ -105,7 +99,7 @@
         #hearts { color: var(--danger-color); font-size: 20px; text-shadow: 2px 2px 0 #000; }
         #progress-bar { width: 100%; height: 10px; background: #555; margin-top: 10px; border: 2px solid #fff; }
         #progress-fill { width: 0%; height: 100%; background: var(--accent-color); transition: width 0.2s; }
-        .sprite { width: 160px; height: 160px; background-repeat: no-repeat; background-position: center; background-size: contain; }
+        .sprite { width: 160px; height: 160px; background-repeat: no-repeat; background-position: center; background-size: contain; position: relative; }
         
         #active-skill-btn {
             position: absolute; bottom: 80px; right: 20px;
@@ -141,23 +135,49 @@
             box-shadow: 0 0 5px rgba(255,255,255,0.8); z-index: 100; animation: flyChalk 0.3s linear forwards;
         }
         @keyframes flyChalk { 0% { top: 40%; transform: translateX(-50%) scale(1); } 100% { top: 80%; transform: translateX(-50%) scale(2) rotate(360deg); } }
+        .shaking { animation: shakeScreen 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shakeScreen { 10%, 90% { transform: translate3d(-4px, 0, 0); } 20%, 80% { transform: translate3d(6px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-8px, 0, 0); } 40%, 60% { transform: translate3d(8px, 0, 0); } }
 
-        /* SVG Sprites */
+        /* ▼▼▼ SVG Sprites (Back / Side / Face) ▼▼▼ */
+        
+        /* 加藤（修正版：線削除） */
         .kato-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
-        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Cline x1='10' y='9' x2='22' y2='9' stroke='%23000' stroke-width='1'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+        .kato-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23222'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+        .kato-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23ffcccc'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23222'/%3E%3Crect x='11' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='3' height='2' fill='%23000'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23ccc'/%3E%3C/svg%3E"); }
+
+        /* 松田 */
         .matsuda-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='4' width='16' height='6' fill='%23622'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
+        .matsuda-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='6' fill='%23622'/%3E%3Crect x='21' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23d8bfd8'/%3E%3Crect x='2' y='6' width='8' height='14' fill='%23622'/%3E%3C/svg%3E"); }
         .matsuda-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='4' width='16' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M8,4 L24,4 L24,10 L8,10 Z' fill='%23622'/%3E%3Cpath d='M6,6 L8,6 L8,16 L6,16 Z' fill='%23622'/%3E%3Cpath d='M24,6 L26,6 L26,16 L24,16 Z' fill='%23622'/%3E%3Crect x='11' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='19' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='9' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='20' y='10' width='3' height='2' fill='%23f0a' opacity='0.5'/%3E%3Crect x='14' y='12' width='4' height='2' fill='%23d00'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23d8bfd8'/%3E%3C/svg%3E"); }
-        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
-        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23331'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+
+        /* 菅原 */
+        .sugawara-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        .sugawara-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8,2 L24,2 L24,10 L8,10 Z' fill='%23321'/%3E%3Crect x='10' y='8' width='12' height='8' fill='%23e0b090'/%3E%3Ccircle cx='22' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+        .sugawara-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6,2 L26,2 L26,10 L6,10 Z' fill='%23321'/%3E%3Crect x='8' y='8' width='16' height='8' fill='%23e0b090'/%3E%3Ccircle cx='12' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' stroke='%23000' fill='none'/%3E%3Crect x='14' y='13' width='4' height='2' fill='%23000'/%3E%3Crect x='6' y='16' width='20' height='16' fill='%23456'/%3E%3C/svg%3E"); }
+
+        /* 福盛田 */
         .fukumorita-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3C/svg%3E"); }
+        .fukumorita-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='10' height='4' fill='%23111'/%3E%3Crect x='20' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='16' width='12' height='16' fill='%23111'/%3E%3C/svg%3E"); }
         .fukumorita-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='4' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='4' width='12' height='4' fill='%23111'/%3E%3Crect x='12' y='8' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='8' width='2' height='2' fill='%23000'/%3E%3Cpath d='M11,10 L14,10' stroke='%23000'/%3E%3Cpath d='M18,10 L21,10' stroke='%23000'/%3E%3Crect x='14' y='12' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='16' width='16' height='16' fill='%23111'/%3E%3Cpath d='M16,16 L16,32' stroke='%23333'/%3E%3Cpath d='M19,19 Q21,21 23,18' stroke='%23fff' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+
+        /* 須藤 */
         .sudo-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,14 L10,14 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
+        .sudo-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='12' y='8' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='8' width='10' height='6' fill='%23421'/%3E%3Cpath d='M10,10 L6,16 L8,18 L12,12 Z' fill='%23421'/%3E%3Crect x='21' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='10' y='20' width='12' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
         .sudo-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,8 L22,8 L22,12 L10,12 Z' fill='%23421'/%3E%3Cpath d='M8,8 L10,20 L8,20 Z' fill='%23421'/%3E%3Cpath d='M22,10 L26,16 L24,18 L20,12 Z' fill='%23421'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='14' y='16' width='4' height='1' fill='%23a00'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%23558855'/%3E%3C/svg%3E"); }
+
+        /* 大谷 */
         .otani-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L22,2 L22,8 L10,8 Z' fill='%23111'/%3E%3Cline x1='16' y1='2' x2='16' y2='8' stroke='%23333' stroke-width='1'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
+        .otani-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='6' fill='%23111'/%3E%3Crect x='21' y='6' width='2' height='2' fill='%23008'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='10' y='14' width='12' height='18' fill='%23ccccff'/%3E%3C/svg%3E"); }
         .otani-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Cpath d='M10,2 L16,2 L16,4 L10,8 Z' fill='%23111'/%3E%3Cpath d='M22,2 L16,2 L16,4 L22,8 Z' fill='%23111'/%3E%3Crect x='12' y='6' width='2' height='2' fill='%23008'/%3E%3Crect x='18' y='6' width='2' height='2' fill='%23008'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000'/%3E%3Ctext x='24' y='10' font-size='8' fill='gold'>✨</text>%3Crect x='8' y='14' width='16' height='18' fill='%23ccccff'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3C/svg%3E"); }
+
+        /* 松村 */
         .matsumura-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3C/svg%3E"); }
+        .matsumura-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='10' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='20' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='10' y='18' width='12' height='14' fill='%23eee'/%3E%3C/svg%3E"); }
         .matsumura-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='6' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='8' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='22' y='12' width='2' height='6' fill='%23888'/%3E%3Crect x='12' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='18' y='10' width='2' height='1' fill='%23000'/%3E%3Crect x='14' y='14' width='4' height='1' fill='%23000'/%3E%3Crect x='8' y='18' width='16' height='14' fill='%23eee'/%3E%3Crect x='12' y='18' width='2' height='14' fill='%23aaa'/%3E%3C/svg%3E"); }
+
+        /* 青田 */
         .aota-back { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3C/svg%3E"); }
+        .aota-side { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='2' width='12' height='4' fill='%23222'/%3E%3Crect x='21' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='8' y='14' width='14' height='18' fill='%23000080'/%3E%3C/svg%3E"); }
         .aota-face { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='2' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='12' y='2' width='8' height='4' fill='%23222'/%3E%3Crect x='10' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='20' y='4' width='2' height='6' fill='%23555'/%3E%3Crect x='13' y='6' width='2' height='1' fill='%23000'/%3E%3Crect x='17' y='6' width='2' height='1' fill='%23000'/%3E%3Cpath d='M14,10 L18,10' stroke='%23000' stroke-width='2'/%3E%3Crect x='8' y='14' width='16' height='18' fill='%23000080'/%3E%3Crect x='14' y='14' width='4' height='18' fill='%23fff'/%3E%3Crect x='15' y='16' width='2' height='10' fill='%23a00'/%3E%3C/svg%3E"); }
 
         .student-awake { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='10' y='8' width='12' height='12' fill='%23f0c0a0'/%3E%3Crect x='10' y='8' width='12' height='4' fill='%23222'/%3E%3Crect x='12' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='18' y='12' width='2' height='2' fill='%23000'/%3E%3Crect x='8' y='20' width='16' height='12' fill='%234488ff'/%3E%3C/svg%3E"); }
@@ -169,7 +189,7 @@
         .god-mode { color: gold !important; text-shadow: 0 0 10px gold !important; }
         
         #ending-screen { background: #111; z-index: 2000; }
-        #certificate { width: 90%; background: #fff; color: #000; padding: 20px; border: 10px double #ffd700; font-family: 'New Tegomin', serif; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); animation: popIn 1s ease-out; }
+        #certificate { width: 90%; background: #fff; color: #000; padding: 20px; border: 10px double #ffd700; font-family: 'New Tegomin', serif; box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); animation: popIn 1s ease-out; position: relative; }
         @keyframes popIn { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .confetti { position: absolute; width: 10px; height: 10px; background: #f00; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
@@ -177,27 +197,9 @@
         .btn-x { background: #000; border-color: #fff; }
         .btn-line { background: #06c755; border-color: #fff; }
         .btn-share { background: #555; border-color: #ccc; }
-        
-        /* 会話画面 */
-        #dialogue-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 2500;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .dialogue-box {
-            width: 85%; background: #fff; border: 4px solid #000; border-radius: 10px; padding: 15px;
-            font-family: 'New Tegomin', serif; min-height: 120px; position: relative;
-        }
-        .dialogue-name { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
-        .name-teacher { color: var(--danger-color); }
-        .name-you { color: #4488ff; }
-        .dialogue-text { font-size: 14px; line-height: 1.5; color: #000; white-space: pre-wrap; }
-        .dialogue-next { position: absolute; bottom: 10px; right: 10px; animation: blink 1s infinite; font-size: 20px; cursor: pointer; }
-        @keyframes blink { 50% { opacity: 0; } }
-        
-        /* リザルトのランク */
-        .rank-stamp { font-size: 80px; color: red; transform: rotate(-20deg); text-shadow: 2px 2px 0 #fff; border: 5px solid red; border-radius: 50%; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin: 10px auto; animation: stamp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes stamp { 0% { transform: scale(3) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(-20deg); opacity: 1; } }
+
+        /* ゴッドモード用スタンプ(リザルト) */
+        .rank-stamp.god { border-color: purple; color: purple; font-size: 30px; }
     </style>
 </head>
 <body>
@@ -253,9 +255,9 @@
             <h2 style="color:var(--accent-color);">HOW TO PLAY</h2>
             <div class="tutorial-step">
                 1. 画面長押し（PCはスペース）で<b>居眠り</b>します。<br>
-                2. 先生がこちらを向いたら、すぐに<b>指を離して</b>起きてください！<br>
-                3. 各先生を倒すと、強力な<b>能力</b>をゲットできます。<br>
-                4. 全8ステージ、青田校長を倒して卒業を目指せ！
+                2. 先生が<b>横を向いたら（Side）</b>警戒！<br>
+                3. 先生が<b>こっちを向く（Front）前</b>に指を離して起きろ！<br>
+                4. 各先生を倒すと、強力な<b>能力</b>をゲットできます。
             </div>
             <button class="btn" onclick="closeTutorial()">わかった！</button>
         </div>
@@ -296,6 +298,7 @@
             <h2 style="border-bottom: 2px solid #000; display:inline-block; margin-bottom:20px;">睡眠卒業証書</h2>
             <p>殿</p>
             <p style="font-size:12px; line-height:2;">あなたは全ての先生の目を盗み<br>青田校長すらも乗り越え<br>完全爆睡したことを証します。</p>
+            <p id="god-mode-note" style="font-size:10px; color:purple; display:none; margin-top:10px;">※ゴッドモードの使用を検知しました。</p>
             <p style="text-align:right; margin-top:20px;">2025年 睡眠委員会</p>
             <div style="font-size:40px; margin-top:10px;">💮</div>
         </div>
@@ -346,15 +349,12 @@
         
         let unlockedStage = parseInt(localStorage.getItem("soichiGameStage")) || 1;
         let unlockedPowers = JSON.parse(localStorage.getItem("soichiPowers")) || [];
-        let stageRanks = JSON.parse(localStorage.getItem("soichiRanks")) || {}; // ★ランク保存用 {1:'S', 2:'B'}
+        let stageRanks = JSON.parse(localStorage.getItem("soichiRanks")) || {};
         
         let equippedPower = localStorage.getItem("soichiEquippedPower");
         if (equippedPower === "null") equippedPower = null;
 
-        // メニューで表示中のステージ（デフォルトは最新解放ステージ、ただしクリア後は8まで）
         let currentMenuStage = (unlockedStage > 8) ? 8 : unlockedStage; 
-        
-        // 実際にバトル開始するステージ
         let battleStage = 1;
 
         let justCleared = false;
@@ -378,7 +378,6 @@
                 openTutorial();
                 localStorage.setItem("soichiTutorialSeen", "true");
             }
-            // 起動時は最新ステージに合わせる
             currentMenuStage = (unlockedStage > 8) ? 8 : unlockedStage;
             updateMenuVisuals(currentMenuStage);
             
@@ -395,14 +394,11 @@
             renderEquipMenu();
         }
 
-        // ★ステージ切り替え（矢印）
         function changeStage(dir) {
-            // ステージ1〜8（エンドレスは別ボタンなので含めない）の範囲で、かつ解放済みのもの
             let max = (unlockedStage > 8) ? 8 : unlockedStage;
             let next = currentMenuStage + dir;
             if (next < 1) next = max;
             if (next > max) next = 1;
-            
             currentMenuStage = next;
             updateMenuVisuals(currentMenuStage);
         }
@@ -413,7 +409,6 @@
             const rivalName = document.getElementById("menu-rival-name");
             const rankDisplay = document.getElementById("menu-rank-display");
             
-            // 矢印の表示制御（1つしかないなら消す）
             const leftArrow = document.getElementById("arrow-left");
             const rightArrow = document.getElementById("arrow-right");
             if (unlockedStage <= 1) {
@@ -425,11 +420,12 @@
             rivalSprite.className = `sprite ${t.face}`;
             rivalName.textContent = t.label;
 
-            // ★ランク表示
             const rank = stageRanks[stageNum];
+            rankDisplay.classList.remove("god"); // リセット
             if (rank) {
                 rankDisplay.textContent = rank;
                 rankDisplay.style.display = "flex";
+                if (rank === "チート") rankDisplay.classList.add("god");
             } else {
                 rankDisplay.style.display = "none";
             }
@@ -476,7 +472,7 @@
         function newGamePlus() {
             if(confirm("能力はそのままで、ステージ1から始めますか？")) {
                 localStorage.setItem("soichiGameStage", 1);
-                localStorage.removeItem("soichiRanks"); // ランクもリセットするかはお好みですが、NG+ならリセットが自然
+                localStorage.removeItem("soichiRanks");
                 location.reload();
             }
         }
@@ -489,12 +485,11 @@
 
         document.getElementById("game-title").addEventListener("click", () => { tapCount++; if(tapCount >= 7 && !isGodMode) { isGodMode = true; document.getElementById("cheat-msg").style.display = "block"; document.getElementById("game-title").classList.add("god-mode"); alert("隠しコマンド成功！無敵モードON！"); } });
 
-        // 開始ボタン：現在表示中のステージを開始
         function startSequence() { startDialogue(currentMenuStage); }
         function startEndless() { startDialogue(9); }
 
         function startDialogue(st) {
-            battleStage = st; // 戦闘ステージ確定
+            battleStage = st;
             dialogueStep = 0;
             const d = dialogues[st] || { t: "...", s: "..." };
             
@@ -599,7 +594,9 @@
             if (isTimeStopped) return;
             let tName = teachers[battleStage].name;
             if (battleStage === 9) { tName = teacherNames[Math.floor(Math.random() * teacherNames.length)]; endlessSpeed += 0.05; }
-            const sprite = document.getElementById("teacher-sprite"); sprite.className = `sprite ${tName}-back`; isTeacherLooking = false;
+            const sprite = document.getElementById("teacher-sprite"); 
+            sprite.className = `sprite ${tName}-back`; 
+            isTeacherLooking = false;
             
             let waitBase = 2000; 
             if (tName === 'sugawara') waitBase = 3000; 
@@ -610,13 +607,23 @@
             let randomTime = (Math.random() * waitBase + 1000) / speed;
             teacherTimerId = setTimeout(() => {
                 if (isTimeStopped) return;
-                sprite.className = `sprite ${tName}-face`; isTeacherLooking = true;
+                // Side (予兆)
+                sprite.className = `sprite ${tName}-side`;
                 
-                let lookBase = 1000;
-                if (equippedPower === 'otani') lookBase = 500; 
+                setTimeout(() => {
+                    if (isTimeStopped) return;
+                    // Front (振り返り)
+                    sprite.className = `sprite ${tName}-face`; 
+                    isTeacherLooking = true;
+                    
+                    let lookBase = 1000;
+                    if (equippedPower === 'otani') lookBase = 500; 
+                    let lookTime = (battleStage === 9) ? Math.max(400, lookBase - endlessSpeed*50) : lookBase;
+                    
+                    setTimeout(() => { updateTeacherBehavior(); }, lookTime);
 
-                let lookTime = (battleStage === 9) ? Math.max(400, lookBase - endlessSpeed*50) : lookBase;
-                setTimeout(() => { updateTeacherBehavior(); }, lookTime);
+                }, 500); // ★予兆時間を500msに短縮
+
             }, randomTime);
         }
 
@@ -668,17 +675,22 @@
             
             if(gotPower) { unlockedPowers.push(dropped); localStorage.setItem("soichiPowers", JSON.stringify(unlockedPowers)); }
 
-            // ★ランク保存ロジック
             let rank = "B";
-            if(hp === 3) rank = "S";
-            else if(hp === 2) rank = "A";
+            if (isGodMode) {
+                rank = "チート"; // ゴッドモードなら強制的にチートランク
+            } else if(hp === 3) {
+                rank = "S";
+            } else if(hp === 2) {
+                rank = "A";
+            }
             
-            // 既存ランクより良ければ更新
             const currentRank = stageRanks[battleStage];
-            const rankOrder = { "S": 3, "A": 2, "B": 1, undefined: 0 };
-            if (rankOrder[rank] > rankOrder[currentRank]) {
-                stageRanks[battleStage] = rank;
-                localStorage.setItem("soichiRanks", JSON.stringify(stageRanks));
+            // チートランクは既存のSABより優先度が低いとする（まっとうな記録を上書きしない）
+            const rankOrder = { "S": 4, "A": 3, "B": 2, "チート": 1, undefined: 0 };
+            
+            if (rankOrder[rank] > rankOrder[currentRank] || (rank === "チート" && !currentRank)) {
+                 stageRanks[battleStage] = rank;
+                 localStorage.setItem("soichiRanks", JSON.stringify(stageRanks));
             }
 
             if (battleStage === 8) {
@@ -686,16 +698,16 @@
                 showEnding(); return;
             } else if(battleStage >= unlockedStage) {
                 unlockedStage++; localStorage.setItem("soichiGameStage", unlockedStage);
-                nextStage = unlockedStage;
                 justCleared = true; 
             }
             document.getElementById("game-screen").classList.add("hidden");
             document.getElementById("result-screen").classList.remove("hidden");
             
-            // ランク表示
             const stamp = document.getElementById("rank-stamp");
             stamp.style.display = "flex";
             stamp.textContent = rank;
+            stamp.classList.remove("god");
+            if (rank === "チート") stamp.classList.add("god");
 
             document.getElementById("result-screen").style.background = "#2b4528";
             document.getElementById("result-title").textContent = "YOU WIN!";
@@ -711,27 +723,19 @@
                 justCleared = false; 
                 playWalkAnimation(); 
             } else { 
-                // クリア後は戦ったステージのままにする（再戦しやすくするため）
                 currentMenuStage = battleStage;
-                // ただし、もし新しいステージが解放されたなら、そっちに進めるように
-                if (unlockedStage > currentMenuStage && unlockedStage <= 8) {
-                     currentMenuStage = unlockedStage;
-                }
+                if (unlockedStage > currentMenuStage && unlockedStage <= 8) { currentMenuStage = unlockedStage; }
                 updateMenuVisuals(currentMenuStage); 
             }
         }
 
         function playWalkAnimation() {
-            // アニメーション開始時は「戦ったステージ」
             currentMenuStage = battleStage; 
             updateMenuVisuals(currentMenuStage); 
-            
             const player = document.getElementById("menu-player");
             const rival = document.getElementById("menu-rival");
             rival.style.opacity = "0"; player.classList.add("walk-right");
-            
             setTimeout(() => {
-                // アニメーション完了後は「次のステージ」
                 currentMenuStage = unlockedStage > 8 ? 8 : unlockedStage; 
                 updateMenuVisuals(currentMenuStage); 
                 rival.style.opacity = "1"; rival.classList.add("fade-in-right"); player.classList.remove("walk-right");
@@ -741,7 +745,18 @@
 
         function gameOver() { clearInterval(gameLoopId); clearTimeout(teacherTimerId); document.getElementById("game-screen").classList.add("hidden"); document.getElementById("result-screen").classList.remove("hidden"); document.getElementById("rank-stamp").style.display = "none"; document.getElementById("result-screen").style.background = "#500"; document.getElementById("result-title").textContent = "GAME OVER"; document.getElementById("result-title").style.color = "red"; let msg = "補習決定..."; if (battleStage === 9) msg = `記録: ${sleepTime.toFixed(1)}秒`; document.getElementById("result-msg").textContent = msg; }
         
-        function showEnding() { document.getElementById("game-screen").classList.add("hidden"); document.getElementById("ending-screen").classList.remove("hidden"); for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } }
+        function showEnding() { 
+            document.getElementById("game-screen").classList.add("hidden"); 
+            document.getElementById("ending-screen").classList.remove("hidden"); 
+
+            // ゴッドモード使用チェック
+            let usedGodMode = false;
+            for(let i=1; i<=8; i++) { if(stageRanks[i] === "チート") usedGodMode = true; }
+            const godNote = document.getElementById("god-mode-note");
+            if(usedGodMode) { godNote.style.display = "block"; } else { godNote.style.display = "none"; }
+
+            for(let i=0; i<50; i++) { const conf = document.createElement("div"); conf.className = "confetti"; conf.style.left = Math.random() * 100 + "vw"; conf.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`; conf.style.animationDuration = (Math.random() * 2 + 2) + "s"; document.getElementById("ending-screen").appendChild(conf); } 
+        }
         const shareText = "【証明書】私は加藤・松田・菅原・福盛田・須藤・大谷・松村・青田校長の目を盗み、完全爆睡したことを証明します。 #加藤先生ゲーム";
         function shareX() { window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(GAME_URL)}`, '_blank'); }
         function shareLine() { const lineUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(GAME_URL)}`; window.open(lineUrl, '_blank'); }
